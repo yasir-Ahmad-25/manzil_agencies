@@ -3,19 +3,16 @@
 namespace App\Controllers\Back;
 
 use App\Controllers\BaseController;
-
 use App\Models\Back\AuthModel;
 use App\Models\Back\DashboardModel;
 
-class Dashboard extends BaseController
-{
-    
-    public function index(): string
-    {
-        $auth = new AuthModel(); 
-        $dashboard = new DashboardModel();
-        
 
+class TesterController extends BaseController
+{
+    public function index(){
+        $auth = new AuthModel();
+
+        $dashboard = new DashboardModel();
         $this->viewData['halls'] = 0;
         $this->viewData['customers'] = count($this->get_table_info('tbl_customers'));
         
@@ -36,22 +33,7 @@ class Dashboard extends BaseController
         $this->viewData['unit_avialable'] = $dashboard->get_avialable_units()->totals;
         $this->viewData['monthly_rev'] =  0;
 
-        //  ut_id means user id
         $this->viewData['access'] = $auth->get_user_access(session()->get('ut_id'),$this->request->getLocale());
-        return view('admin/dashboard', $this->viewData);
-
+        return view('admin/tester/test', $this->viewData);
     }
-
-
-   
-
-
-  
-
-
-
-
-
-
-
 }

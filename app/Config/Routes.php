@@ -84,6 +84,7 @@ $routes->group('{locale}', function ($routes) {
       $routes->post('change_password', 'UserController::change_password', ['filter' => 'restrict']);
       $routes->post('update_profile', 'UserController::update_profile', ['filter' => 'restrict']);
    });
+
    $routes->group('financial', ['namespace' => 'App\Controllers\Back'], function ($routes) {
       $routes->get('chart_accounts', 'FinancialController::chart_accounts', ['filter' => 'restrict']);
       $routes->get('acc_list', 'FinancialController::fetch_accounts', ['filter' => 'restrict']);
@@ -379,6 +380,13 @@ $routes->group('{locale}', function ($routes) {
       $routes->post('get_prev_reading', 'ReadingController::get_prev_reading', ['filter' => 'restrict']);
       $routes->post('get_rate_value', 'ReadingController::get_rate_value', ['filter' => 'restrict']);
     
+   });
+
+
+   $routes->group('tester' , ['namespace' => 'App\Controllers\Back'], function ($routes){
+
+      $routes->get('/' , "TesterController::index");
+
    });
 
 

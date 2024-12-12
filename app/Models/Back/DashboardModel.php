@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 class DashboardModel extends Model
 {
     public function get_table_data($table)
-    {
+    { 
 
         $query = $this->db->query("SELECT * FROM $table WHERE 1");
 

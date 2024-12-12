@@ -375,7 +375,7 @@
               
             </nav>
         </header>
-
+ 
         <aside class="left-sidebar" data-sidebarbg="skin6">
         <!-- Sidebar scroll-->
         <div class="scroll-sidebar ps-container ps-theme-default ps-active-y" data-ps-id="cac1f8f4-b00b-28f3-0993-3e932e5b0995">
@@ -384,7 +384,7 @@
                 <ul id="sidebarnav" class="in">
                                              
         
-                        <?= $access;?>
+                         <?= $access;?>
                     
                 
                 </ul>

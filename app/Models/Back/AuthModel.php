@@ -3,7 +3,7 @@
 namespace App\Models\Back;
 
 use CodeIgniter\Model;
-
+ 
 class AuthModel extends Model
 {
     protected $table   = 'tbl_users';
