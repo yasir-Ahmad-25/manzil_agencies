@@ -46,6 +46,9 @@ return [
         'details' => 'تفاصيل',
         
     ],
+    'modalButton' => [
+        'AddNewUser' => "مستخدم جديد",
+    ],
     'user' => [
         'username' => 'اسم المستخدم',
         'password' => 'كلمة المرور',
@@ -145,7 +148,6 @@ return [
     ],
     'common' => [
         'name' => 'الإسم',
-        
         'tel' => 'الهاتف',
         'image' => 'الصورة',
         'email' => 'البريد الإلكتروني',
@@ -158,6 +160,7 @@ return [
         'action' => 'اجراء',
         'remarks' => 'وصف',
         'address' => 'العنوان',
+        'Branch' => 'فرع',
 
         
     ],

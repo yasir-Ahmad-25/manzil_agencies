@@ -46,6 +46,9 @@ return [
         'delete' => 'Delete',
         'details' => 'Details',
     ],
+    'modalButton' => [
+        'AddNewUser' => "New User",
+    ],
     'user' => [
         'username' => 'User Name',
         'password' => 'Password',
@@ -189,6 +192,8 @@ return [
         'status' => 'Status',
         'action' => 'Action',
         'remarks' => 'Remarks',
+        'address' => 'Address',
+        'Branch' => 'Branch',
 
     ],
     'state' => [

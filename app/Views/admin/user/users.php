@@ -18,7 +18,7 @@
 
         <div class="col-md-12" style="text-align: end">
             <button class="btn btn-primary " id="btn_add" data-bs-toggle="modal" data-bs-target="#user_modal"> +
-                <?= 'New User' ?></button> <br>
+                <?= lang('Site.modalButton.AddNewUser') ?></button> <br>
         </div>
     </div>
 
@@ -40,10 +40,10 @@
                             <th>#</th> 
 
                             <th><?= lang('Site.common.name') ?></th>
-                            <th>Adress</th>
+                            <th><?= lang('Site.common.address') ?></th>
                             <th><?= lang('Site.common.tel') ?></th>
                             <th><?= lang('Site.menus.role') ?></th>
-                            <th><?= 'Branch' ?></th>
+                            <th><?= lang('Site.common.Branch') ?></th>
                             <th><?= lang('Site.common.status') ?></th>
                             <th><?= lang('Site.common.action') ?></th>
                         </tr>
@@ -67,97 +67,96 @@
             </div>
             <div class="modal-body">
                 <div id="inner_add"></div>
-                <form id="data_form" method="post" action="<?= base_url($locale . '/user/crud') ?>" enctype="multipart/form-data">
+                    <form id="data_form" method="post" action="<?= base_url($locale . '/user/crud') ?>" enctype="multipart/form-data">
 
-                    <input type="hidden" name="btn_action" id="btn_action">
-                    <input type="hidden" name="user_id" id="user_id">
+                        <input type="hidden" name="btn_action" id="btn_action">
+                        <input type="hidden" name="user_id" id="user_id">
 
-                    <div class="row">
-                        <div class="col-md-3  mx-auto">
-                            <div class="form-group text-center">
-                                <img src="<?= base_url(); ?>public/assets/images/core/ph.png" onclick="triggerClick()" id="pdis" class="img img-thumbnail">
-                                <input type="file" onchange="display(this)" name="user_img" id="user_img" style="display: none;"><br>
-                                <input type="hidden" class="form-control border-secondary" name="old_img" id="old_img">
-                                <small><i><?= lang('Site.common.image') ?></i></small>
+                        <div class="row">
+                            <div class="col-md-3  mx-auto">
+                                <div class="form-group text-center">
+                                    <img src="<?= base_url(); ?>public/assets/images/core/ph.png" onclick="triggerClick()" id="pdis" class="img img-thumbnail">
+                                    <input type="file" onchange="display(this)" name="user_img" id="user_img" style="display: none;"><br>
+                                    <input type="hidden" class="form-control border-secondary" name="old_img" id="old_img">
+                                    <small><i><?= lang('Site.common.image') ?></i></small>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-9">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group text-dark">
-                                        <label><?= lang('Site.common.name') ?></label>
-                                        <input type="text" class="form-control border-secondary" name="full_name" id="full_name" required>
+                            <div class="col-md-9">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group text-dark">
+                                            <label><?= lang('Site.common.name') ?></label>
+                                            <input type="text" class="form-control border-secondary" name="full_name" id="full_name" required>
+                                        </div>
                                     </div>
-                                </div>
-                                
-                                <div class="col-md-6">
-                                    <div class="form-group text-dark">
-                                        <label><?= lang('Site.common.tel') ?></label>
-                                        <input type="text" class="form-control border-secondary" name="user_tell" id="user_tell" required>
+                                    
+                                    <div class="col-md-6">
+                                        <div class="form-group text-dark">
+                                            <label><?= lang('Site.common.tel') ?></label>
+                                            <input type="text" class="form-control border-secondary" name="user_tell" id="user_tell" required>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group text-dark">
-                                        <label><?= lang('Site.common.email') ?></label>
-                                        <input type="email" class="form-control border-secondary" name="user_email" id="user_email" required>
+                                    <div class="col-md-6">
+                                        <div class="form-group text-dark">
+                                            <label><?= lang('Site.common.email') ?></label>
+                                            <input type="email" class="form-control border-secondary" name="user_email" id="user_email" required>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="col-md-12">
-                                    <div class="form-group text-dark">
-                                        <label>Address</label>
-                                        <input type="text" class="form-control border-secondary" name="user_address" id="user_address" required>
+                                    <div class="col-md-12">
+                                        <div class="form-group text-dark">
+                                            <label><?= lang('Site.common.address')?></label>
+                                            <input type="text" class="form-control border-secondary" name="user_address" id="user_address" required>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="col-md-6">
-                                    <div class="form-group text-dark">
-                                        <label for="utt_id"><?= lang('Site.menus.role') ?></label>
-                                        <select class="form-control border-secondary" name="ut_id" id="ut_id" required>
-                                            <option selected disabled><?= lang('Site.menus.role') ?></option>
-                                            <?php foreach ($user_types as $types) : ?>
-                                                <option value="<?= $types['ut_id'] ?>"><?= $locale == "ar" ? $types['ut_name_ar'] : $types['ut_name_en']  ?></option>
-                                            <?php endforeach; ?>
-                                        </select>
+                                    <div class="col-md-6">
+                                        <div class="form-group text-dark">
+                                            <label for="utt_id"><?= lang('Site.menus.role') ?></label>
+                                            <select class="form-control border-secondary" name="ut_id" id="ut_id" required>
+                                                <option selected disabled><?= lang('Site.menus.role') ?></option>
+                                                <?php foreach ($user_types as $types) : ?>
+                                                    <option value="<?= $types['ut_id'] ?>"><?= $locale == "ar" ? $types['ut_name_ar'] : $types['ut_name_en']  ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group text-dark">
-                                        <label for="utt_id"><?= 'Branch' ?></label>
-                                        <select class="form-control border-secondary" name="br_id" id="br_id" required>
-                                            <option selected disabled><?= 'Select branch' ?></option>
-                                            <?php foreach ($branches as $br) : ?>
-                                                <option value="<?= $br['branch_id']  ?>"><?= $br['br_name']  ?></option>
-                                            <?php endforeach; ?>
-                                        </select>
+                                    <div class="col-md-6">
+                                        <div class="form-group text-dark">
+                                            <label for="utt_id"><?= 'Branch' ?></label>
+                                            <select class="form-control border-secondary" name="br_id" id="br_id" required>
+                                                <option selected disabled><?= 'Select branch' ?></option>
+                                                <?php foreach ($branches as $br) : ?>
+                                                    <option value="<?= $br['branch_id']  ?>"><?= $br['br_name']  ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="col-md-6">
-                                    <div class="form-group text-dark">
-                                        <label><?= lang('Site.user.username') ?></label>
-                                        <input type="text" class="form-control border-secondary" name="username" id="username" required>
+                                    <div class="col-md-6">
+                                        <div class="form-group text-dark">
+                                            <label><?= lang('Site.user.username') ?></label>
+                                            <input type="text" class="form-control border-secondary" name="username" id="username" required>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6" id="pass_f">
-                                    <div class="form-group text-dark">
-                                        <label><?= lang('Site.user.password') ?></label>
-                                        <input type="password" class="form-control border-secondary" name="password" id="password" required>
+                                    <div class="col-md-6" id="pass_f">
+                                        <div class="form-group text-dark">
+                                            <label><?= lang('Site.user.password') ?></label>
+                                            <input type="password" class="form-control border-secondary" name="password" id="password" required>
+                                        </div>
                                     </div>
-                                </div>
 
 
+                                </div>
                             </div>
+
                         </div>
 
-                    </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-rounded btn-outline-primary"><b><?= lang('Site.button.save') ?></b></button>
+                        </div>
 
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-rounded btn-outline-primary"><b><?= lang('Site.button.save') ?></b></button>
-                    </div>
-
-                </form>
-
+                    </form>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -229,6 +228,7 @@
                 $('#ut_id').val($(e.relatedTarget).data('ut_id'));
                 $('#username').val($(e.relatedTarget).data('user_name'));
                 $('#user_status').val($(e.relatedTarget).data('user_status'));
+               
 
                 $('#password').val($(e.relatedTarget).data('password'));
                 $('#pass_f').hide();

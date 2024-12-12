@@ -20,7 +20,6 @@ class UserController extends BaseController
             $this->request->uri->getSegment(3)
         )) {
             return view('admin/page_404', $this->viewData);
-            exit;
         }
 
         $this->viewData['access'] = $auth->get_user_access(session()->get('ut_id'), $this->request->getLocale());
@@ -212,7 +211,6 @@ class UserController extends BaseController
             $this->request->uri->getSegment(3)
         )) {
             return view('admin/page_404', $this->viewData);
-            exit;
         }
 
         $this->viewData['access'] = $auth->get_user_access(session()->get('ut_id'), $this->request->getLocale());
@@ -302,7 +300,6 @@ class UserController extends BaseController
             $this->request->uri->getSegment(3)
         )) {
             return view('admin/page_404', $this->viewData);
-            exit;
         }
 
         $this->viewData['access'] = $auth->get_user_access(session()->get('ut_id'), $this->request->getLocale());
