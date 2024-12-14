@@ -58,14 +58,15 @@ class ApartmentController extends BaseController
                     <i class="fas fa-ellipsis-v mx-1"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dd1" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-110px, 39px, 0px);">
-                    <a type="button" id="btn_view" data-site_id="' . $value["site_id"] . '"  
+                    <a type="button" id="btn_view" data-site_id="' . $value["site_id"] . '" 
+                         data-site_build_year="' . $value["SiteYearBuild"] .'" 
                         data-site_name="' . $value["site_name"] . '" data-site_address="' . $value["site_address"] . '"
                         data-floor="' . $apartment->get_num_floors($value['site_name']) . '" data-Prefix="' . 'Floor' . '"
                         class="dropdown-item" data-bs-toggle="modal" data-bs-target="#sitemodel">
                         <i class="fas fa-info-circle text-info mx-1"></i>View </a>
 
                    <a type="button" id="btn_edit"  data-site_id="' . $value["site_id"] . '"  
-                   data-site_name="' . $value["site_name"] . '" data-site_address="' . $value["site_address"] . '"
+                   data-site_name="' . $value["site_name"] . '" data-site_build_year="' . $value["SiteYearBuild"] .'" data-site_address="' . $value["site_address"] . '"
                    data-floor="' . $apartment->get_num_floors($value['site_name']) . '" data-Prefix="' . 'Floor' . '"
                         class="dropdown-item" data-bs-toggle="modal" data-bs-target="#sitemodel">
                         <i class="fas fa-pencil-alt text-warning mx-1"></i>Edit </a>
@@ -84,6 +85,7 @@ class ApartmentController extends BaseController
                 $i,
                 $value['site_name'],
                 $value['site_address'],
+                $value['SiteYearBuild'],
                 $apartment->get_num_floors($value['site_name']) . ' Floors',
                 $stat_icon . ' ' . $value['status'],
                 $buttons,
@@ -157,6 +159,7 @@ class ApartmentController extends BaseController
                 $data = [
                     'site_name' => $_POST['sitename'],
                     'site_address' => $_POST['siteaddress'],
+                    'SiteYearBuild' => $_POST['SiteYearBuild'],
                     // 'profile_no' => $this->session->userdata('profile')['profile_no'],
                     'status' => $default_status
                 ];
@@ -173,7 +176,8 @@ class ApartmentController extends BaseController
                 $data = [
                     'site_id' => $_POST['site_id'],
                     'site_name' => $_POST['sitename'],
-                    'site_address' => $_POST['siteaddress']
+                    'site_address' => $_POST['siteaddress'],
+                    'SiteYearBuild' => $_POST['SiteYearBuild'],
                 ];
                 $apartment->update_table('tbl_sites', $data);
                 $response['success'] = true;
@@ -387,7 +391,8 @@ class ApartmentController extends BaseController
                     <i class="fas fa-ellipsis-v mx-1"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dd1" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-110px, 39px, 0px);">
-                    <a type="button" id="btn_view" data-ap_type_id="' . $value["ap_type_id"] . '"  
+                    <a type="button" id="btn_view"- dataap_type_id="' . $value["ap_type_id"] . '" 
+                        data-site_build_year="' . $value["SiteYearBuild"] .'"  
                         data-ap_type_name="' . $value["ap_type_name"] . '"
                         data-des="' . $value["des"] . '"
                         class="dropdown-item" data-toggle="modal" data-target="#form_modal">

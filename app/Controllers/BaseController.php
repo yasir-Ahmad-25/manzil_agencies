@@ -78,7 +78,7 @@ abstract class BaseController extends Controller
         if ($status != 'Active' && $status != 'Confirmed' && $status != 'Received'  && $status != 'Rejected' && $status != 'Blocked' &&  $status != 'Pending' &&  $status != 'Cancelled' &&  $status != 'Recovered') $stat_icon = '<i class="fas fa-question text-danger mx-1"></i>';
         return $stat_icon;
     }
-
+ 
     public function alert($message, $type) // Alert function 
     {
         $alert = '<div class="alert alert-' . $type . ' alert-dismissible" id="alert" role="alert">'

@@ -41,7 +41,7 @@
                     <div class="card-body">
                         <!-- <h4 class="card-title">  </h4> -->
                         <button class="btn btn-primary" id="btn_add" data-bs-toggle="modal" data-bs-target="#sitemodel">
-                        <?= 'addd' ?>
+                        <?= 'Add' ?>
                         </button> <br>
                         <br/>
                         <div id="messages"></div>
@@ -52,6 +52,7 @@
                                     <th>#</th>                                                                                                                                     
                                     <th><?= 'Site Name' ?></th> 
                                     <th><?= 'Address'?></th> 
+                                    <th><?= 'Built in'?></th> 
                                     <th><?= 'Floors' ?></th> 
                                     <th><?= 'Status' ?></th> 
                                     <th>Action</th>
@@ -88,7 +89,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header d-flex align-items-center">
-                    <h4 class="modal-title" id="myModalLabel"><?= 'sites' ?></h4>
+                    <h4 class="modal-title" id="myModalLabel"><?= 'Add Building' ?></h4>
                     <button type="button" class="btn-close border-0 p-2" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
             
@@ -97,31 +98,37 @@
                     <form method="post" id="data_form">
 
                         <div class="modal-body">
-                            <input type="hidden" name="btn_action" id="btn_action">
+                            <input type="text" name="btn_action" id="btn_action">
                             <input type="hidden" name="site_id" id="site_id">
-                            <div class="form-group">
-                                <label for="type_name"><?= 'site name' ?></label>
-                                <input type="text" class="form-control" id="sitename" name="sitename" placeholder="" autocomplete="off">
+                            <div class="form-group mt-3">
+                                
+                                <input type="text" class="form-control" id="sitename" name="sitename" placeholder="Enter Building name.." autocomplete="off">
                             </div>     
-                            <div class="form-group">
-                                <label for="type_name"><?= 'address' ?></label>
-                                <input type="text" class="form-control" id="siteaddress" name="siteaddress" placeholder="" autocomplete="off">
+                            <div class="form-group mt-3">
+                                
+                                <input type="text" class="form-control" id="siteaddress" name="siteaddress" placeholder="Enter Building Address" autocomplete="off">
                             </div> 
+
+                            <div class="form-group mt-3">
+                                
+                                <input type="date" class="form-control" id="SiteYearBuild" name="SiteYearBuild" placeholder="Enter The Year Build The Building" autocomplete="off">
+                            </div> 
+
                             <div class="row">
                                 <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="flor">Number of Floors</label>
+                            <div class="form-group mt-3">
+                               
                                 <input type="number" class="form-control" id="floor" name="floor" placeholder="" autocomplete="off">
                             </div>
                             </div> 
                             <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="flor">Prefix</label>
+                            <div class="form-group mt-3">
+                                
                                 <input type="text" class="form-control" id="Prefix" name="Prefix" value="Floor">
                             </div>
                             </div> 
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mt-3">
                                 <label for="floors">Generate Floors</label>
                                 <div class="row">
                                <div class="col-md-5">
@@ -133,7 +140,7 @@
                                </div>
                                </div>
 
-                               <div class="form-group" id="display">
+                               <div class="form-group mt-3" id="display">
                                 <h6 id="num"></h6>
                                 <h6 id="name"></h6>
                                </div>
@@ -176,7 +183,7 @@
 <!-- ============================================================== -->
 <script type="text/javascript">
 
-var base_url = "<?php echo base_url($locale); ?>";
+    var base_url = "<?php echo base_url($locale); ?>";
     var manageTable;
     var lang = "<?php echo $locale; ?>";
  
@@ -192,36 +199,41 @@ var base_url = "<?php echo base_url($locale); ?>";
         $('#name').hide();
             $('#num').hide();
 
+        // If Admin selects to store floors by Numbers
         $('#byname').on("change click", function() {
             $('#num').hide();
             $('#name').show();
             $('#name').html($('#Prefix').val() + ' A ,' +$('#Prefix').val() + ' B ,' +$('#Prefix').val() + ' C, ...');
-            });
+        });
 
+        // If Admin selects to store floors by Alphabetically
         $('#bynum').on("change click", function() {
             $('#name').hide();
             $('#num').show();
             $('#num').html($('#Prefix').val() + ' 1 ,' +$('#Prefix').val() + ' 2 ,' +$('#Prefix').val() + ' 3, ...');
-            });
+        });
 
 
+        // If Add Button clicks it 
         $('#sitemodel').on('show.bs.modal', function(e) {
-           // alert(event.target.id)
+        //    alert(event.target.id)
             $('#btn_action').val(event.target.id);
 
             $('#btn_submit').attr('disabled', false)
             $('#sitename').attr('readonly', false)
+            $('#SiteYearBuild').attr('readonly', false)
             $('#siteaddress').attr('readonly', false)
             $('#Prefix').attr('readonly', false)
             $('#floor').attr('readonly', false)
 
             if (event.target.id == 'btn_add') {
                 $('#btn_submit').show();
-                $('#btn_submit').html('Save');
+                $('#btn_submit').html('S A V E');
             } else if (event.target.id == 'btn_edit') {
 
                 $('#sitename').val($(e.relatedTarget).data('site_name'));
                 $('#siteaddress').val($(e.relatedTarget).data('site_address'));
+                $('#SiteYearBuild').val($(e.relatedTarget).data('site_build_year'));
                 $('#floor').val($(e.relatedTarget).data('floor'));
                 $('#Prefix').val($(e.relatedTarget).data('Prefix'));
                 $('#site_id').val($(e.relatedTarget).data('site_id'));
@@ -229,17 +241,27 @@ var base_url = "<?php echo base_url($locale); ?>";
                 $('#floor').attr('readonly', true)
 
                 $('#btn_submit').show();
-                $('#btn_submit').html('Save Changes');
+                $('#btn_submit').html('U P D A T E');
                 
                     
             } else if (event.target.id == 'btn_view') {
                
+                // setting values
                 $('#sitename').val($(e.relatedTarget).data('site_name'));
                 $('#siteaddress').val($(e.relatedTarget).data('site_address'));
+                $('#SiteYearBuild').val($(e.relatedTarget).data('site_build_year'));
+
+                console.log("LOG: " + $(e.relatedTarget).data('site_build_year'));
+                
+
+
                 $('#floor').val($(e.relatedTarget).data('floor'));
                 $('#Prefix').val($(e.relatedTarget).data('Prefix'));
+
+                // reading data
                $('#sitename').attr('readonly', true)
                $('#siteaddress').attr('readonly', true)
+               $('#SiteYearBuild').attr('readonly', true)
                $('#Prefix').attr('readonly', true)
                 $('#floor').attr('readonly', true)
                $('#btn_submit').hide();
@@ -351,7 +373,7 @@ var base_url = "<?php echo base_url($locale); ?>";
                 }
             });
             return false;
-        }
+    }
 
 
 
