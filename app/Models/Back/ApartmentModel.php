@@ -75,7 +75,7 @@ class ApartmentModel extends Model
     public function fill_floor_site()
     {
         // $profile_no = $this->session->userdata("profile")['profile_no'];
-        $query = $this->db->query("select * from tbl_sites WHERE   status !='Deleted'");
+        $query = $this->db->query("select * from tbl_sites WHERE status !='Deleted' AND No_of_Floors >= 1;");
         return $query->getResultArray();
     }
     public function get_ap_type_in_apartment($id)

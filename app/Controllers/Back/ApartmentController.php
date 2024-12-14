@@ -160,6 +160,7 @@ class ApartmentController extends BaseController
                     'site_name' => $_POST['sitename'],
                     'site_address' => $_POST['siteaddress'],
                     'SiteYearBuild' => $_POST['SiteYearBuild'],
+                    'No_of_Floors' => $_POST['floor'],
                     // 'profile_no' => $this->session->userdata('profile')['profile_no'],
                     'status' => $default_status
                 ];
@@ -178,6 +179,7 @@ class ApartmentController extends BaseController
                     'site_name' => $_POST['sitename'],
                     'site_address' => $_POST['siteaddress'],
                     'SiteYearBuild' => $_POST['SiteYearBuild'],
+                    'No_of_Floors' => $_POST['floor'],
                 ];
                 $apartment->update_table('tbl_sites', $data);
                 $response['success'] = true;
