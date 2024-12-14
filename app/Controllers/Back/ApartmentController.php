@@ -149,6 +149,15 @@ class ApartmentController extends BaseController
             if ($_POST['btn_action'] == "btn_add") {
 
 
+                // Added some validations
+
+                if(!$_POST['floor']){
+
+                    $response['alert_inner'] = $this->alert('please No of Floors That Builing contains', 'danger');
+                    echo json_encode($response);
+                    exit();
+                }
+
 
                 $sql = "SELECT * FROM tbl_sites WHERE site_name='" . $_POST['sitename'] . "'";
                 if ($apartment->query($sql)->getNumRows() > 0) {

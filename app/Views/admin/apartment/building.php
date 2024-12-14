@@ -98,7 +98,7 @@
                     <form method="post" id="data_form">
 
                         <div class="modal-body">
-                            <input type="text" name="btn_action" id="btn_action">
+                            <input type="hidden" name="btn_action" id="btn_action">
                             <input type="hidden" name="site_id" id="site_id">
                             <div class="form-group mt-3">
                                 
