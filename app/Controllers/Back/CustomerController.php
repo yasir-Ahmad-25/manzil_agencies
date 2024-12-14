@@ -16,14 +16,7 @@ class CustomerController extends BaseController
         $auth = new AuthModel();
         $payment = new PaymentModel();
 
-        if (
-            !$this->page_authorized(
-                $this->request->uri->getSegment(2),
-                $this->request->uri->getSegment(3)
-            )
-        ) {
-            return view('admin/page_404', $this->viewData);
-        }
+        
 
         $this->viewData['title'] = 'Deposit Payable';
         $this->viewData['customers'] = $this->get_table_info('tbl_customers');
@@ -125,15 +118,7 @@ class CustomerController extends BaseController
     public function list()
     {
         $auth = new AuthModel();
-        if (
-            !$this->page_authorized(
-                $this->request->uri->getSegment(2),
-                $this->request->uri->getSegment(3)
-            )
-        ) {
-            return view('admin/page_404', $this->viewData);
-            exit;
-        }
+        
 
         $this->viewData['title'] = 'Customers';
         $this->viewData['customers'] = $this->get_table_info('tbl_customers');

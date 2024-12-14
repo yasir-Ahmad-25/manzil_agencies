@@ -15,13 +15,7 @@ class MeterController extends BaseController
         $auth = new AuthModel();
         $meter = new ReadingModel();
 
-        if (!$this->page_authorized(
-            $this->request->uri->getSegment(2),
-            $this->request->uri->getSegment(3)
-        )) {
-            return view('admin/page_404', $this->viewData);
-            exit;
-        }
+        
 
         $this->viewData['title'] = 'Rates';
         $this->viewData['apartments'] = $meter->get_apartments();

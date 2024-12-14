@@ -23,7 +23,8 @@ class Filters extends BaseConfig
         'secureheaders' => SecureHeaders::class,
         // Define the localize alias
         'localize' => \App\Filters\Localize::class,
-        'restrict' => \App\Filters\Restrict::class,
+        'restrict' => \App\Filters\Restrict::class, // checks if user is Logged in before accessing the page
+        'pageAuthorizedFilter' => \App\Filters\pageAuthorizedFilter::class, // checks if the user is authorized to access this page by the admin
         'authFilter' => \App\Filters\AuthFilter::class,
         'waiterFilter' => \App\Filters\WaiterFilter::class,
     ];

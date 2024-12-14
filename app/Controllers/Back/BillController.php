@@ -14,17 +14,6 @@ class BillController extends BaseController
     function list()
     {
         $auth = new AuthModel();
-        if (
-            
-                !$this->page_authorized(
-                    $this->request->uri->getSegment(2),
-             
-               $this->request->uri->getSegment(3)
-            )
-        ) {
-            return view('admin/page_404', $this->viewData);
-            exit;
-        }
 
         $this->viewData['title'] = 'Bills';
         $this->viewData['sites'] = $this->get_table_info('tbl_sites');
@@ -39,16 +28,6 @@ class BillController extends BaseController
     {
         $auth = new AuthModel();
     
-        if (    
-             
-           !$this->page_authorized(
-                $this->request->uri->getSegment(2),
-                $this->request->uri->getSegment(3)
-            )
-        ) {
-            return view('admin/page_404', $this->viewData);
-            exit;
-        }
 
         $this->viewData['title'] = 'Bill charges';
         $this->viewData['accounts'] = $this->get_cash_bank_accounts();

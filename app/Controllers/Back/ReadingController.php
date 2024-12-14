@@ -17,15 +17,7 @@ class ReadingController extends BaseController
     function list()
     {
         $auth = new AuthModel();
-        if (
-            !$this->page_authorized(
-                $this->request->uri->getSegment(2),
-                $this->request->uri->getSegment(3)
-            )
-        ) {
-            return view('admin/page_404', $this->viewData);
-            exit;
-        }
+        
         $apartment = new ApartmentModel();
 
         $this->viewData['title'] = 'Bills';
@@ -41,14 +33,7 @@ class ReadingController extends BaseController
     {
         $auth = new AuthModel();
 
-        // if (
-        //     $this->page_authorized(
-        //         $this->request->uri->getSegment(2),
-        //         $this->request->uri->getSegment(3)
-        //     )
-        // ) {
-        //     return view('admin/page_404', $this->viewData);
-        // }
+        
         $apartment = new ApartmentModel();
         $this->viewData['title'] = 'Services';
         $this->viewData['access'] = $auth->get_user_access(session()->get('ut_id'), $this->request->getLocale());
@@ -57,14 +42,7 @@ class ReadingController extends BaseController
     function charge_services()
     {
         $auth = new AuthModel();
-        // if (
-        //     $this->page_authorized(
-        //         $this->request->uri->getSegment(2),
-        //         $this->request->uri->getSegment(3)
-        //     )
-        // ) {
-        //     return view('admin/page_404', $this->viewData);
-        // }
+        
         $apartment = new ApartmentModel();
         $reading = new ReadingModel();
 

@@ -15,13 +15,6 @@ class FinancialController extends BaseController
     public function chart_accounts()
     {
         $auth = new AuthModel();
-        if (!$this->page_authorized(
-            $this->request->uri->getSegment(2),
-            $this->request->uri->getSegment(3)
-        )) {
-            return view('admin/page_404', $this->viewData);
-            exit;
-        }
 
         $this->viewData['title'] = lang('Site.financial.chaccounts');
         $this->viewData['access'] = $auth->get_user_access(session()->get('ut_id'), $this->request->getLocale());
@@ -32,13 +25,6 @@ class FinancialController extends BaseController
     {
         $auth = new AuthModel();
         $finmodel = new FinancialModel();
-        if (!$this->page_authorized(
-            $this->request->uri->getSegment(2),
-            $this->request->uri->getSegment(3)
-        )) {
-            return view('admin/page_404', $this->viewData);
-            exit;
-        }
 
         $this->viewData['title'] = "Payment Voucher";
         $this->viewData['access'] = $auth->get_user_access(session()->get('ut_id'), $this->request->getLocale());
@@ -54,13 +40,6 @@ class FinancialController extends BaseController
         $auth = new AuthModel();
         $finmodel = new FinancialModel();
 
-        if (!$this->page_authorized(
-            $this->request->uri->getSegment(2),
-            $this->request->uri->getSegment(3)
-        )) {
-            return view('admin/page_404', $this->viewData);
-            exit;
-        }
 
         $this->viewData['title'] = "Receipt Voucher";
         $this->viewData['access'] = $auth->get_user_access(session()->get('ut_id'), $this->request->getLocale());
@@ -447,13 +426,7 @@ class FinancialController extends BaseController
         $auth = new AuthModel();
         $finmodel = new FinancialModel();
 
-        if (!$this->page_authorized(
-            $this->request->uri->getSegment(2),
-            $this->request->uri->getSegment(3)
-        )) {
-            return view('admin/page_404', $this->viewData);
-            exit;
-        }
+        
 
         $this->viewData['title'] = lang('Site.financial.finperiod');
         $this->viewData['access'] = $auth->get_user_access(session()->get('ut_id'), $this->request->getLocale());
@@ -488,13 +461,7 @@ class FinancialController extends BaseController
         $auth = new AuthModel();
         $finmodel = new FinancialModel();
 
-        if (!$this->page_authorized(
-            $this->request->uri->getSegment(2),
-            $this->request->uri->getSegment(3)
-        )) {
-            return view('admin/page_404', $this->viewData);
-            exit;
-        }
+        
 
         $this->viewData['title'] = lang('Site.financial.journal');
         $this->viewData['access'] = $auth->get_user_access(session()->get('ut_id'), $this->request->getLocale());
@@ -563,13 +530,6 @@ class FinancialController extends BaseController
     {
         $auth = new AuthModel();
         $finmodel = new FinancialModel();
-        if (!$this->page_authorized(
-            $this->request->uri->getSegment(2),
-            $this->request->uri->getSegment(3)
-        )) {
-            return view('admin/page_404', $this->viewData);
-            exit;
-        }
 
         $this->viewData['title'] = lang('Site.financial.trxhistory');
         $this->viewData['access'] = $auth->get_user_access(session()->get('ut_id'), $this->request->getLocale());

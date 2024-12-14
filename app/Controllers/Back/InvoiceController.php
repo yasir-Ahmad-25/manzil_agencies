@@ -15,13 +15,6 @@ class InvoiceController extends BaseController
         $auth = new AuthModel();
         $invoice = new InvoiceModel();
 
-        if (!$this->page_authorized(
-            $this->request->uri->getSegment(2),
-            $this->request->uri->getSegment(3)
-        )) {
-            return view('admin/page_404', $this->viewData);
-            exit;
-        }
 
         $this->viewData['title'] = 'Bills';
         $this->viewData['accounts'] = $invoice->get_expense_accounts();

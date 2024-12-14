@@ -12,13 +12,7 @@ class RateController extends BaseController
     function list()
     {
         $auth = new AuthModel();
-        if (!$this->page_authorized(
-            $this->request->uri->getSegment(2),
-            $this->request->uri->getSegment(3)
-        )) {
-            return view('admin/page_404', $this->viewData);
-            exit;
-        }
+        
 
         $this->viewData['title'] = 'Rates';
         $this->viewData['sites'] = $this->get_table_info('tbl_sites');

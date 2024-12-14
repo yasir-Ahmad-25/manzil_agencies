@@ -19,12 +19,7 @@ class SettingsController extends BaseController
         $auth = new AuthModel();
         $stmodel = new SettingsModel();
 
-        if (!$this->page_authorized(
-            $this->request->uri->getSegment(2),
-            $this->request->uri->getSegment(3)
-        )) {
-            return view('admin/page_404', $this->viewData);
-        }
+        
 
         $this->viewData['access'] = $auth->get_user_access(session()->get('ut_id'), $this->request->getLocale());
         $this->viewData['menus'] = $stmodel->menus();
@@ -145,13 +140,7 @@ class SettingsController extends BaseController
     {
         $auth = new AuthModel();
 
-        if (!$this->page_authorized(
-            $this->request->uri->getSegment(2),
-            $this->request->uri->getSegment(3)
-        )) {
-            return view('admin/page_404', $this->viewData);
-            exit;
-        }
+       
 
         // ut_id means user id
         $this->viewData['access'] = $auth->get_user_access(session()->get('ut_id'), $this->request->getLocale());
@@ -249,13 +238,7 @@ class SettingsController extends BaseController
         $auth = new AuthModel();
         $stmodel = new SettingsModel();
 
-        if (!$this->page_authorized(
-            $this->request->uri->getSegment(2),
-            $this->request->uri->getSegment(3)
-        )) {
-            return view('admin/page_404', $this->viewData);
-            exit;
-        }
+        
 
         $this->viewData['access'] = $auth->get_user_access(session()->get('ut_id'), $this->request->getLocale());
         $this->viewData['users'] = $stmodel->get_users();
@@ -387,13 +370,7 @@ class SettingsController extends BaseController
     {
         $auth = new AuthModel();
 
-        if (!$this->page_authorized(
-            $this->request->uri->getSegment(2),
-            $this->request->uri->getSegment(3)
-        )) {
-            return view('admin/page_404', $this->viewData);
-            exit;
-        }
+       
 
         $this->viewData['title'] = 'Branches';
         $this->viewData['access'] = $auth->get_user_access(session()->get('ut_id'), $this->request->getLocale());

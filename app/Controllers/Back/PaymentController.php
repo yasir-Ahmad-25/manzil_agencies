@@ -14,13 +14,7 @@ class PaymentController extends BaseController
         $auth = new AuthModel();
         $payment = new PaymentModel();
 
-        if (!$this->page_authorized(
-            $this->request->uri->getSegment(2),
-            $this->request->uri->getSegment(3)
-        )) {
-            return view('admin/page_404', $this->viewData);
-            exit;
-        }
+        
 
         $this->viewData['title'] = 'Payments';
         $this->viewData['suppliers'] = $this->get_table_with_branch('tbl_suppliers');

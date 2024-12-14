@@ -16,15 +16,7 @@ class ReportController extends BaseController
     {
         $auth = new AuthModel();
 
-        if (
-            !$this->page_authorized(
-                $this->request->uri->getSegment(2),
-                $this->request->uri->getSegment(3)
-            )
-        ) {
-            return view('admin/page_404', $this->viewData);
-            exit;
-        }
+        
 
 
         $this->viewData['access'] = $auth->get_user_access(
@@ -127,16 +119,6 @@ class ReportController extends BaseController
     public function blance_sheet()
     {
         $auth = new AuthModel();
-
-        if (
-            !$this->page_authorized(
-                $this->request->uri->getSegment(2),
-                $this->request->uri->getSegment(3)
-            )
-        ) {
-            return view('admin/page_404', $this->viewData);
-            exit;
-        }
 
         $this->viewData['access'] = $auth->get_user_access(
             session()->get('ut_id'),

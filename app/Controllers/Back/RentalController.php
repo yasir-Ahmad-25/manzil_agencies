@@ -17,13 +17,7 @@ class RentalController extends BaseController
         $payment = new PaymentModel();
 
 
-        if (!$this->page_authorized(
-            $this->request->uri->getSegment(2),
-            $this->request->uri->getSegment(3)
-        )) {
-            return view('admin/page_404', $this->viewData);
-            exit;
-        }
+        
 
         $this->viewData['title'] = 'Rental';
         $this->viewData['access'] = $auth->get_user_access(session()->get('ut_id'), $this->request->getLocale());
@@ -40,13 +34,7 @@ class RentalController extends BaseController
         $payment = new PaymentModel();
 
 
-        if (!$this->page_authorized(
-            $this->request->uri->getSegment(2),
-            $this->request->uri->getSegment(3)
-        )) {
-            return view('admin/page_404', $this->viewData);
-            exit;
-        }
+       
 
         $this->viewData['access'] = $auth->get_user_access(session()->get('ut_id'), $this->request->getLocale());
         $this->viewData['accounts'] = $payment->get_cash_bank_accounts();
