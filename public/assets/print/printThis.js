@@ -86,7 +86,7 @@
         clone.find(elementSelector).each(function(index, item) {
             $(item).val($originalElements.eq(index).val());
         });
-    }
+    } 
 
     var opt;
     $.fn.printThis = function(options) {

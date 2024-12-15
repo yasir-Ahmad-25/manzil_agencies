@@ -3,6 +3,7 @@
 namespace App\Controllers\Back;
 
 use App\Controllers\BaseController;
+use App\Models\Back\ApartmentModel;
 use App\Models\Back\AuthModel;
 use App\Models\Back\CustomerModel;
 use App\Models\Back\FinancialModel;
@@ -295,6 +296,7 @@ class ReportController extends BaseController
         $this->viewData['company'] = $this->get_table_info('`company_info`');
         return view('admin/report/payables', $this->viewData);
     }
+
     public function payables_report(): void
     {
 
@@ -349,5 +351,55 @@ class ReportController extends BaseController
         }
 
         echo $output;
+    }
+
+    public function getAll_Buildings(){
+
+        $auth = new AuthModel();
+
+        $this->viewData['access'] = $auth->get_user_access(session()->get('ut_id'),$this->request->getLocale());
+        return view('admin/report/buildings.php', $this->viewData);
+    }
+
+    public function fetch_buildings(){
+
+
+        $apartment = new ApartmentModel();
+        $result = array('data' => array()); // initialize empty result array
+
+        // fetch Apartments
+        $data = $apartment->get_type_data('tbl_sites', 'site_id', 'status'); 
+
+        $i = 1;
+        foreach ($data as $key => $value) {
+
+
+            $set = [
+                'id' => $value["site_id"],
+                'rec_title' => $value["site_name"],
+                'status' => $value["status"],
+                'rec_tbl' => 'tbl_sites',
+                'rec_tag_col' => 'status',
+                'rec_id_col' => 'site_id',
+            ];
+
+            $stat_icon = $this->stat_icon($set["status"]);
+
+            $result['data'][$key] = array(
+                $i,
+                $value['site_name'],
+                $value['site_owner'],
+                $value['site_address'],
+                $value['SiteYearBuild'],
+                $apartment->get_num_floors($value['site_name']) . ' Floors',
+                $stat_icon . ' ' . $value['status'],
+            );
+
+            $i++;
+        }
+
+        //  return the result as JSON
+        echo json_encode($result);
+
     }
 }

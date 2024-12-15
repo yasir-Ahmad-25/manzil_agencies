@@ -335,6 +335,9 @@ $routes->group('{locale}', function ($routes) {
       $routes->get('income_statemant', 'ReportController::income', ['filter' => ['restrict', 'pageAuthorizedFilter']]);
       $routes->get('blance_sheet', 'ReportController::blance_sheet', ['filter' => ['restrict', 'pageAuthorizedFilter']]);
 
+      $routes->get('buildings', 'ReportController::getAll_Buildings', ['filter' => ['restrict', 'pageAuthorizedFilter']]);
+      $routes->get('fetch_buildings', 'ReportController::fetch_buildings', ['filter' => 'restrict']);
+
 
       // These are the Ajax requests: fetching user data and handling user actions
       $routes->get('payables_report', 'ReportController::payables_report', ['filter' => 'restrict']);
