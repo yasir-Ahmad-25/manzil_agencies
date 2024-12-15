@@ -47,6 +47,12 @@ class ApartmentModel extends Model
         return true;
     }
 
+    public function delete_table($table, $data)
+    {
+        $this->db->table($table)->upsertBatch($data);
+        return true;
+    }
+
 
     public function get_floors_list()
     {

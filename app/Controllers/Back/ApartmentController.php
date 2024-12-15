@@ -54,9 +54,11 @@ class ApartmentController extends BaseController
 
             $buttons = '<div class="ml-auto">
             <div class="dropdown sub-dropdown">
+
                 <button class="btn btn-link text-dark" type="button" id="dd1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                     <i class="fas fa-ellipsis-v mx-1"></i>
                 </button>
+
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dd1" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-110px, 39px, 0px);">
                     <a type="button" id="btn_view" data-site_id="' . $value["site_id"] . '" 
                          data-site_build_year="' . $value["SiteYearBuild"] .' "
@@ -64,21 +66,39 @@ class ApartmentController extends BaseController
                         data-site_name="' . $value["site_name"] . '" data-site_address="' . $value["site_address"] . '"
                         data-floor="' . $apartment->get_num_floors($value['site_name']) . '" data-Prefix="' . 'Floor' . '"
                         class="dropdown-item" data-bs-toggle="modal" data-bs-target="#sitemodel">
-                        <i class="fas fa-info-circle text-info mx-1"></i>View </a>
+                        <i class="fas fa-info-circle text-info mx-1"></i> View </a>
 
                    <a type="button" id="btn_edit"  data-site_id="' . $value["site_id"] . '"  
                    data-site_name="' . $value["site_name"] . '" data-site_owner="' . $value["site_owner"] .'" data-site_build_year="' . $value["SiteYearBuild"] .'" data-site_address="' . $value["site_address"] . '"
                    data-floor="' . $apartment->get_num_floors($value['site_name']) . '" data-Prefix="' . 'Floor' . '"
                         class="dropdown-item" data-bs-toggle="modal" data-bs-target="#sitemodel">
-                        <i class="fas fa-pencil-alt text-warning mx-1"></i>Edit </a>
+                        <i class="fas fa-pencil-alt text-warning mx-1"></i> Edit </a>
+                    
+                   ';
 
-        
-                        
 
+                   if($value['status'] == "Active"){
+                    $buttons .= 
+                     '<a type="button" id="btn_delete"  data-site_id="' . $value["site_id"] . '"  
+                   data-site_name="' . $value["site_name"] . '" data-site_owner="' . $value["site_owner"] .'" data-site_build_year="' . $value["SiteYearBuild"] .'" data-site_address="' . $value["site_address"] . '"
+                   data-floor="' . $apartment->get_num_floors($value['site_name']) . '" data-Prefix="' . 'Floor' . '"
+                        class="dropdown-item" data-bs-toggle="modal" data-bs-target="#sitemodel">
+                        <i class="fa fa-trash text-danger mx-1"></i>  De-Activate </a>
+                        </div>
+                        </div>
+                </div>';
+            }else{
+                $buttons .= 
+                       '<a type="button" id="btn_Activate"  data-site_id="' . $value["site_id"] . '"  
+                     data-site_name="' . $value["site_name"] . '" data-site_owner="' . $value["site_owner"] .'" data-site_build_year="' . $value["SiteYearBuild"] .'" data-site_address="' . $value["site_address"] . '"
+                     data-floor="' . $apartment->get_num_floors($value['site_name']) . '" data-Prefix="' . 'Floor' . '"
+                          class="dropdown-item" data-bs-toggle="modal" data-bs-target="#sitemodel">
+                          <i class="fa fa-check text-success mx-1"></i>  Activate </a>
+                          </div>
+                          </div>
+                  </div>';
 
-            </div>
-            </div>
-    </div>';
+                   }
 
             // end menu button
 
@@ -187,7 +207,7 @@ class ApartmentController extends BaseController
                 }
 
                 $response['alert_outer'] = $this->alert('Site Has Been Added', 'success');
-            } else if ($_POST['btn_action'] == "btn_edit") { // SAVE THE UPDATED DATA
+        } else if ($_POST['btn_action'] == "btn_edit") { // SAVE THE UPDATED DATA
 
                 // collect the updated  Data
                 $data = [
@@ -201,7 +221,38 @@ class ApartmentController extends BaseController
                 $apartment->update_table('tbl_sites', $data);
                 $response['success'] = true;
                 $response['alert_outer'] = $this->alert('Site Has Been Updated.', 'success');
-            }
+        } else if ($_POST['btn_action'] == "btn_delete") { // DE-ACTIVATES SITE OR BUILDING
+
+                $data = [
+                    'site_id' => $_POST['site_id'],
+                    'site_name' => $_POST['sitename'],
+                    'site_address' => $_POST['siteaddress'],
+                    'site_owner' => $_POST['siteOwner'],
+                    'SiteYearBuild' => $_POST['SiteYearBuild'],
+                    'No_of_Floors' => $_POST['floor'],
+                    'status' => 'De-Active'
+                ];
+
+                $apartment->delete_table('tbl_sites', $data);
+                $response['success'] = true;
+                $response['alert_outer'] = $this->alert('Site Has Been De-Activated Successfully.', 'success');
+
+        } else if ($_POST['btn_action'] == "btn_Activate") { // ACTIVATES SITE OR BUILDING
+
+                $data = [
+                    'site_id' => $_POST['site_id'],
+                    'site_name' => $_POST['sitename'],
+                    'site_address' => $_POST['siteaddress'],
+                    'site_owner' => $_POST['siteOwner'],
+                    'SiteYearBuild' => $_POST['SiteYearBuild'],
+                    'No_of_Floors' => $_POST['floor'],
+                    'status' => 'Active'
+                ];
+
+                $apartment->update_table('tbl_sites', $data);
+                $response['success'] = true;
+                $response['alert_outer'] = $this->alert('Site Has Been Activated Successfully.', 'success');
+        }
 
 
         echo json_encode($response);

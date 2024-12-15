@@ -111,17 +111,17 @@
                                 <input type="text" class="form-control" id="siteOwner" name="siteOwner" placeholder="" autocomplete="off">
                             </div>   
 
-                            <div class="form-group mt-3">
+                            <div class="form-group mt-3" id="BuildingAddressDiv">
                                 <label for="#"> Building Address</label>
                                 <input type="text" class="form-control" id="siteaddress" name="siteaddress" placeholder="" autocomplete="off">
                             </div> 
 
-                            <div class="form-group mt-3">
+                            <div class="form-group mt-3" id="YearBuiltDiv">
                                 <label for="#"> Year Built in</label>
                                 <input type="date" class="form-control" id="SiteYearBuild" name="SiteYearBuild" placeholder="" autocomplete="off">
                             </div> 
 
-                            <div class="row">
+                            <div class="row" id="FloorsAndPrefixRowDiv">
                                 <div class="col-md-6">
                             <div class="form-group mt-3">
                                
@@ -135,7 +135,7 @@
                             </div>
                             </div> 
                             </div>
-                            <div class="form-group mt-3">
+                            <div class="form-group mt-3" id="GenerateFloorsByNumberOrAlphaDiv">
                                 <label for="floors">Generate Floors</label>
                                 <div class="row">
                                <div class="col-md-5">
@@ -155,6 +155,7 @@
                                             
                         </div>
 
+                        <div class="bg-danger p-2 rounded text-center text-white" id="deleteMessage"></div>
                         <div class="modal-footer">
                             <button type="submit" id="btn_submit" class="btn btn-rounded btn-outline-primary"><b><?= 'save'?></b></button>
                         </div>
@@ -193,16 +194,18 @@
     var base_url = "<?php echo base_url($locale); ?>";
     var manageTable;
     var lang = "<?php echo $locale; ?>";
- 
+    
 
     $(document).ready(function () {
+         // This is hidden by default but when user clicks de-activate this message pops out
          $('#tablesMainNav').addClass('active');
         // initialize the datatable 
         manageTable_site = $('#manageTable_site').DataTable({
             'ajax': base_url + '/apartment/fetch_sites',
             'order': []
         });
-
+        
+        $('#deleteMessage').hide();
         $('#name').hide();
             $('#num').hide();
 
@@ -276,8 +279,44 @@
                $('#Prefix').attr('readonly', true)
                 $('#floor').attr('readonly', true)
                $('#btn_submit').hide();
-            //    $('#btn_submit').attr('disabled', true)
+               
+            } else if (event.target.id == 'btn_delete') {
+                
+                // setting values
+                $('#sitename').val($(e.relatedTarget).data('site_name'));
+                $('#siteaddress').val($(e.relatedTarget).data('site_address'));
+                $('#siteOwner').val($(e.relatedTarget).data('site_owner'));
+                $('#SiteYearBuild').val($(e.relatedTarget).data('site_build_year'));
+                $('#floor').val($(e.relatedTarget).data('floor'));
+                $('#Prefix').val($(e.relatedTarget).data('Prefix'));
+                $('#site_id').val($(e.relatedTarget).data('site_id'));
+                $('#Prefix').attr('readonly', true)
+                $('#floor').attr('readonly', true)
 
+                $('#btn_submit').show();
+                $('#btn_submit').html('DE-ACTIVATE');
+
+                $('#deleteMessage').text("ARE YOU SURE YOU WANT TO DE-ACTIVATE THIS SITE ?");
+                $('#deleteMessage').show();
+            } else if (event.target.id == 'btn_Activate') {
+                
+                // setting values
+                $('#sitename').val($(e.relatedTarget).data('site_name'));
+                $('#siteaddress').val($(e.relatedTarget).data('site_address'));
+                $('#siteOwner').val($(e.relatedTarget).data('site_owner'));
+                $('#SiteYearBuild').val($(e.relatedTarget).data('site_build_year'));
+                $('#floor').val($(e.relatedTarget).data('floor'));
+                $('#Prefix').val($(e.relatedTarget).data('Prefix'));
+                $('#site_id').val($(e.relatedTarget).data('site_id'));
+                $('#Prefix').attr('readonly', true)
+                $('#floor').attr('readonly', true)
+
+                $('#btn_submit').show();
+                $('#btn_submit').html('ACTIVATE');
+
+                $('#deleteMessage').text("ARE YOU SURE YOU WANT TO ACTIVATE THIS SITE ?");
+                $('#deleteMessage').show();
+                
             }
            
             // $('#btn_submit').html('Save');
@@ -383,6 +422,7 @@
                     }
                 }
             });
+            
             return false;
     }
 
