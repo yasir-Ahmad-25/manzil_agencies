@@ -79,7 +79,7 @@ class ApartmentController extends BaseController
 
                    if($value['status'] == "Active"){
                     $buttons .= 
-                     '<a type="button" id="btn_delete"  data-site_id="' . $value["site_id"] . '"  
+                     '<a type="button" id="btn_de_activate"  data-site_id="' . $value["site_id"] . '"  
                    data-site_name="' . $value["site_name"] . '" data-site_owner="' . $value["site_owner"] .'" data-site_build_year="' . $value["SiteYearBuild"] .'" data-site_address="' . $value["site_address"] . '"
                    data-floor="' . $apartment->get_num_floors($value['site_name']) . '" data-Prefix="' . 'Floor' . '"
                         class="dropdown-item" data-bs-toggle="modal" data-bs-target="#sitemodel">
@@ -221,7 +221,7 @@ class ApartmentController extends BaseController
                 $apartment->update_table('tbl_sites', $data);
                 $response['success'] = true;
                 $response['alert_outer'] = $this->alert('Site Has Been Updated.', 'success');
-        } else if ($_POST['btn_action'] == "btn_delete") { // DE-ACTIVATES SITE OR BUILDING
+        } else if ($_POST['btn_action'] == "btn_de_activate") { // DE-ACTIVATES SITE OR BUILDING
 
                 $data = [
                     'site_id' => $_POST['site_id'],

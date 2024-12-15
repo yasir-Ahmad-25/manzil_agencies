@@ -361,14 +361,14 @@ class ReportController extends BaseController
         return view('admin/report/buildings.php', $this->viewData);
     }
 
-    public function fetch_buildings(){
+    public function fetch_buildings($status){
 
 
         $apartment = new ApartmentModel();
         $result = array('data' => array()); // initialize empty result array
 
         // fetch Apartments
-        $data = $apartment->get_type_data('tbl_sites', 'site_id', 'status'); 
+        $data = $apartment->get_Buildings('tbl_sites', 'site_id', $status); 
 
         $i = 1;
         foreach ($data as $key => $value) {

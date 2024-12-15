@@ -30,6 +30,22 @@ class ApartmentModel extends Model
         return $query->getResultArray();
     }
 
+    // changes made
+    public function get_Buildings($table, $tableid, $status, $id = null)
+    {
+
+ 
+        if ($id) {
+            $sql = "SELECT * FROM $table  where status = '$status' and $tableid =?";
+            $query = $this->db->query($sql, array($id));
+            return $query->getRowArray();
+        }
+
+        $sql = "SELECT * FROM $table where status = '$status' ORDER BY $tableid ASC";
+        $query = $this->db->query($sql);
+        return $query->getResultArray();
+    }
+
     public function get_apartments($site_id){
         return $this->db->query("SELECT * from tbl_apartments where ap_status='Occupied' and site_id='$site_id'")->getResultArray();
     }

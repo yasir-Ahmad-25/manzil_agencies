@@ -280,7 +280,7 @@
                 $('#floor').attr('readonly', true)
                $('#btn_submit').hide();
                
-            } else if (event.target.id == 'btn_delete') {
+            } else if (event.target.id == 'btn_de_activate') {
                 
                 // setting values
                 $('#sitename').val($(e.relatedTarget).data('site_name'));

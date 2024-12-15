@@ -43,6 +43,16 @@
                     <div class="card-body">
                         <!-- <h4 class="card-title">  </h4> -->
                         <br/>
+
+                        <form action="#" method="post">
+                            <div class="form-group">
+                                <label for="#">Status</label>
+                                <select name="selected_status" id="selected_status" class="form-select mb-2">
+                                    <option value="Active" selected> Active </option>
+                                    <option value="De-Active"> De-Active </option>
+                                </select>
+                            </div>
+                        </form>
                         <div id="messages"></div>
 
                         <table id="manageTable_site" class="table table-striped table-bordered no-wrap" style="width:100%">
@@ -98,13 +108,37 @@
             $('#tablesMainNav').addClass('active');
             // initialize the datatable 
 
-
-            // This returns fetched data from Db and populates to the table
-            var CI4_ROUTE = base_url + '/report/fetch_buildings'; 
-            manageTable_site = $('#manageTable_site').DataTable({
-                'ajax': CI4_ROUTE,
-                'order': []
+            updateTable('Active');
+            // Event listener to trigger table update when status is selected
+            document.getElementById("selected_status").addEventListener("change", function() {
+                const selectedStatus = this.value;
+                updateTable(selectedStatus);
             });
+
+            function updateTable(status) {
+                let CI4_ROUTE;
+
+                // Determine which route to use based on the selected status
+                if (status === 'Active') {
+                    CI4_ROUTE = base_url + '/report/fetch_buildings/Active';
+                } else {
+                    CI4_ROUTE = base_url + '/report/fetch_buildings/De-Active';
+                }
+                
+                console.log("Selected status: " + status);
+                console.log("Fetching data from: " + CI4_ROUTE);
+
+                // Initialize the DataTable only if it hasn't been initialized yet
+                if (!$.fn.dataTable.isDataTable('#manageTable_site')) {
+                    manageTable_site = $('#manageTable_site').DataTable({
+                        'ajax': CI4_ROUTE,  // Dynamic data source URL based on the selected status
+                        'order': []         // Optionally specify your table ordering logic
+                    });
+                } else {
+                    // If the DataTable is already initialized, just reload the data
+                    manageTable_site.ajax.url(CI4_ROUTE).load();
+                }
+            }
          });
 
          $('#btn_rental_income').click(function () {
