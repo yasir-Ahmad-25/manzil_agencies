@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Models\Back\ApartmentModel;
 use App\Models\Back\AuthModel;
 use App\Models\Back\DashboardModel;
+use App\Models\Back\OwnerModel;
 
 class ApartmentController extends BaseController
 {
@@ -19,8 +20,6 @@ class ApartmentController extends BaseController
         $this->viewData['access'] = $auth->get_user_access(session()->get('ut_id'), $this->request->getLocale());
         return view('admin/apartment/building', $this->viewData);
     }
-
-
 
     public function fetch_sites()
     {
@@ -119,6 +118,7 @@ class ApartmentController extends BaseController
 
         echo json_encode($result);
     }
+
 
     public function generate_floorbynum($num_of_floor, $prefix, $site_id)
     {
@@ -258,6 +258,24 @@ class ApartmentController extends BaseController
         echo json_encode($response);
     }
 
+    // changes made manually
+    public function fetch_owners()
+    {
+        $ownerModel = new OwnerModel();
+        $data = $ownerModel->findAll();  // You can use your custom method to fetch data if necessary
+        
+        // Format the data in the way your JS expects it
+        $result = array('data' => array());
+
+        foreach ($data as $key => $value) {
+            $result['data'][$key] = array(
+                'id' => $value["owner_id"], // Assuming 'owner_id' is the unique identifier
+                'rec_title' => $value["fullname"] // Assuming 'fullname' is the owner's name
+            );
+        }
+
+        return $this->response->setJSON($result);  // Return as JSON
+    }
 
     public function floors(): string
     {
