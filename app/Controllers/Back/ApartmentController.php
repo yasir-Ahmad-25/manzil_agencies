@@ -59,14 +59,15 @@ class ApartmentController extends BaseController
                 </button>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dd1" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-110px, 39px, 0px);">
                     <a type="button" id="btn_view" data-site_id="' . $value["site_id"] . '" 
-                         data-site_build_year="' . $value["SiteYearBuild"] .'" 
+                         data-site_build_year="' . $value["SiteYearBuild"] .' "
+                         data-site_owner="' . $value["site_owner"] .'"
                         data-site_name="' . $value["site_name"] . '" data-site_address="' . $value["site_address"] . '"
                         data-floor="' . $apartment->get_num_floors($value['site_name']) . '" data-Prefix="' . 'Floor' . '"
                         class="dropdown-item" data-bs-toggle="modal" data-bs-target="#sitemodel">
                         <i class="fas fa-info-circle text-info mx-1"></i>View </a>
 
                    <a type="button" id="btn_edit"  data-site_id="' . $value["site_id"] . '"  
-                   data-site_name="' . $value["site_name"] . '" data-site_build_year="' . $value["SiteYearBuild"] .'" data-site_address="' . $value["site_address"] . '"
+                   data-site_name="' . $value["site_name"] . '" data-site_owner="' . $value["site_owner"] .'" data-site_build_year="' . $value["SiteYearBuild"] .'" data-site_address="' . $value["site_address"] . '"
                    data-floor="' . $apartment->get_num_floors($value['site_name']) . '" data-Prefix="' . 'Floor' . '"
                         class="dropdown-item" data-bs-toggle="modal" data-bs-target="#sitemodel">
                         <i class="fas fa-pencil-alt text-warning mx-1"></i>Edit </a>
@@ -84,6 +85,7 @@ class ApartmentController extends BaseController
             $result['data'][$key] = array(
                 $i,
                 $value['site_name'],
+                $value['site_owner'],
                 $value['site_address'],
                 $value['SiteYearBuild'],
                 $apartment->get_num_floors($value['site_name']) . ' Floors',
@@ -145,8 +147,7 @@ class ApartmentController extends BaseController
         if (empty($_POST['sitename'])) {
             echo $_POST['sitename'];
             $response['alert_inner'] = $this->alert('Enter Site Name', 'danger');
-        } else
-            if ($_POST['btn_action'] == "btn_add") {
+        } else if ($_POST['btn_action'] == "btn_add") { // SAVE DATA TO DB
 
 
                 // Added some validations
@@ -159,15 +160,19 @@ class ApartmentController extends BaseController
                 }
 
 
+                // check if the provided site is already exist in the database
                 $sql = "SELECT * FROM tbl_sites WHERE site_name='" . $_POST['sitename'] . "'";
                 if ($apartment->query($sql)->getNumRows() > 0) {
                     $response['alert_inner'] = $this->alert('Site Name Already Exist', 'danger');
                     echo json_encode($response);
                     exit();
                 }
+
+                // collect data
                 $data = [
                     'site_name' => $_POST['sitename'],
                     'site_address' => $_POST['siteaddress'],
+                    'site_owner' => $_POST['siteOwner'],
                     'SiteYearBuild' => $_POST['SiteYearBuild'],
                     'No_of_Floors' => $_POST['floor'],
                     // 'profile_no' => $this->session->userdata('profile')['profile_no'],
@@ -182,11 +187,14 @@ class ApartmentController extends BaseController
                 }
 
                 $response['alert_outer'] = $this->alert('Site Has Been Added', 'success');
-            } else if ($_POST['btn_action'] == "btn_edit") {
+            } else if ($_POST['btn_action'] == "btn_edit") { // SAVE THE UPDATED DATA
+
+                // collect the updated  Data
                 $data = [
                     'site_id' => $_POST['site_id'],
                     'site_name' => $_POST['sitename'],
                     'site_address' => $_POST['siteaddress'],
+                    'site_owner' => $_POST['siteOwner'],
                     'SiteYearBuild' => $_POST['SiteYearBuild'],
                     'No_of_Floors' => $_POST['floor'],
                 ];

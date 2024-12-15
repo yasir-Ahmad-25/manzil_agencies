@@ -51,6 +51,7 @@
                                 <tr> 
                                     <th>#</th>                                                                                                                                     
                                     <th><?= 'Site Name' ?></th> 
+                                    <th><?= 'Site Owner' ?></th> 
                                     <th><?= 'Address'?></th> 
                                     <th><?= 'Built in'?></th> 
                                     <th><?= 'Floors' ?></th> 
@@ -101,17 +102,23 @@
                             <input type="hidden" name="btn_action" id="btn_action">
                             <input type="hidden" name="site_id" id="site_id">
                             <div class="form-group mt-3">
-                                
-                                <input type="text" class="form-control" id="sitename" name="sitename" placeholder="Enter Building name.." autocomplete="off">
-                            </div>     
+                                 <label for="#"> Building name</label>
+                                <input type="text" class="form-control" id="sitename" name="sitename" placeholder="" autocomplete="off">
+                            </div>   
+
                             <div class="form-group mt-3">
-                                
-                                <input type="text" class="form-control" id="siteaddress" name="siteaddress" placeholder="Enter Building Address" autocomplete="off">
+                                 <label for="#"> Building Owner</label>
+                                <input type="text" class="form-control" id="siteOwner" name="siteOwner" placeholder="" autocomplete="off">
+                            </div>   
+
+                            <div class="form-group mt-3">
+                                <label for="#"> Building Address</label>
+                                <input type="text" class="form-control" id="siteaddress" name="siteaddress" placeholder="" autocomplete="off">
                             </div> 
 
                             <div class="form-group mt-3">
-                                
-                                <input type="date" class="form-control" id="SiteYearBuild" name="SiteYearBuild" placeholder="Enter The Year Build The Building" autocomplete="off">
+                                <label for="#"> Year Built in</label>
+                                <input type="date" class="form-control" id="SiteYearBuild" name="SiteYearBuild" placeholder="" autocomplete="off">
                             </div> 
 
                             <div class="row">
@@ -221,6 +228,7 @@
 
             $('#btn_submit').attr('disabled', false)
             $('#sitename').attr('readonly', false)
+            $('#siteOwner').attr('readonly', false)
             $('#SiteYearBuild').attr('readonly', false)
             $('#siteaddress').attr('readonly', false)
             $('#Prefix').attr('readonly', false)
@@ -233,6 +241,7 @@
 
                 $('#sitename').val($(e.relatedTarget).data('site_name'));
                 $('#siteaddress').val($(e.relatedTarget).data('site_address'));
+                $('#siteOwner').val($(e.relatedTarget).data('site_owner'));
                 $('#SiteYearBuild').val($(e.relatedTarget).data('site_build_year'));
                 $('#floor').val($(e.relatedTarget).data('floor'));
                 $('#Prefix').val($(e.relatedTarget).data('Prefix'));
@@ -250,8 +259,9 @@
                 $('#sitename').val($(e.relatedTarget).data('site_name'));
                 $('#siteaddress').val($(e.relatedTarget).data('site_address'));
                 $('#SiteYearBuild').val($(e.relatedTarget).data('site_build_year'));
+                $('#siteOwner').val($(e.relatedTarget).data('site_owner'));
 
-                console.log("LOG: " + $(e.relatedTarget).data('site_build_year'));
+               
                 
 
 
@@ -261,6 +271,7 @@
                 // reading data
                $('#sitename').attr('readonly', true)
                $('#siteaddress').attr('readonly', true)
+               $('#siteOwner').attr('readonly', true)
                $('#SiteYearBuild').attr('readonly', true)
                $('#Prefix').attr('readonly', true)
                 $('#floor').attr('readonly', true)
