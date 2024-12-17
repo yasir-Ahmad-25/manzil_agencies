@@ -7,7 +7,7 @@ use CodeIgniter\Model;
 
 class CustomerModel extends Model
 {
-
+ 
     public function store($table, $data)
     {
         $this->db->table($table)->insert($data);

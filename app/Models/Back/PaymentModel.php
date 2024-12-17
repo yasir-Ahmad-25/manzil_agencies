@@ -23,6 +23,8 @@ class PaymentModel extends Model
     }
 
 
+
+
     public function get_cash_bank_accounts()
     {
         $brid = session()->get('user')['branch_id'];
@@ -143,15 +145,15 @@ class PaymentModel extends Model
             return true;
         }
     }
-    public function deposit_payment($accid, $amount, $custid, $date): bool
+    public function deposit_payment($accid, $amount, $custid, $date , $depositMoney): bool
     {
         #start transaction
         $dis = 0;
-
+    
         $this->db->transBegin();
-
+    
         $trid =  $this->record_deposit_transaction('Deposit Payment', $amount, $custid, $accid, $date);
-
+    
         $data = [
             'amount' => -$amount,
             'amount_bal' => -$amount,
@@ -159,17 +161,46 @@ class PaymentModel extends Model
             'account_id' =>  $accid,
         ];
         $pay_id = $this->store('tbl_deposit', $data);
-
-        // $this->update_bal(($amount + $dis), $suppid, $trid);
-
-        #commit/rollback transaction
-        if ($this->db->transStatus() === FALSE) {
-            $this->db->transRollback();
+        
+        $update_deposit_Status = $this->update_deposit($custid, $depositMoney);
+        if($update_deposit_Status){
+            #commit/rollback transaction
+            if ($this->db->transStatus() === FALSE) {
+                $this->db->transRollback();
+                return false;
+            } else {
+                $this->db->transCommit();
+                return true; 
+            }
+        }else{
             return false;
-        } else {
-            $this->db->transCommit();
-            return true;
         }
+    }
+    
+
+    public function update_deposit($customer_id, $depositMoney)
+    {
+        // get the current deposit money
+        $current_deposit_in_db = $this->db->query("SELECT deposit FROM tbl_rentals WHERE customer_id = $customer_id")->getRowArray();
+
+        // Check if the query returned a result
+        if ($current_deposit_in_db) {
+            // Access the 'deposit' value from the array
+            $deposit_value = $current_deposit_in_db['deposit'];
+            $depositMoney = $deposit_value - $depositMoney;
+            // Ensure that the input values are properly sanitized or bound to avoid SQL injection
+            $sql = "UPDATE tbl_rentals SET deposit = " . $depositMoney . " WHERE customer_id = ". $customer_id. "";
+    
+            // Execute the query with bound parameters
+            $this->db->query($sql);
+    
+            return true;
+        } else {
+            // Handle case where no data is found for the given customer_id
+            $deposit_value = 0; // Or some default value
+            return false;
+        }
+
     }
 
     public function record_transactions($source, $amount, $suppid, $cb_acc, $date): string

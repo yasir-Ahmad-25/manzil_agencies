@@ -154,9 +154,6 @@ $routes->group('{locale}', function ($routes) {
         
    });
 
-   
-
-
    $routes->group('hr', ['namespace' => 'App\Controllers\Back'], function ($routes) {
       $routes->get('employees', 'HRController::employees', ['filter' => ['restrict', 'pageAuthorizedFilter']]);
       $routes->get('jobs', 'HRController::jobs', ['filter' => ['restrict', 'pageAuthorizedFilter']]);
@@ -173,8 +170,7 @@ $routes->group('{locale}', function ($routes) {
       $routes->post('get_base_salary', 'HRController::get_base_salary', ['filter' => 'restrict']);
       $routes->post('manage_salary', 'HRController::manage_salary', ['filter' => 'restrict']);
    });
-
-
+   
    $routes->group('supplier', ['namespace' => 'App\Controllers\Back'], function ($routes) {
       // pages
       $routes->get('list', 'SupplierController::list', ['filter' => ['restrict', 'pageAuthorizedFilter']]);

@@ -18,7 +18,7 @@
                             <li class="breadcrumb-item active" aria-current="page"><?= $title ?></li>
                         </ol>
                     </nav>
-                </div>
+                </div> 
             </div>
 
             <div class="col-md-12" style="text-align: end">
@@ -368,7 +368,7 @@
 
             }
 
-        });
+        }); 
         $('#delete_modal').on('show.bs.modal', function(e) {
 
             $('#_pay_id').val($(e.relatedTarget).data('pay_id'));

@@ -54,6 +54,7 @@
                                     <th><?= 'Floor' ?></th>
                                     <th><?= 'Apartment Type' ?></th>
                                     <th><?= 'Price' ?> </th>
+                                    <th><?= 'Rooms' ?></th>
                                     <th><?= 'Bedroom' ?></th>
                                     <th><?= 'Pathroom'?></th>
                                     <th><?= 'Kitchen' ?></th>
@@ -130,7 +131,7 @@
                                         <select class="form-control" id="site_id" name="site_id" required>
                                             <option selected disabled value="">Choose Building</option>
                                             <?php foreach ($buildings as $k => $v) : ?>
-                                                <option value="<?php echo $v['site_id'] ?>"><?php echo $v['site_name'] ?></option>
+                                                <option value="<?= $v['site_id'] ?>"><?= $v['site_name'] ?></option>
                                             <?php endforeach ?>
                                         </select>
                                     </div>
@@ -145,7 +146,6 @@
                                         </select>
                                     </div>
                                 </div>
-
                             </div>
 
 
@@ -171,6 +171,10 @@
                                 </div>
                             </div>
 
+                            <div class="form-group">
+                                <label for="rooms"><?= 'Number of Rooms' ?></label>
+                                <input type="number" class="form-control" id="Rooms" name="Rooms" placeholder="" autocomplete="off" min="1" max="6">
+                            </div>
 
                             <div class="row">
 
@@ -285,6 +289,7 @@
             $('#floor_id').attr('readonly', false)
             $('#ap_type_id').attr('readonly', false)
             $('#price').attr('readonly', false)
+            $('#Rooms').attr('readonly', false)
             $('#bedrooms').attr('readonly', false)
             $('#pathrooms').attr('readonly', false)
             $('#kitchen').attr('readonly', false)
@@ -303,6 +308,7 @@
                 $('#floor_id').val($(e.relatedTarget).data('floor_id'));
                 $('#ap_type_id').val($(e.relatedTarget).data('ap_type_id'));
                 $('#price').val($(e.relatedTarget).data('price'));
+                $('#Rooms').val($(e.relatedTarget).data('rooms_number'));
                 $('#bedrooms').val($(e.relatedTarget).data('bedrooms'));
                 $('#pathrooms').val($(e.relatedTarget).data('pathrooms'));
                 $('#kitchen').val($(e.relatedTarget).data('kitchen'));
@@ -314,10 +320,13 @@
 
             } else if (event.target.id == 'btn_view') {
 
+                console.log("Returned data: " + $(e.relatedTarget).data('Rooms'));
+                
                 $('#ap_no').val($(e.relatedTarget).data('ap_no'));
                 $('#floor_id').val($(e.relatedTarget).data('floor_id'));
                 $('#ap_type_id').val($(e.relatedTarget).data('ap_type_id'));
                 $('#price').val($(e.relatedTarget).data('price'));
+                $('#Rooms').val($(e.relatedTarget).data('rooms_number'));
                 $('#bedrooms').val($(e.relatedTarget).data('bedrooms'));
                 $('#pathrooms').val($(e.relatedTarget).data('pathrooms'));
                 $('#kitchen').val($(e.relatedTarget).data('kitchen'));

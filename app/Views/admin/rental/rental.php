@@ -104,11 +104,11 @@
 
                     <form id="terminate_form">
 
-                        <input type="hidden" name="term_rental_id" id="term_rental_id">
-                        <input type="hidden" name="t_ap_id" id="t_ap_id">
+                        <input type="text" name="term_rental_id" id="term_rental_id">
+                        <input type="text" name="t_ap_id" id="t_ap_id">
 
-                        <input type="hidden" name="tbal" id="tbal">
-                        <input type="hidden" name="tdep" id="tdep">
+                        <input type="text" name="tbal" id="tbal">
+                        <input type="text" name="tdep" id="tdep">
 
                         <div class="row">
 
@@ -124,21 +124,16 @@
                             </div>
 
                         </div>
-
-                        <div class="row">
-
-                            <div class="form-group col-6 text-dark">
+                            <!-- <div class="form-group col-6 text-dark">
                                 <label for="t_bal">Customer balance</label>
                                 <input type="text" class="form-control" id="t_bal" name="t_bal" disabled>
-                            </div>
+                            </div> -->
 
 
-                            <div class="form-group col-6 text-dark">
+                            <div class="form-group text-dark">
                                 <label for="t_deposit">Deposit</label>
                                 <input type="text" class="form-control" id="t_deposit" name="t_deposit" disabled>
                             </div>
-
-                        </div>
 
                         <div class="row">
 
@@ -180,7 +175,9 @@
 
             </div>
         </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
+    </div>
+
+    <!-- /.modal-dialog -->
     <div id="relocate_modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-bs-backdrop='static'
         data-bs-keyboard='false'>
         <div class="modal-dialog dialog-lg">
@@ -237,7 +234,9 @@
 
             </div>
         </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
+    </div>
+
+    <!-- /.modal-dialog -->
 
 
     <div id="extend_modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-bs-backdrop='static'
@@ -314,7 +313,8 @@
 
             </div>
         </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal-dialog -->
 
 
     <div id="print_modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-bs-backdrop='static'
@@ -472,11 +472,8 @@
                                 <div class="form-group col-6 text-dark">
                                     <label for="ap_id"><?= 'Apartment No' ?></label>
                                     <select class="form-control border-secondary " id="apid_add" name="ap_id">
-                                        <!-- <option selected disabled>Choose Apartment</option>
-                                    <?php foreach ($apartments as $val): ?>
-                                        <option value="<?= $val['ap_id'] ?>"><?= $val['ap_no'] ?></option>
-                                    <?php endforeach; ?> -->
-
+                                        <!-- <option selected disabled>Choose Apartment</option> -->
+                                        <?= $Active_Apartments; ?>
                                     </select>
 
                                     <select class="form-control border-secondary " id="ap_id" name="ap_id">
@@ -526,8 +523,8 @@
                             <div class="row">
                                 <div class="form-group col-6 text-dark">
                                     <label for="rent_price"><?= 'Price/month' ?></label>
-                                    <input type="decimal" class="form-control" id="rent_price" name="rent_price"
-                                        min="0">
+                                    <input type="decimal" class="form-control bg-secondary text-light" id="rent_price" name="rent_price"
+                                        min="0" readonly>
                                 </div>
 
                                 <div class="form-group col-6 text-dark">
@@ -574,7 +571,8 @@
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+    </div>
+    <!-- /.modal -->
 
 
 
@@ -652,7 +650,7 @@
             $('#btn_submit').show();
             $('#btn_submit').html('Save');
 
-            get_apartments();
+            get_apartments(); // FETCHES ALL ACTIVE-APARTMENTS 
 
         } else if (event.target.id == 'btn_edit') {
             $('#apid_add').hide();
@@ -768,7 +766,6 @@
 
     });
 
-
     $(document).on('submit', '#extend_form', function (event) {
         form(new FormData(this), '/rental/extend_rental_duration', '#extend_form', '#extend_modal', '#inner_extend');
     });
@@ -782,6 +779,7 @@
     });
 
 
+    // save rental record
     $(document).on('submit', '#data_form', function (event) {
         form(new FormData(this), '/rental/record_rentals', '#data_form', '#rental_modal', '#inner_add');
     });
@@ -794,14 +792,29 @@
         var months = Math.floor(days / 31);
         var years = Math.floor(months / 12);
 
-        // var message = date2.toDateString();
-        // message += " was "
-        // message += days + " days "
-        // message += months + " months "
-        // message += years + " years ago \n"
-
-        $('#duration_days').val(days);
-        return days + ' days '
+        if (days <= 30 || days <= 31 ) {
+            $('#duration_days').val(days);
+           
+            if (days > 1) {
+                return days + ' days'
+            }else{
+                return days + ' day '
+            }
+        }else if (months <= 12){
+            $('#duration_days').val(months);
+            if (months > 1) {
+                return months + ' Months '
+            }else{
+                return months + ' Month '
+            }
+        }else{
+            $('#duration_days').val(years);
+            if (years > 1) {
+                return years + ' years '
+            }else{
+                return years + ' year '
+            }
+        }
     }
 
 
@@ -819,8 +832,6 @@
             }
         });
     }
-
-
 
 
     function form(data, controller_funtion, form, modal, inner) {
@@ -883,6 +894,7 @@
         });
         return false;
     }
+
 </script>
 
 <?= $this->endSection(); ?>

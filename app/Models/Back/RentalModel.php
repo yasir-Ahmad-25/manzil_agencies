@@ -81,18 +81,26 @@ class RentalModel extends Model
     {
         $this->db->transStart();
         $this->db->transException(true);
-        $rentid = $this->store('tbl_rentals', $data);
+        
+        // save posted data to db [tbl_rentals] and store the last insertion id to this variable
+        $rentid = $this->store('tbl_rentals', $data); 
 
-        ## change status
+        // fetch passed data 
         $apid = $data['ap_id'];
+        $rentalDate = $data['rental_date'];
+        $customer_id = $data['customer_id'];
+        $depositMoney = $data['deposit'];
+
+        ## change apertment status
         $this->db->query("UPDATE tbl_apartments SET ap_status='Occupied' WHERE ap_id='$apid'");
 
         ## record bill ##
-        $rental_id = $this->record_rental_bill($apid, $data['rental_date'], $data['duration'], $data['customer_id'], $rentid, $price, $acc_cash);
+        $rental_id = $this->record_rental_bill($apid, $rentalDate, $customer_id, $rentid, $price, $acc_cash);
 
         ## record deposit ##
 
-        $this->record_rental_deposit($price,$rental_id, $apid,$data['customer_id'], $data['deposit'], $data['rental_date'], $acc_dep);
+        // $price : refers to the price/month of the apartment
+        $this->record_rental_deposit($price,$rental_id, $apid,$customer_id, $depositMoney, $rentalDate, $acc_dep);
 
         if ($this->db->transStatus() === FALSE) {
             $this->db->transRollback();
@@ -103,9 +111,9 @@ class RentalModel extends Model
         }
     }
 
-    public function record_rental_bill($apid,$date, $dur_days, $customer_id, $rentid, $price, $acc_cash)
+    public function record_rental_bill($apid,$date, $customer_id, $rentid, $price, $acc_cash)
     {
-         $this->record_transaction($price, 'Bill', 'INC', $acc_cash, $date, $customer_id);
+        $this->record_transaction($price, 'Bill', 'INC', $acc_cash, $date, $customer_id);
         $date2 = new \DateTime($date);
         $month = $date2->format('m');
         $data = [
@@ -135,14 +143,16 @@ class RentalModel extends Model
 
             $data = [
                 'customer_id' => $customer_id,
-                'profile_no' => '',
+                'profile_no' => 'not-settled-yet',
                 'amount' => $deposit,
                 'amount_bal' => $deposit,
                 'account_id' => $acc_dep,
                 'des' => '',
             ];
 
+            // save data to the database tbl_deposit
             $this->store('tbl_deposit', $data);
+            
             $date2 = new \DateTime($date);
             $month = $date2->format('m');
             $ri = $this->rental_income_exists($month, $customer_id, $rental_id);

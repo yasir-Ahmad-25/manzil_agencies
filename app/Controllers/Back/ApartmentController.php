@@ -656,24 +656,17 @@ class ApartmentController extends BaseController
                     <i class="fas fa-ellipsis-v mx-1"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dd1" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-110px, 39px, 0px);">
-                <a type="button" id="btn_view"  data-ap_id="' . $value["ap_id"] . '"  
+                <a type="button" id="btn_view"  data-ap_id="' . $value["ap_id"] . '"  data-rooms_number="' . $value["rooms"] . '"
                 data-ap_no="' . $value["ap_no"] . '" data-floor_id="' . $value["floor_id"] . '" data-ap_type_id="' . $value["ap_type_id"] .
                 '" data-price="' . $value["price"] . '" data-bedrooms="' . $value["bedrooms"] . '" data-pathrooms="' . $value["pathrooms"] . '"data-kitchen="' . $value["kitchen"] . '"data-ap_des="' . $value["ap_des"] . '"   
                      class="dropdown-item" data-bs-toggle="modal" data-bs-target="#apartment_model">
                         <i class="fas fa-info-circle text-info mx-1"></i>View </a>
 
-                   <a type="button" id="btn_edit"  data-ap_id="' . $value["ap_id"] . '"  
+                   <a type="button" id="btn_edit"  data-ap_id="' . $value["ap_id"] . '" data-rooms_number="' . $value["rooms"] . '"  
                    data-ap_no="' . $value["ap_no"] . '" data-floor_id="' . $value["floor_id"] . '" data-ap_type_id="' . $value["ap_type_id"] .
                 '" data-price="' . $value["price"] . '" data-bedrooms="' . $value["bedrooms"] . '" data-pathrooms="' . $value["pathrooms"] . '"data-kitchen="' . $value["kitchen"] . '"data-ap_des="' . $value["ap_des"] . '"   
                         class="dropdown-item" data-bs-toggle="modal" data-bs-target="#apartment_model">
                         <i class="fas fa-pencil-alt text-warning mx-1"></i>Edit </a>
-
-                      
-
-
-                        
-
-
               </div>
             </div>
     </div>';
@@ -687,6 +680,7 @@ class ApartmentController extends BaseController
                 $value['floor_name'],
                 $value['ap_type_name'],
                 '$' . $value['price'],
+                $value['rooms'],
                 $value['bedrooms'],
                 $value['pathrooms'],
                 $value['kitchen'],
@@ -726,11 +720,12 @@ class ApartmentController extends BaseController
 
 
                 $data = [
-                    'ap_no' => $_POST['ap_no'],
+                    'ap_no' => $_POST['ap_no'], 
                     'floor_id' => $_POST['floor_id'],
                     'ap_type_id' => $_POST['ap_type_id'],
                     'price' => $_POST['price'],
                     'site_id'=>$_POST['site_id'],
+                    'rooms'=>$_POST['Rooms'],
                     'bedrooms' => $_POST['bedrooms'],
                     'pathrooms' => $_POST['pathrooms'],
                     'kitchen' => $_POST['kitchen'],
@@ -749,6 +744,7 @@ class ApartmentController extends BaseController
                     'floor_id' => $_POST['floor_id'],
                     'ap_type_id' => $_POST['ap_type_id'],
                     'price' => $_POST['price'],
+                    'rooms'=>$_POST['Rooms'],
                     'bedrooms' => $_POST['bedrooms'],
                     'pathrooms' => $_POST['pathrooms'],
                     'kitchen' => $_POST['kitchen']

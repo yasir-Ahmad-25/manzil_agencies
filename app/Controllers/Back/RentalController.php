@@ -21,10 +21,12 @@ class RentalController extends BaseController
 
         $this->viewData['title'] = 'Rental';
         $this->viewData['access'] = $auth->get_user_access(session()->get('ut_id'), $this->request->getLocale());
+
         $this->viewData['customers'] = $this->get_table_info('tbl_customers');
-        $this->viewData['apartments'] = $this->get_table_info('tbl_apartments');
+        $this->viewData['Active_Apartments'] = $this->get_active_apartments();
         $this->viewData['all_apartment'] = $this->get_table_info('tbl_apartments');
         $this->viewData['accounts'] = $payment->get_cash_bank_accounts();
+
         return view('admin/rental/rental', $this->viewData);
     }
 
@@ -177,10 +179,11 @@ class RentalController extends BaseController
     {
         $rental = new RentalModel();
 
-        $response = array();
+        $response = array(); // initialize response array
         $response['success'] = false;
-        $tag = $_POST['acc_tag_rec'];
+        $tag = $_POST['acc_tag_rec']; // this is the account he choosed to pay for the apartment price
 
+        // $_POST['ten_id'] : get the selected customer / tenant id
         if (empty($_POST['ten_id'])) {
             $response['alert_inner'] = $this->alert('Choose Customer', 'danger');
         } else if (empty($_POST['ap_id'])) {
@@ -196,14 +199,16 @@ class RentalController extends BaseController
         } else {
             if ($_POST['btn_action'] == 'btn_add') {
 
+                // check if the apartment is already rented by this customer
                 if ($rental->apartment_exist($_POST['ap_id'], $_POST['ten_id'])) {
                     $response['alert_inner'] = $this->alert('This apartment is already rented to this customer', 'danger');
                 } else {
 
+                    // getting posted data
                     $rentals = [
-                        'profile_no' =>  '',
-                        'customer_id' => $_POST['ten_id'],
-                        'ap_id' => $_POST['ap_id'],
+                        'profile_no' =>  'not-settled YET',
+                        'customer_id' => $_POST['ten_id'], // get customer id and save it to the column
+                        'ap_id' => $_POST['ap_id'], // get aprtment id and save it to the column
                         'start_date' => $_POST['start_date'],
                         'end_date' => $_POST['end_date'],
                         'rental_date' => $_POST['rental_date'],
@@ -211,6 +216,9 @@ class RentalController extends BaseController
                         'rental_status' => 'Active',
                         'deposit' => $_POST['deposit'],
                     ];
+
+                    // $_POST['acc_tag_rec'] : this is the account he payed it for the first time customer was renting the aprtment
+                    // $_POST['acc_tag_dep'] : this is the account he payed it for the deposit money 
 
                     $rental_created = $rental->create_rental( $_POST['ap_id'],$rentals, $_POST['rent_price'], $_POST['acc_tag_rec'], $_POST['acc_tag_dep']);
 
@@ -396,12 +404,13 @@ class RentalController extends BaseController
         $db = \Config\Database::connect();
 
         $rentid = $_POST['term_rental_id'];
-        $bal = $_POST['tbal'];
-        $dep = $_POST['tdep'];
-        $apid = $_POST['t_ap_id'];
+        $bal = $_POST['tbal']; // get customer balance money
+        $dep = $_POST['tdep']; // get customer deposit money
+        $apid = $_POST['t_ap_id']; // get the apartmens id that the customer rented
         $edate = date('Y-m-d');
 
-        if (($bal != 0) || ($dep != 0)) {
+        // if the customer balance or deposit money is not equal to zero we cannot let this customer terminate the rent 
+        if (($bal != 0) || ($dep != 0)) { 
             $response['alert_inner'] = $this->alert('Please clear balance or deposit to terminate', 'danger');
         } else {
 
@@ -437,8 +446,6 @@ class RentalController extends BaseController
     }
 
 
-
-
     public function get_active_apartments()
     {
         $rental = new RentalModel();
@@ -449,7 +456,7 @@ class RentalController extends BaseController
         foreach ($aparts as $val) {
             $output .= '<option value="' . $val['ap_id'] . '"> ' . $val['ap_no'] . '</option>';
         }
-        echo $output;
+        return $output;
     }
 
     public function get_apartment_price()

@@ -92,7 +92,7 @@ class CustomerController extends BaseController
         } else
             if ($_POST['btn_action'] == "btn_add") {
 
-                $payment_done = $payment->deposit_payment($_POST['account_id'], $_POST['pay_amount'], $_POST['sup_id'], $_POST['pay_date']);
+                $payment_done = $payment->deposit_payment($_POST['account_id'], $_POST['pay_amount'], $_POST['sup_id'], $_POST['pay_date'] , $_POST['pay_amount']);
 
                 if ($payment_done) {
                     $response['success'] = true;

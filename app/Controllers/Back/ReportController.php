@@ -362,7 +362,7 @@ class ReportController extends BaseController
     }
 
     public function fetch_buildings($status){
-
+ 
 
         $apartment = new ApartmentModel();
         $result = array('data' => array()); // initialize empty result array

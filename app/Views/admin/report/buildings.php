@@ -64,7 +64,7 @@
                                     <th><?= 'Address'?></th> 
                                     <th><?= 'Built in'?></th> 
                                     <th><?= 'Floors' ?></th> 
-                                    <th><?= 'Status' ?></th>
+                                    <th class="status-column"><?= 'Status' ?></th> <!-- Added custom class here -->
                                 </tr>
                             </thead>
                             <tbody>
@@ -143,28 +143,32 @@
 
          $('#btn_rental_income').click(function () {
 
-            $('#manageTable_site').printThis({
-                debug: false, // show the iframe for debugging
-                importCSS: true, // import parent page css
-                importStyle: true, // import style tags
-                printContainer: true, // path to additional css file - use an array [] for multiple
-                pageTitle: "Report Of Buildings", // add title to print page
-                removeInline: false, // remove inline styles from print elements
-                printDelay: 333, // variable print delay
-                header: null, // prefix to html
-                footer: null, // postfix to html
-                base: false, // preserve the BASE tag, or accept a string for the URL
-                formValues: true, // preserve input/form values
-                canvas: false, // copy canvas content
-                doctypeString: '...', // enter a different doctype for older markup
-                removeScripts: false, // remove script tags from print content
-                copyTagClasses: false, // copy classes from the html & body tag
-                beforePrintEvent: null, // function for printEvent in iframe
-                beforePrint: null, // function called before iframe is filled
-                afterPrint: null // function called before iframe is removed
-            });
-
-            console.log("Printing Right Away ....");
+                    $('#manageTable_site').printThis({
+                    debug: false, // show the iframe for debugging
+                    importCSS: true, // import parent page css
+                    importStyle: true, // import style tags
+                    printContainer: true, // path to additional css file - use an array [] for multiple
+                    pageTitle: "Report Of Buildings", // add title to print page
+                    removeInline: false, // remove inline styles from print elements
+                    printDelay: 333, // variable print delay
+                    header: null, // prefix to html
+                    footer: null, // postfix to html
+                    base: false, // preserve the BASE tag, or accept a string for the URL
+                    formValues: true, // preserve input/form values
+                    canvas: false, // copy canvas content
+                    doctypeString: '...', // enter a different doctype for older markup
+                    removeScripts: false, // remove script tags from print content
+                    copyTagClasses: false, // copy classes from the html & body tag
+                    beforePrintEvent: null, // function for printEvent in iframe
+                    beforePrint: function() {
+                        // Hide the entire "Status" column before printing
+                    $('#manageTable_site th:nth-child(7), #manageTable_site td:nth-child(7)').css('display', 'none');
+                    },
+                    afterPrint: function() {
+                        // Make sure the column is visible again after printing
+                        $('#manageTable_site th:nth-child(7), #manageTable_site td:nth-child(7)').css('display', '');
+                    }
+                });
             
          });
          
