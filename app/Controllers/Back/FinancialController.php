@@ -161,7 +161,7 @@ class FinancialController extends BaseController
     }
 
 
-
+ 
     public function get_ledger($id)
     {
         $Financial_model = new FinancialModel();
@@ -190,8 +190,8 @@ class FinancialController extends BaseController
         <tbody>';
 
         $i = 1;
-        $totalCr = 0;
-        $totalDr = 0;
+        $totalCr = 0; // total depit
+        $totalDr = 0; // total credit
         $bal = 0;
         $ttl = 0;
         $nature = $Financial_model->get_accgrp_nature($id);
@@ -493,7 +493,7 @@ class FinancialController extends BaseController
                 else $amount = - ($_POST['dr_amount'][$i]);
 
                 $finmodel->trx_det('dr', $_POST['dr_amount'][$i], $_POST['dr_account_id'][$i], $trx_id, $_POST['trx_det_des_dr'][$i]);
-                $finmodel->update_accounnt_balance($_POST['dr_account_id'][$i], $amount);
+                $finmodel->update_accounnt_balance($_POST['dr_account_id'][$i], $amount , 'dr');
             }
             for ($i = 0; $i < count($_POST['cr_account_id']); $i++) {
 
@@ -503,7 +503,7 @@ class FinancialController extends BaseController
 
                 $finmodel->trx_det('cr', $_POST['cr_amount'][$i], $_POST['cr_account_id'][$i], $trx_id, $_POST['trx_det_des_cr'][$i]);
 
-                $finmodel->update_accounnt_balance($_POST['cr_account_id'][$i], $amount);
+                $finmodel->update_accounnt_balance($_POST['cr_account_id'][$i], $amount , 'cr');
             }
 
             #commit/rollback transaction

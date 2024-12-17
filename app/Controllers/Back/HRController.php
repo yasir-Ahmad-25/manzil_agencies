@@ -470,10 +470,10 @@ class HRController extends BaseController
         $cracc = $cb_acc;
 
         $finmodel->cr_trx_det((float) $amount, $cracc, $trx_id);
-        $finmodel->update_accounnt_balance($cracc, -$amount);
+        $finmodel->update_accounnt_balance($cracc, -$amount, 'cr');
 
         $finmodel->dr_trx_det((float) $amount, $dracc, $trx_id);
-        $finmodel->update_accounnt_balance($dracc, $amount);
+        $finmodel->update_accounnt_balance($dracc, $amount ,'dr');
 
         return $trx_id;
     }

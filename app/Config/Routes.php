@@ -112,7 +112,7 @@ $routes->group('{locale}', function ($routes) {
 
    //  items start
 
-   $routes->get('owners', 'ApartmentController::fetch_Owners', ['filter' => ['restrict', 'pageAuthorizedFilter']]);
+   
 
    $routes->group('apartment', ['namespace' => 'App\Controllers\Back'], function ($routes) {
       // pages
@@ -120,6 +120,7 @@ $routes->group('{locale}', function ($routes) {
       $routes->get('floors', 'ApartmentController::floors', ['filter' => 'restrict']);
       $routes->get('apartment_types', 'ApartmentController::apartment_types', ['filter' => 'restrict']);
       $routes->get('apartments', 'ApartmentController::apartments', ['filter' => 'restrict']);
+      $routes->get('owners', 'OwnerController::index',['filter' => ['restrict', 'pageAuthorizedFilter']]);
 
       // These are the Ajax requests: fetching user data and handling user actions
          $routes->get('fetch_sites', 'ApartmentController::fetch_sites', ['filter' => 'restrict']);
@@ -130,7 +131,6 @@ $routes->group('{locale}', function ($routes) {
          $routes->get('fetch_floors', 'ApartmentController::fetch_floors', ['filter' => 'restrict']);
 
          $routes->post('crud_floors', 'ApartmentController::crud_floors', ['filter' => 'restrict']);
-
 
          $routes->get('fetch_apart_types', 'ApartmentController::fetch_apart_types', ['filter' => 'restrict']);
          $routes->post('crud_apart_type', 'ApartmentController::crud_apart_type', ['filter' => 'restrict']);
