@@ -172,7 +172,7 @@
                     }
                 });
             }
-        });
+        }); 
 
 
         function get_ledger(id, startdate, enddate) {

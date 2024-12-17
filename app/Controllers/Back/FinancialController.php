@@ -197,8 +197,8 @@ class FinancialController extends BaseController
         $nature = $Financial_model->get_accgrp_nature($id);
 
         foreach ($history as $val) {
-            $debit = $val['dr_amount'] == 0 ? "" : '$' . $val['dr_amount'];
-            $credit = $val['cr_amount'] == 0 ? "" : '$' . $val['cr_amount'];
+            $debit = $val['dr_amount'] == 0 ? "$0" : '$' . $val['dr_amount'];
+            $credit = $val['cr_amount'] == 0 ? "$0" : '$' . $val['cr_amount'];
             $totalDr += $val['dr_amount'];
             $totalCr += $val['cr_amount'];
 

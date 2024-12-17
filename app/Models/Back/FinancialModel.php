@@ -324,23 +324,36 @@ class FinancialModel extends Model
     {
         $brid = session()->get('user')['branch_id'];
 
+        // Query the database to calculate the sum of the account balances (acc_balance) 
+        // for active accounts with a specific account type ($acc_type_id)
+        // The result is fetched as a single row, and the sum (type_balance) is returned.
+        // If no results are found (i.e., the sum is null), return '0.00' as a default value.
         $data = $this->db->query("SELECT SUM(acc_balance) AS type_balance FROM tbl_cl_accounts 
-        WHERE acc_type_id = '$acc_type_id' AND acc_status = 'Active'")->getRow()->type_balance;
-        return $data ?? ' 0.00';
+                WHERE acc_type_id = '$acc_type_id' AND acc_status = 'Active'")->getRow()->type_balance;
+        return $data ?? '0.00';
+
     }
     // get list of acc_accounts by type
     public function get_cl_accounts_by_type($acc_type_id)
     {
         $brid = session()->get('user')['branch_id'];
 
+        // Query the database to fetch all columns from the tbl_cl_accounts table 
+        // for active accounts with a specific account type ($acc_type_id).
+        // The result is returned as an array of records.
         $data = $this->db->query("SELECT * From tbl_cl_accounts WHERE acc_status = 'Active' 
         AND acc_type_id = '$acc_type_id '")->getResultArray();
         return $data;
+
     }
     // get No of acc_accounts by type
     public function no_cl_accounts($acc_type_id)
     {
         $brid = session()->get('user')['branch_id'];
+        // Query the database to count the number of active accounts for a specific account type
+        // The query filters the accounts based on the status being 'Active' and the account type ID ($acc_type_id)
+        // The result is retrieved as an array and the count value (acc_no) is returned.
+
         $data = $this->db->query("SELECT count(account_id) as acc_no From tbl_cl_accounts 
         where acc_status = 'Active' AND acc_type_id = '$acc_type_id'")->getResultArray()[0]['acc_no'];
         return $data;
