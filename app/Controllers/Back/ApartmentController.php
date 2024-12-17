@@ -480,7 +480,7 @@ class ApartmentController extends BaseController
                 </button>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dd1" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-110px, 39px, 0px);">
                     <a type="button" id="btn_view"- dataap_type_id="' . $value["ap_type_id"] . '" 
-                        data-site_build_year="' . $value["SiteYearBuild"] .'"  
+                         
                         data-ap_type_name="' . $value["ap_type_name"] . '"
                         data-des="' . $value["des"] . '"
                         class="dropdown-item" data-toggle="modal" data-target="#form_modal">

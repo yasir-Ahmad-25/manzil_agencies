@@ -42,6 +42,7 @@ $routes->group("api", ['namespace' => 'App\Controllers\Api'],  function ($routes
 });
 
 $routes->get('admin/page_404', 'Back\ErrorController::page_404');
+
 $routes->group('{locale}', function ($routes) {
 
    $routes->group('front', ['namespace' => 'App\Controllers\Front'], function ($routes) {});
@@ -115,10 +116,10 @@ $routes->group('{locale}', function ($routes) {
 
    $routes->group('apartment', ['namespace' => 'App\Controllers\Back'], function ($routes) {
       // pages
-      $routes->get('building', 'ApartmentController::building',['filter' => ['restrict', 'pageAuthorizedFilter']]);
-      $routes->get('floors', 'ApartmentController::floors', ['filter' => ['restrict', 'pageAuthorizedFilter']]);
-      $routes->get('apartment_types', 'ApartmentController::apartment_types', ['filter' => ['restrict', 'pageAuthorizedFilter']]);
-      $routes->get('apartments', 'ApartmentController::apartments', ['filter' => ['restrict', 'pageAuthorizedFilter']]);
+      $routes->get('building', 'ApartmentController::building',['filter' => 'restrict']);
+      $routes->get('floors', 'ApartmentController::floors', ['filter' => 'restrict']);
+      $routes->get('apartment_types', 'ApartmentController::apartment_types', ['filter' => 'restrict']);
+      $routes->get('apartments', 'ApartmentController::apartments', ['filter' => 'restrict']);
 
       // These are the Ajax requests: fetching user data and handling user actions
          $routes->get('fetch_sites', 'ApartmentController::fetch_sites', ['filter' => 'restrict']);
