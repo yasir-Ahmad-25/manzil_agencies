@@ -264,7 +264,7 @@ class RentalController extends BaseController
             ];
             $set = [
                 'id' => $value["rental_id"],
-                'rec_title' => $value["ten_name"],
+                'rec_title' => $value["cust_name"],
                 'status' => $value["rental_status"],
                 'rec_tbl' => 'tbl_rentals',
                 'rec_tag_col' => 'rental_status',
@@ -277,7 +277,7 @@ class RentalController extends BaseController
 
             $buttons = $btn['header'] . '
                             <a type="button" id="btn_view" data-rental_id="' . $value["rental_id"] . '"
-                                 data-ten_id="' . $value["ten_id"] . '"
+                                 data-ten_id="' . $value["customer_id"] . '"
                                  data-ap_id="' . $value["ap_id"] . '"
                                  data-start_date="' . $value["start_date"] . '"
                                  data-end_date="' . $value["end_date"] . '"
@@ -297,7 +297,7 @@ class RentalController extends BaseController
 
             $result['data'][$key] = array(
                 $i,
-                $value['ten_name'],
+                $value['cust_name'],
                 $value['ap_no'],
                 $value['start_date'],
                 $value['end_date'],
