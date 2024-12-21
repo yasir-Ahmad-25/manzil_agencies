@@ -294,7 +294,7 @@ class FinancialModel extends Model
         }
         return ['state' => $state ?? 'Ok', 'account_id' => $data[0]['account_id']  ?? null];
     }
-
+ 
     public function get_account_groups()
     {
         $data = $this->db->query("SELECT * From tbl_cl_account_groups ")->getResultArray();

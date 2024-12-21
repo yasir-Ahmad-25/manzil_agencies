@@ -24,6 +24,7 @@ class RentalController extends BaseController
 
         $this->viewData['customers'] = $this->get_table_info('tbl_customers');
         $this->viewData['Active_Apartments'] = $this->get_active_apartments();
+        $this->viewData['sites'] = $this->get_sites();
         $this->viewData['all_apartment'] = $this->get_table_info('tbl_apartments');
         $this->viewData['accounts'] = $payment->get_cash_bank_accounts();
 
@@ -43,12 +44,15 @@ class RentalController extends BaseController
         return view('admin/rental/closed_rental', $this->viewData);
     }
 
-    public function fetch_rentals()
+    public function fetch_rentals($selected_site)
     {
         $rental = new RentalModel();
 
         $result = array('data' => array());
-        $data = $rental->get_rental_info();
+
+        // search rental information based on selected site 
+        $data = $rental->get_rental_info($selected_site);
+       
         $i = 1;
         foreach ($data as $key => $value) {
 
@@ -464,5 +468,18 @@ class RentalController extends BaseController
         $rental = new RentalModel();
         $apid = $_POST['ap_id'];
         echo $rental->get_apartment_price($apid);
+    }
+
+
+    public function get_sites(){
+        $rental = new RentalModel();
+        $sites = $rental->getAvailableSites();
+        $output = '';
+
+        foreach ($sites as $key => $site) {
+            $output .= '<option value="'.$site['site_id'].'">'. $site['site_name'].'</option>';
+        }
+
+        return $output;
     }
 }

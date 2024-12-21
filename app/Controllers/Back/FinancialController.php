@@ -524,7 +524,7 @@ class FinancialController extends BaseController
     }
 
     /**
-     * Transactions
+     * Transactions 
      */
     public function transactions()
     {

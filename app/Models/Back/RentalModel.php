@@ -18,11 +18,25 @@ class RentalModel extends Model
         $this->db->table($table)->upsertBatch($data);
         return true;
     }
-
-    public function get_rental_info()
+ 
+    public function get_rental_info($selected_site)
     {
 
-        $sql = "SELECT rental_id, cu.customer_id,rental_status,duration, cust_name,r.profile_no, ap.ap_id, 
+        if($selected_site !== "All_Sites"){
+            $sql = "SELECT rental_id, cu.customer_id,rental_status,duration, cust_name,r.profile_no, ap.ap_id, 
+                    ap_no,ap.price, start_date, end_date, rental_date, deposit, s.site_address,s.site_name FROM tbl_rentals r
+                    JOIN tbl_apartments ap ON r.ap_id=ap.ap_id
+            
+                    JOIN tbl_floors fl ON fl.floor_id=ap.floor_id
+            
+                    JOIN tbl_sites s ON s.site_id=fl.site_id
+
+                    JOIN tbl_customers cu ON r.customer_id=cu.customer_id
+                    WHERE r.rental_status = 'Active'  AND s.site_id = '$selected_site' ORDER BY rental_id DESC";
+                    
+                    
+        }else{
+            $sql = "SELECT rental_id, cu.customer_id,rental_status,duration, cust_name,r.profile_no, ap.ap_id, 
                 ap_no,ap.price, start_date, end_date, rental_date, deposit, s.site_address,s.site_name FROM tbl_rentals r
                 JOIN tbl_apartments ap ON r.ap_id=ap.ap_id
         
@@ -32,10 +46,10 @@ class RentalModel extends Model
 
                 JOIN tbl_customers cu ON r.customer_id=cu.customer_id
                 WHERE r.rental_status = 'Active' ORDER BY rental_id DESC";
+        }
 
         $query = $this->db->query($sql);
-
-        return $query->getResultArray();
+        return $query->getResultArray();    
     }
 
     public function get_closed_rentals()
@@ -59,6 +73,12 @@ class RentalModel extends Model
         $sql = "SELECT * FROM tbl_apartments 
                 WHERE ap_status = 'Active' ORDER BY ap_id ASC";
 
+        $query = $this->db->query($sql);
+        return $query->getResultArray();
+    }
+
+    public function getAvailableSites(){
+        $sql = 'SELECT * FROM tbl_sites WHERE No_of_Floors > 0';
         $query = $this->db->query($sql);
         return $query->getResultArray();
     }

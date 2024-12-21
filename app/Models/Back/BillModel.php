@@ -56,7 +56,7 @@ class BillModel extends Model
 
         return $this->db->query($sql)->getResultArray();
     }
-
+ 
     public function get_chargable_bills()
     {
         $sql = "SELECT MAX(created_date) as created_date,MAX(created_date) as bill_due_date, rental_id FROM tbl_rental_summary

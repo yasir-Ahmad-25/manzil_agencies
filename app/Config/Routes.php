@@ -309,7 +309,7 @@ $routes->group('{locale}', function ($routes) {
       $routes->post('create_invoice', 'InvoiceController::create_invoice', ['filter' => 'restrict']);
       $routes->post('get_outstanding_invoices', 'InvoiceController::get_outstanding_invoices', ['filter' => 'restrict']);
    });
-
+ 
    $routes->group('payment', ['namespace' => 'App\Controllers\Back'], function ($routes) {
       $routes->get('/', 'PaymentController::list', ['filter' => ['restrict', 'pageAuthorizedFilter']]);
       $routes->get('list', 'PaymentController::list', ['filter' => ['restrict', 'pageAuthorizedFilter']]);
@@ -367,7 +367,7 @@ $routes->group('{locale}', function ($routes) {
    $routes->group('rental', ['namespace' => 'App\Controllers\Back'], function ($routes) {
       $routes->get('list', 'RentalController::list', ['filter' => ['restrict', 'pageAuthorizedFilter']]);
 
-      $routes->get('fetch_rentals', 'RentalController::fetch_rentals', ['filter' => 'restrict']);
+      $routes->get('fetch_rentals/(:any)', 'RentalController::fetch_rentals/$1', ['filter' => 'restrict']);
       $routes->get('closed', 'RentalController::closed', ['filter' => 'restrict']);
       $routes->get('fetch_closed_rentals', 'RentalController::fetch_closed_rentals', ['filter' => 'restrict']);
 

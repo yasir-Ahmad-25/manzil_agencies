@@ -127,7 +127,7 @@
     </div>
    
 
-    <script>
+    <script> 
     $(document).ready(function() {
         //alert('Hello...');
         var manageTable;

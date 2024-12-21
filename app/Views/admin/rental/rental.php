@@ -49,6 +49,15 @@
 
                         <div id="messages"></div>
 
+                        
+
+                        <div class="form-group mb-3">
+                            <label for="#">Search by site: </label>
+                            <select name="selected_site" id="selected_site" class="form-control">
+                                <option selected disabled>All Sites</option>
+                                <?= $sites ?>
+                            </select>
+                        </div>
 
                         <table id="manageTable" class="table table-striped table-bordered no-wrap" style="width:100%">
                             <thead>
@@ -587,44 +596,64 @@
 
     $(document).ready(function () {
         $('#tablesMainNav').addClass('active');
-        // initialize the datatable 
-        manageTable = $('#manageTable').DataTable({
-            'ajax': base_url + '/rental/fetch_rentals',
-            'order': []
-        });
 
+            fetchTable('All_Sites');
 
-        $('#apid_add').on('change', function () {
-
-            $.ajax({
-                url: base_url + '/rental/get_apartment_price',
-                type: "POST",
-                data: {
-                    ap_id: $(this).val(),
-                },
-                success: function (response) {
-                    $("#rent_price").val(response);
-                }
+            // Event listener to trigger table fetch table when site is selected
+            document.getElementById("selected_site").addEventListener("change", function() {
+                const selectedSite = this.value;
+                fetchTable(selectedSite);
             });
-        });
 
-        $('#end_date').change(function () {
-            let edate = new Date($(this).val());
-            let sdate = new Date($('#start_date').val());
+            function fetchTable(site) {
+                let CI4_ROUTE;
 
-            let dt = calcDate(edate, sdate);
+                // Determine which route to use based on the selected site
+                CI4_ROUTE = base_url + '/rental/fetch_rentals/' + site;
 
-            $('#duration').val(dt);
-        });
+                // Initialize the DataTable only if it hasn't been initialized yet
+                if (!$.fn.dataTable.isDataTable('#manageTable')) {
+                    manageTable = $('#manageTable').DataTable({
+                        'ajax': CI4_ROUTE,  // Dynamic data source URL based on the selected status
+                        'order': []         // Optionally specify your table ordering logic
+                    });
+                } else {
+                    // If the DataTable is already initialized, just reload the data
+                    manageTable.ajax.url(CI4_ROUTE).load();
+                }
+            }
 
-        $('#new_end_date').change(function () {
-            let edate = new Date($(this).val());
-            let sdate = new Date($('#e_date').val());
+            $('#apid_add').on('change', function () {
 
-            let dt = calcDate(edate, sdate);
+                $.ajax({
+                    url: base_url + '/rental/get_apartment_price',
+                    type: "POST",
+                    data: {
+                        ap_id: $(this).val(),
+                    },
+                    success: function (response) {
+                        $("#rent_price").val(response);
+                    }
+                });
+            });
 
-            $('#extra_duration').val(dt);
-        });
+            $('#end_date').change(function () {
+                let edate = new Date($(this).val());
+                let sdate = new Date($('#start_date').val());
+
+                let dt = calcDate(edate, sdate);
+
+                $('#duration').val(dt);
+            });
+
+            $('#new_end_date').change(function () {
+                let edate = new Date($(this).val());
+                let sdate = new Date($('#e_date').val());
+
+                let dt = calcDate(edate, sdate);
+
+                $('#extra_duration').val(dt);
+            });
 
     });
 
