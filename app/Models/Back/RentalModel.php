@@ -148,7 +148,7 @@ class RentalModel extends Model
         ## change apertment status
         $this->db->query("UPDATE tbl_apartments SET ap_status='Occupied' WHERE ap_id='$apid'");
 
-        ## record bill ##
+        ## record bill that he paid for the first time ##
         $rental_id = $this->record_rental_bill($apid, $rentalDate, $customer_id, $rentid, $price, $acc_cash);
 
         ## record deposit ##
@@ -167,6 +167,11 @@ class RentalModel extends Model
 
     public function record_rental_bill($apid,$date, $customer_id, $rentid, $price, $acc_cash)
     {
+        // account cash = which account does he send the money to is it cash,wallet or merchant
+        // source = the money we received or saving it what is it ? like is it for renting that stands for Bill or it's for something else
+        // customer-id = the customer that paid the money
+        // price = the price customer payed or send 
+        // INC stands for income
         $this->record_transaction($price, 'Bill', 'INC', $acc_cash, $date, $customer_id);
         $date2 = new \DateTime($date);
         $month = $date2->format('m');
@@ -264,17 +269,23 @@ class RentalModel extends Model
     {
         $finance = new FinancialModel();
 
-        $fpid = $finance->financial_period()['fp_id']; // getting the financial period id
+        $fpid = $finance->financial_period()['fp_id']; // getting the financial period id [ soo hel xisaab xirka sanadlaha ]
 
-        
+        // create summary of the transaction that occured and get the id
+        // trx_amount = transaction ka dhacay meeqay ahayd lacagta
+        // trx_source = xagee ka timid lacagta ama transaction ka dhacaaya [ HADDA WAANA-QAANAA OO WAA KIRO ]
+        // fp_id = id ga xisaab xirka sanadlaha
         $trx_id = $finance->record_trans($amount, $source, $fpid, $date, $customer_id);
 
-        $dracc = $acc_cash;
+        // account cash = which account does he send the money to is it cash,wallet or merchant
+        $dracc = $acc_cash; // we are storing this to debit-account since i rent an apartment and i collected a money 
         $cracc = $finance->get_account_tag($cr_tag)['account_id'];
 
+        // save the details of the transactions that occur
         $finance->dr_trx_det((float) $amount, $dracc, $trx_id);
         $finance->cr_trx_det((float) $amount, $cracc, $trx_id);
 
+        // update my account's balance
         $finance->update_accounnt_balance($dracc, (float) $amount, 'dr');
         $finance->update_accounnt_balance($cracc, (float) $amount, 'cr');
 

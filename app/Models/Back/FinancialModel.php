@@ -166,9 +166,10 @@ class FinancialModel extends Model
 
     public function record_trans($trx_amount, $trx_source, $fp_id, $date, $custid = '', $des = '') # Record trx = transections
     {
+        
         $data = [
             //'trx_cust'  =>  $custid,
-            'trx_source' => $trx_source, # var
+            'trx_source' => $trx_source, # var 
             'trx_date' => $date,
             'trx_amount' => $trx_amount, # var
             'fp_id' => $fp_id, # var

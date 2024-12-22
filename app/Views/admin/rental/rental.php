@@ -539,7 +539,7 @@
                                 <div class="form-group col-6 text-dark">
                                     <label for="acc_tag"><?= 'Account' ?></label>
                                     <select class="form-control border-secondary" id="acc_tag_rec" name="acc_tag_rec">
-                                        <option selected disabled value="">--------------</option>
+                                        <option selected disabled value="">-- Select First Month Payment Account --</option>
                                         <?php foreach ($accounts as $val): ?>
                                             <option value="<?= $val['account_id'] ?>"><?= $val['acc_name'] ?></option>
                                         <?php endforeach; ?>
@@ -559,7 +559,7 @@
                                 <div class="form-group col-6 text-dark">
                                     <label for="acc_tag"><?= 'Account' ?></label>
                                     <select class="form-control border-secondary" id="acc_tag_dep" name="acc_tag_dep">
-                                        <option selected disabled value="">--------------</option>
+                                        <option selected disabled value="">-- Choose Account for Deposit --</option>
                                         <?php foreach ($accounts as $val): ?>
                                             <option value="<?= $val['account_id'] ?>"><?= $val['acc_name'] ?></option>
                                         <?php endforeach; ?>

@@ -95,7 +95,7 @@ $routes->group('{locale}', function ($routes) {
       $routes->get('payment_voucher', 'FinancialController::payment_voucher', ['filter' => ['restrict', 'pageAuthorizedFilter']]);
       $routes->get('receipt_voucher', 'FinancialController::receipt_voucher', ['filter' => ['restrict', 'pageAuthorizedFilter']]);
       $routes->post('get_ledger/(:any)', 'FinancialController::get_ledger/$1', ['filter' => ['restrict']]);
-
+      
       $routes->get('acchistory/(:any)', 'FinancialController::acchistory/$1', ['filter' => ['restrict']]);
       $routes->get('finperiod', 'FinancialController::finperiod', ['filter' => ['restrict', 'pageAuthorizedFilter']]);
       $routes->get('journal', 'FinancialController::journal_entry', ['filter' => ['restrict', 'pageAuthorizedFilter']]);

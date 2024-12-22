@@ -624,7 +624,7 @@ class FinancialController extends BaseController
         } // /foreach
         echo json_encode($result);
     }
-
+ 
     public function fetch_trx()
     {
         $finmodel = new FinancialModel();

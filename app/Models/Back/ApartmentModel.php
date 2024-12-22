@@ -19,9 +19,9 @@ class ApartmentModel extends Model
     // public function get_type_data($table, $tableid, $status, $id = null , $branch_id)
     {
 
-        $branch_id = session()->get('user')['branch_id'];
+        $branch_id = (int) session()->get('user')['branch_id']; // Cast to integer
 
-        if($branch_id != 1){
+        if($branch_id !== 1){
             
             // if ($id) {
             //     $sql = "SELECT * FROM $table  where $status != 'Deleted' and $tableid =? AND branch_id= ?";
@@ -160,7 +160,7 @@ class ApartmentModel extends Model
         // get apartment lists based on branch 
         // $profile_no = $this->session->userdata("profile")['profile_no'];
 
-        $branch_id = session()->get('user')['branch_id'];
+        $branch_id = (int) session()->get('user')['branch_id']; // Cast to integer
         if($branch_id !== 1){
             $sql = "SELECT *
                     FROM tbl_apartments ap 
@@ -185,23 +185,22 @@ class ApartmentModel extends Model
 
         // get Active sites based on branch
 
-        $branch_id = session()->get('user')['branch_id'];
+        // $branch_id = session()->get('user')['branch_id'];
+        $branch_id = (int) session()->get('user')['branch_id']; // Cast to integer
 
+
+        // Log the branch_id to check its value
         if($branch_id !== 1){
-            $sql = "SELECT *
-                    FROM tbl_sites
-                    WHERE   status ='Active' AND branch_id = $branch_id";
-
+            $sql = "SELECT * FROM tbl_sites WHERE status ='Active' AND branch_id = $branch_id AND No_of_Floors > 1";
+            $query = $this->db->query($sql);
+            return $query->getResultArray();
         }else{
-            $sql = "SELECT *
-                    FROM tbl_sites
-                    WHERE   status ='Active'";
+            $sql = "SELECT * FROM tbl_sites WHERE status ='Active' AND No_of_Floors > 1";
+            $query = $this->db->query($sql);
+            return $query->getResultArray();
         }
         
 
-        $query = $this->db->query($sql);
-
-        return $query->getResultArray();
     }
 
     public function get_floors_for($site_id){

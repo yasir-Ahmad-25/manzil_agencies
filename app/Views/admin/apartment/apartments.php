@@ -46,6 +46,7 @@
                         <br />
                         <div id="messages"></div>
 
+                        
                         <table id="manageTable" class="table table-striped table-bordered no-wrap" style="width:100%">
                             <thead>
                                 <tr>
@@ -126,7 +127,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-group">
+                                    <div class="form-group">  
                                         <label for="floor_id"><?='Buildings' ?></label>
                                         <select class="form-control" id="site_id" name="site_id" required>
                                             <option selected disabled value="">Choose Buildings</option>
