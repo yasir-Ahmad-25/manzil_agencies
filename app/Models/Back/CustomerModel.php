@@ -29,10 +29,13 @@ class CustomerModel extends Model
 
     public function get_customers()
     {
-        // $brid = session()->get('user')['branch_id'];
+        $brid = session()->get('user')['branch_id'];
 
-        $sql = "SELECT cu.*,(SELECT sum(amount) from tbl_deposit td where td.customer_id=cu.customer_id ) as total_deposit, acc.acc_balance FROM `tbl_customers` cu JOIN `tbl_cl_accounts` acc 
-        ON cu.customer_id=acc.acc_tag WHERE acc.acc_set='Customer' ";
+        if($brid != 1){
+            $sql = "SELECT cu.*, (SELECT SUM(amount) FROM tbl_deposit td WHERE td.customer_id = cu.customer_id) AS total_deposit, acc.acc_balance FROM tbl_customers cu JOIN tbl_cl_accounts acc ON cu.customer_id = acc.acc_tag WHERE acc.acc_set = 'Customer' AND cu.branch_id = ".$brid;
+        }else{
+            $sql = "SELECT cu.*, (SELECT SUM(amount) FROM tbl_deposit td WHERE td.customer_id = cu.customer_id) AS total_deposit, acc.acc_balance FROM tbl_customers cu JOIN tbl_cl_accounts acc ON cu.customer_id = acc.acc_tag WHERE acc.acc_set = 'Customer'";
+        }
         $query = $this->db->query($sql);
 
         return $query->getResultArray();

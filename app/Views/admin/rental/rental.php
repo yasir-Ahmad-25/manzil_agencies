@@ -482,7 +482,7 @@
                                     <label for="ap_id"><?= 'Apartment No' ?></label>
                                     <select class="form-control border-secondary " id="apid_add" name="ap_id">
                                         <!-- <option selected disabled>Choose Apartment</option> -->
-                                        <?= $Active_Apartments; ?>
+                                        <?= $Active_Apartment ?> 
                                     </select>
 
                                     <select class="form-control border-secondary " id="ap_id" name="ap_id">

@@ -96,6 +96,8 @@ abstract class BaseController extends Controller
         $qry = $auth->query("SELECT * FROM $table");
         return $qry->getResultArray();
     }
+
+
     public function get_table_with_branch($table)
     {
         $auth = new AuthModel();

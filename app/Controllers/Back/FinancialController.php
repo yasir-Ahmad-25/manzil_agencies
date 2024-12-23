@@ -91,7 +91,7 @@ class FinancialController extends BaseController
         $finmodel = new FinancialModel();
 
         $fp_id1 = $this->getActivePeriod()->fp_id;
-
+ 
         $user_data = [
             'paid_from' => $paid_f,
             'amount' => $p_amount,

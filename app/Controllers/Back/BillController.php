@@ -22,7 +22,7 @@ class BillController extends BaseController
 
         return view('admin/rental/bills', $this->viewData);
     }
-
+ 
 
     function charges()
     {

@@ -14,7 +14,8 @@ class PaymentModel extends Model
         return $this->db->insertID();
     }
     public function get_deposits(){
-        return $this->db->query('SELECT cu.cust_name, d.amount,d.created_at,acc.acc_name from tbl_deposit d join tbl_customers cu on cu.customer_id=d.customer_id join tbl_cl_accounts acc on acc.account_id=d.account_id where d.amount < 0')->getResultArray();
+        $branch_id = session()->get('user')['branch_id'];
+        return $this->db->query('SELECT cu.cust_name, d.amount,d.created_at,acc.acc_name from tbl_deposit d join tbl_customers cu on cu.customer_id=d.customer_id join tbl_cl_accounts acc on acc.account_id=d.account_id where d.amount < 0 and branch_id = '.$branch_id)->getResultArray();
     }
     public function update_table($table, $data)
     {

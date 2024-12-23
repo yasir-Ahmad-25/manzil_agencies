@@ -274,7 +274,7 @@
                     // $("#bills-badge").html(response.bill);
                     $("#total").val(response);
 
-                }
+                } 
             });
         });
 

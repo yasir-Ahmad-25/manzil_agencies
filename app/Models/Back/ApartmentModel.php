@@ -15,19 +15,37 @@ class ApartmentModel extends Model
         return $this->db->insertID();
     }
 
-    public function get_type_data($table, $tableid, $status, $id = null)
+    public function get_type_data($table, $tableid, $status)
+    // public function get_type_data($table, $tableid, $status, $id = null , $branch_id)
     {
 
- 
-        if ($id) {
-            $sql = "SELECT * FROM $table  where $status != 'Deleted' and $tableid =?";
-            $query = $this->db->query($sql, array($id));
-            return $query->getRowArray();
-        }
+        $branch_id = session()->get('user')['branch_id'];
 
-        $sql = "SELECT * FROM $table where $status != 'Deleted' ORDER BY $tableid ASC";
-        $query = $this->db->query($sql);
-        return $query->getResultArray();
+        if($branch_id != 1){
+            
+            // if ($id) {
+            //     $sql = "SELECT * FROM $table  where $status != 'Deleted' and $tableid =? AND branch_id= ?";
+            //     $query = $this->db->query($sql, array($id, $branch_id));
+            //     return $query->getRowArray();
+            // }
+    
+            $sql = "SELECT * FROM $table where $status != 'Deleted' AND branch_id = $branch_id ORDER BY $tableid ASC";
+            $query = $this->db->query($sql);
+            return $query->getResultArray();
+        }else{
+            
+            // it's an admin
+            // if ($id) {
+            //     $sql = "SELECT * FROM $table  where $status != 'Deleted' and $tableid =?";
+            //     $query = $this->db->query($sql, array($id));
+            //     return $query->getRowArray();
+            // }
+    
+            $sql = "SELECT * FROM $table where $status != 'Deleted' ORDER BY $tableid ASC";
+            $query = $this->db->query($sql);
+            return $query->getResultArray();
+        }
+ 
     }
 
     // changes made
@@ -47,7 +65,13 @@ class ApartmentModel extends Model
     }
 
     public function get_apartments($site_id){
-        return $this->db->query("SELECT * from tbl_apartments where ap_status='Occupied' and site_id='$site_id'")->getResultArray();
+        // get partments based on branch
+        $branch_id = session()->get('user')['branch_id'];
+        if($branch_id !== 1){
+            return $this->db->query("SELECT * from tbl_apartments where ap_status='Occupied' and site_id='$site_id' AND branch_id=$branch_id")->getResultArray();
+        }else{
+            return $this->db->query("SELECT * from tbl_apartments where ap_status='Occupied' and site_id='$site_id'")->getResultArray();
+        }
     }
 
     public function get_num_floors($id)
@@ -74,9 +98,18 @@ class ApartmentModel extends Model
     {
         // $profile_no = $this->session->userdata("profile")['profile_no'];
 
-        $sql = "SELECT * FROM tbl_floors f 
-                JOIN tbl_sites s ON f.site_id = s.site_id 
-                where f.floor_status !='Deleted' ";
+        // get floors based on branch id sites
+        $branch_id = session()->get('user')['branch_id'];
+
+        if($branch_id !== 1){
+            $sql = "SELECT * FROM tbl_floors f 
+                    JOIN tbl_sites s ON f.site_id = s.site_id 
+                    where f.floor_status !='Deleted' and f.branch_id = $branch_id ";
+        }else{
+            $sql = "SELECT * FROM tbl_floors f 
+                    JOIN tbl_sites s ON f.site_id = s.site_id 
+                    where f.floor_status !='Deleted' ";
+        }
 
         $query = $this->db->query($sql);
         return $query->getResultArray();
@@ -96,9 +129,20 @@ class ApartmentModel extends Model
 
     public function fill_floor_site()
     {
+
+        // fill floor sites based on branch
+        $branch_id = session()->get('user')['branch_id'];
+
+        if($branch_id !== 1){
+            $query = $this->db->query("select * from tbl_sites WHERE status !='Deleted' AND No_of_Floors >= 1 AND branch_id = $branch_id");
+            return $query->getResultArray();
+
+        }else{
+            $query = $this->db->query("select * from tbl_sites WHERE status !='Deleted' AND No_of_Floors >= 1;");
+            return $query->getResultArray();
+            
+        }
         // $profile_no = $this->session->userdata("profile")['profile_no'];
-        $query = $this->db->query("select * from tbl_sites WHERE status !='Deleted' AND No_of_Floors >= 1;");
-        return $query->getResultArray();
     }
     public function get_ap_type_in_apartment($id)
     {
@@ -113,24 +157,47 @@ class ApartmentModel extends Model
 
     public function get_apartments_list()
     {
+        // get apartment lists based on branch 
         // $profile_no = $this->session->userdata("profile")['profile_no'];
 
-        $sql = "SELECT *
-                FROM tbl_apartments ap 
-                JOIN tbl_apartment_types tp ON tp.ap_type_id=ap.ap_type_id 
-                JOIN tbl_floors fl ON fl.floor_id=ap.floor_id
-                WHERE   ap.ap_status !='Deleted'";
+        $branch_id = session()->get('user')['branch_id'];
+        if($branch_id !== 1){
+            $sql = "SELECT *
+                    FROM tbl_apartments ap 
+                    JOIN tbl_apartment_types tp ON tp.ap_type_id=ap.ap_type_id 
+                    JOIN tbl_floors fl ON fl.floor_id=ap.floor_id
+                    WHERE   ap.ap_status !='Deleted' AND ap.branch_id = $branch_id";
+        }else{
+                $sql = "SELECT *
+                        FROM tbl_apartments ap 
+                        JOIN tbl_apartment_types tp ON tp.ap_type_id=ap.ap_type_id 
+                        JOIN tbl_floors fl ON fl.floor_id=ap.floor_id
+                        WHERE   ap.ap_status !='Deleted'";
+        }
 
         $query = $this->db->query($sql);
 
         return $query->getResultArray();
     }
+
     public function get_sites()
     {
 
-        $sql = "SELECT *
-                FROM tbl_sites
-                WHERE   status ='Active'";
+        // get Active sites based on branch
+
+        $branch_id = session()->get('user')['branch_id'];
+
+        if($branch_id !== 1){
+            $sql = "SELECT *
+                    FROM tbl_sites
+                    WHERE   status ='Active' AND branch_id = $branch_id";
+
+        }else{
+            $sql = "SELECT *
+                    FROM tbl_sites
+                    WHERE   status ='Active'";
+        }
+        
 
         $query = $this->db->query($sql);
 
@@ -138,7 +205,14 @@ class ApartmentModel extends Model
     }
 
     public function get_floors_for($site_id){
-        return $this->db->query("SELECT * from tbl_floors where site_id='$site_id' and floor_status='Active'")->getResultArray();
+        // get floors based on branch
+        $branch_id = session()->get('user')['branch_id'];
+
+        if($branch_id !== 1){
+            return $this->db->query("SELECT * from tbl_floors where site_id='$site_id' and floor_status='Active' and branch_id = $branch_id")->getResultArray();
+        }else{
+            return $this->db->query("SELECT * from tbl_floors where site_id='$site_id' and floor_status='Active'")->getResultArray();
+        }
     }
 
     

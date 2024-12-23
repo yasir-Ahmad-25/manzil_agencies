@@ -19,7 +19,7 @@ class CustomerController extends BaseController
         
 
         $this->viewData['title'] = 'Deposit Payable';
-        $this->viewData['customers'] = $this->get_table_info('tbl_customers');
+        $this->viewData['customers'] = $this->get_table_with_branch('tbl_customers');
         $this->viewData['accounts'] = $payment->get_cash_bank_accounts();
         $this->viewData['access'] = $auth->get_user_access(session()->get('ut_id'), $this->request->getLocale());
         return view('admin/customer/deposit_payment', $this->viewData);
@@ -118,7 +118,7 @@ class CustomerController extends BaseController
     public function list()
     {
         $auth = new AuthModel();
-        
+         
 
         $this->viewData['title'] = 'Customers';
         $this->viewData['customers'] = $this->get_table_info('tbl_customers');
@@ -423,6 +423,7 @@ class CustomerController extends BaseController
                 'ref_name' => $this->request->getVar('ref_name'),
                 'ref_phone' => $this->request->getVar('ref_phone'),
                 'cust_status' => 'Active',
+                'branch_id' => $this->request->getVar('branch_id'),
             ];
             switch ($_POST['form_tag']) {
 

@@ -111,6 +111,7 @@
                                 <input type="text" class="form-control " placeholder="<?= 'Customer Name' ?>" name="cust_name" id="cust_name">
                                 <input type="hidden" class="form-control " name="form_tag" id="form_tag">
                                 <input type="hidden" class="form-control " name="customer_id" id="customer_id">
+                                <input type="hidden" class="form-control " name="branch_id" id="branch_id">
                             </div>
                         </div>
                         <div class="col-md-5">
@@ -188,6 +189,10 @@
 
     $(document).ready(function() {
         var manageTable;
+
+        branch_id = <?= session()->get('user')['branch_id'] ?>;
+        $('#branch_id').val("branch_id");
+        
 
         customerList();
 

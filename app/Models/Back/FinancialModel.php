@@ -136,7 +136,7 @@ class FinancialModel extends Model
     public function financial_period()
     {
         $brid = session()->get('user')['branch_id'];
-        $data = $this->db->query("SELECT * From tbl_cl_financial_period where fp_status = 'Active'")->getResultArray();
+        $data = $this->db->query("SELECT * From tbl_cl_financial_period where fp_status = 'Active' AND branch_id = $brid")->getResultArray();
 
         if (count($data) == 0) $state = 'None';
         else if (count($data) > 1)  $state = 'Multiple';
@@ -193,6 +193,7 @@ class FinancialModel extends Model
     }
     public function update_accounnt_balance($account_id, $amount, $value_type) # Record trx = transections
     {
+        
         // $amount=abs($amount);
         $data = $this->db->query("SELECT * From tbl_cl_accounts where account_id = '" . $account_id . "'")->getResultArray();
         if (count($data) == 0)

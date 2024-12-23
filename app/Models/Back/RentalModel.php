@@ -7,6 +7,7 @@ use CodeIgniter\Model;
 class RentalModel extends Model
 {
 
+    protected $database_table = 'tbl_apartments'; // Table name
     public function store($table, $data)
     {
         $this->db->table($table)->insert($data);
@@ -19,10 +20,31 @@ class RentalModel extends Model
         return true;
     }
  
-    public function get_rental_info($selected_site)
-    {
+    public function get_rental_info($selected_site , $branch_id)
+    { 
+        if($branch_id !== 1){ /// if it's not superAdmin 
+            return $this->fetchBasedOnSelectedSite($selected_site , $branch_id);
+        }else{
+            $sql = "SELECT rental_id, cu.customer_id,rental_status,duration, cust_name,r.profile_no, ap.ap_id, 
+                ap_no,ap.price, start_date, end_date, rental_date, deposit, s.site_address,s.site_name FROM tbl_rentals r
+                JOIN tbl_apartments ap ON r.ap_id=ap.ap_id
+        
+                JOIN tbl_floors fl ON fl.floor_id=ap.floor_id
+        
+                JOIN tbl_sites s ON s.site_id=fl.site_id
 
-        if($selected_site !== "All_Sites"){
+                JOIN tbl_customers cu ON r.customer_id=cu.customer_id
+                WHERE r.rental_status = 'Active' ORDER BY rental_id DESC";
+
+            $query = $this->db->query($sql);
+            return $query->getResultArray();
+
+        }
+            
+    }
+
+    public function fetchBasedOnSelectedSite($selected_site , $branch){
+        if($selected_site !== "All_Sites"){ // if he didn't select All sites fetch data based on selected site
             $sql = "SELECT rental_id, cu.customer_id,rental_status,duration, cust_name,r.profile_no, ap.ap_id, 
                     ap_no,ap.price, start_date, end_date, rental_date, deposit, s.site_address,s.site_name FROM tbl_rentals r
                     JOIN tbl_apartments ap ON r.ap_id=ap.ap_id
@@ -32,7 +54,7 @@ class RentalModel extends Model
                     JOIN tbl_sites s ON s.site_id=fl.site_id
 
                     JOIN tbl_customers cu ON r.customer_id=cu.customer_id
-                    WHERE r.rental_status = 'Active'  AND s.site_id = '$selected_site' ORDER BY rental_id DESC";
+                    WHERE r.rental_status = 'Active'  AND s.site_id = '$selected_site' AND r.branch_id = $branch ORDER BY rental_id DESC";
                     
                     
         }else{
@@ -45,13 +67,12 @@ class RentalModel extends Model
                 JOIN tbl_sites s ON s.site_id=fl.site_id
 
                 JOIN tbl_customers cu ON r.customer_id=cu.customer_id
-                WHERE r.rental_status = 'Active' ORDER BY rental_id DESC";
+                WHERE r.rental_status = 'Active' AND r.branch_id = $branch ORDER BY rental_id DESC";
         }
 
         $query = $this->db->query($sql);
-        return $query->getResultArray();    
+        return $query->getResultArray();
     }
-
     public function get_closed_rentals()
     {
         $sql = "SELECT rental_id, ten.customer_id,rental_status,duration, cust_name,r.profile_no, ap.ap_id, 
@@ -69,16 +90,29 @@ class RentalModel extends Model
 
     public function get_active_apartments()
     {
+        // getting active apartments based on branch
+        $branch_id = session()->get('user')['branch_id'];
+        $builder = $this->db->table($this->database_table); // Ensures the correct table
 
-        $sql = "SELECT * FROM tbl_apartments 
-                WHERE ap_status = 'Active' ORDER BY ap_id ASC";
+        if ($branch_id !== 1) {
+            $builder->where('ap_status', 'Active')
+                    ->where('branch_id', $branch_id)
+                    ->orderBy('ap_id', 'ASC');
+        } else {
+            $builder->where('ap_status', 'Active')
+                    ->orderBy('ap_id', 'ASC');
+        }
 
-        $query = $this->db->query($sql);
-        return $query->getResultArray();
+        // Check the query if needed for debugging
+        // echo $this->db->getLastQuery(); // Uncomment to check the last query
+
+        $query = $builder->get();
+        return $query->getResultArray(); // Return result as array
     }
 
     public function getAvailableSites(){
-        $sql = 'SELECT * FROM tbl_sites WHERE No_of_Floors > 0';
+        $branch_id = session()->get('user')['branch_id']; 
+        $sql = 'SELECT * FROM tbl_sites WHERE No_of_Floors > 0 AND branch_id ='.$branch_id;
         $query = $this->db->query($sql);
         return $query->getResultArray();
     }
@@ -144,6 +178,7 @@ class RentalModel extends Model
             'month' => $month,
             'created_date' => $date,
             'apartment_id' => $apid,
+            'branch_id' => session()->get('user')['branch_id'],
         ];
 
         // if ($dur_days <= 30) {
@@ -229,8 +264,9 @@ class RentalModel extends Model
     {
         $finance = new FinancialModel();
 
-        $fpid = $finance->financial_period()['fp_id'];
+        $fpid = $finance->financial_period()['fp_id']; // getting the financial period id
 
+        
         $trx_id = $finance->record_trans($amount, $source, $fpid, $date, $customer_id);
 
         $dracc = $acc_cash;

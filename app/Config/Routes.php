@@ -123,7 +123,7 @@ $routes->group('{locale}', function ($routes) {
       $routes->get('owners', 'OwnerController::index',['filter' => ['restrict', 'pageAuthorizedFilter']]);
 
       // These are the Ajax requests: fetching user data and handling user actions
-         $routes->get('fetch_sites', 'ApartmentController::fetch_sites', ['filter' => 'restrict']);
+         $routes->get('fetch_sites/(:any)', 'ApartmentController::fetch_sites/$1', ['filter' => 'restrict']);
          $routes->post('crud_sites', 'ApartmentController::crud_sites', ['filter' => 'restrict']);
          $routes->post('crud_sites', 'ApartmentController::crud_sites', ['filter' => 'restrict']);
          $routes->get('owner_list', 'ApartmentController::fetch_owners',['filter' => 'restrict']);

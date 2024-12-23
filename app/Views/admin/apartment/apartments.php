@@ -129,7 +129,7 @@
                                     <div class="form-group">
                                         <label for="floor_id"><?='Buildings' ?></label>
                                         <select class="form-control" id="site_id" name="site_id" required>
-                                            <option selected disabled value="">Choose Building</option>
+                                            <option selected disabled value="">Choose Buildings</option>
                                             <?php foreach ($buildings as $k => $v) : ?>
                                                 <option value="<?= $v['site_id'] ?>"><?= $v['site_name'] ?></option>
                                             <?php endforeach ?>

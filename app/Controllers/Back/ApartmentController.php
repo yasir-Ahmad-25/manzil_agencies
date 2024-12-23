@@ -21,12 +21,14 @@ class ApartmentController extends BaseController
         return view('admin/apartment/building', $this->viewData);
     }
 
-    public function fetch_sites()
+    public function fetch_sites($branch_id)
     {
+
 
         $apartment = new ApartmentModel();
         $result = array('data' => array());
 
+        
         $data = $apartment->get_type_data('tbl_sites', 'site_id', 'status');
 
         $i = 1;
@@ -101,6 +103,19 @@ class ApartmentController extends BaseController
 
             // end menu button
 
+            $show_Buttons = "";
+
+            
+            // if($value['branch_id'] != 1){
+            //     if($value['status'] != 'Active'){
+            //         $show_Buttons;
+            //     }else{
+            //         $show_Buttons = $buttons;
+            //     }
+            // }else{
+            //     $show_Buttons = ;
+            // }
+
             $result['data'][$key] = array(
                 $i,
                 $value['site_name'],
@@ -109,7 +124,7 @@ class ApartmentController extends BaseController
                 $value['SiteYearBuild'],
                 $apartment->get_num_floors($value['site_name']) . ' Floors',
                 $stat_icon . ' ' . $value['status'],
-                $buttons,
+               $buttons,
             );
 
             // $this->display(  $this->Property_model->get_num_floors($value['site_name']).' Floors');
@@ -131,7 +146,8 @@ class ApartmentController extends BaseController
                 // 'profile_no' => $this->session->userdata('profile')['profile_no'],
                 'floor_name' => $floorname,
                 'site_id' => $site_id,
-                'floor_status' => 'Active'
+                'floor_status' => 'Active',
+                'branch_id' => session()->get('user')['branch_id'],
             ];
             $apartment->store('tbl_floors', $data);
         }
@@ -149,7 +165,8 @@ class ApartmentController extends BaseController
                 // 'profile_no' => $this->session->userdata('profile')['profile_no'],
                 'floor_name' => $floorname,
                 'site_id' => $site_id,
-                'floor_status' => 'Active'
+                'floor_status' => 'Active',
+                'branch_id' => session()->get('user')['branch_id'],
             ];
 
             $apartment->store('tbl_floors', $data);
@@ -195,7 +212,7 @@ class ApartmentController extends BaseController
                     'site_owner' => $_POST['siteOwner'],
                     'SiteYearBuild' => $_POST['SiteYearBuild'],
                     'No_of_Floors' => $_POST['floor'],
-                    // 'profile_no' => $this->session->userdata('profile')['profile_no'],
+                    'branch_id' =>  $_POST['branch_id'],
                     'status' => $default_status
                 ];
                 $site_id = $apartment->store('tbl_sites', $data);
@@ -205,10 +222,10 @@ class ApartmentController extends BaseController
                 } else {
                     $this->generate_floorbyalpha($_POST['floor'], $_POST['Prefix'], $site_id);
                 }
-
+                
                 $response['alert_outer'] = $this->alert('Site Has Been Added', 'success');
-        } else if ($_POST['btn_action'] == "btn_edit") { // SAVE THE UPDATED DATA
-
+            } else if ($_POST['btn_action'] == "btn_edit") { // SAVE THE UPDATED DATA
+                
                 // collect the updated  Data
                 $data = [
                     'site_id' => $_POST['site_id'],
@@ -221,8 +238,8 @@ class ApartmentController extends BaseController
                 $apartment->update_table('tbl_sites', $data);
                 $response['success'] = true;
                 $response['alert_outer'] = $this->alert('Site Has Been Updated.', 'success');
-        } else if ($_POST['btn_action'] == "btn_de_activate") { // DE-ACTIVATES SITE OR BUILDING
-
+            } else if ($_POST['btn_action'] == "btn_de_activate") { // DE-ACTIVATES SITE OR BUILDING
+                
                 $data = [
                     'site_id' => $_POST['site_id'],
                     'site_name' => $_POST['sitename'],
@@ -232,13 +249,13 @@ class ApartmentController extends BaseController
                     'No_of_Floors' => $_POST['floor'],
                     'status' => 'De-Active'
                 ];
-
+                
                 $apartment->delete_table('tbl_sites', $data);
                 $response['success'] = true;
                 $response['alert_outer'] = $this->alert('Site Has Been De-Activated Successfully.', 'success');
-
-        } else if ($_POST['btn_action'] == "btn_Activate") { // ACTIVATES SITE OR BUILDING
-
+                
+            } else if ($_POST['btn_action'] == "btn_Activate") { // ACTIVATES SITE OR BUILDING
+                
                 $data = [
                     'site_id' => $_POST['site_id'],
                     'site_name' => $_POST['sitename'],
@@ -258,7 +275,8 @@ class ApartmentController extends BaseController
         echo json_encode($response);
     }
 
-    // changes made manually
+    // changes made manually [ START ]
+    
     public function fetch_owners()
     {
         $ownerModel = new OwnerModel();
@@ -276,6 +294,7 @@ class ApartmentController extends BaseController
 
         return $this->response->setJSON($result);  // Return as JSON
     }
+    // changes made manually [ END ]
 
     public function floors(): string
     {
@@ -395,6 +414,7 @@ class ApartmentController extends BaseController
                 $data = [
                     'floor_name' => $_POST['floor_name'],
                     'site_id' => $_POST['site_id'],
+                    'branch_id' => session()->get('user')['branch_id'],
                     // 'profile_no' => $this->session->userdata('profile')['profile_no'],
                     'floor_status' => $default_status
                 ];
@@ -541,6 +561,7 @@ class ApartmentController extends BaseController
                     'ap_type_name' => $_POST['type_name'],
                     'des' => $_POST['des'],
                     'ap_type_status' => 'Active',
+                    'branch_id' => session()->get('user')['branch_id'],
                     // 'profile_no' => $this->session->userdata('profile')['profile_no'],
                 ];
                 $apartment->store('tbl_apartment_types', $data);
@@ -693,8 +714,6 @@ class ApartmentController extends BaseController
 
         echo json_encode($result);
     }
-
-
     public function crud_apartments()
     {
 
@@ -730,6 +749,7 @@ class ApartmentController extends BaseController
                     'pathrooms' => $_POST['pathrooms'],
                     'kitchen' => $_POST['kitchen'],
                     'ap_des' => $_POST['ap_des'],
+                    'branch_id' => session()->get('user')['branch_id'],
                     // 'profile_no' => $this->session->userdata('profile')['profile_no'],
                     'ap_status' => $default_status
                 ];

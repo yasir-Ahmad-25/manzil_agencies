@@ -101,6 +101,7 @@
                         <div class="modal-body">
                             <input type="hidden" name="btn_action" id="btn_action">
                             <input type="hidden" name="site_id" id="site_id">
+                            <input type="hidden" name="branch_id" id="branch_id">
                             <div class="form-group mt-3">
                                  <label for="#"> Building name</label>
                                 <input type="text" class="form-control" id="sitename" name="sitename" placeholder="" autocomplete="off">
@@ -229,6 +230,37 @@
     
          // This is hidden by default but when user clicks de-activate this message pops out
          $('#tablesMainNav').addClass('active');
+
+         // get the branch id
+         branch_id = <?= session()->get('user')['branch_id'] ?>;
+         $('#branch_id').val(branch_id);
+         console.log("branch-id: " + branch_id);
+         
+         if(branch_id != 1){
+            console.log("BRANCH-ID IS: " + branch_id);
+            fetchTable(branch_id);
+         }else{
+            console.log("THIS IS THE SUPER-ADMIN");
+            fetchTable(1)
+         }
+
+         function fetchTable(branch_id) {
+            let CI4_ROUTE;
+
+            // Determine which route to use based on the selected site
+            CI4_ROUTE = base_url + '/apartment/fetch_sites/' + branch_id;
+
+            // Initialize the DataTable only if it hasn't been initialized yet
+            if (!$.fn.dataTable.isDataTable('#manageTable_site')) {
+                manageTable_site = $('#manageTable_site').DataTable({
+                    'ajax': CI4_ROUTE,  // Dynamic data source URL based on the selected status
+                    'order': []         // Optionally specify your table ordering logic
+                });
+            } else {
+                // If the DataTable is already initialized, just reload the data
+                manageTable_site.ajax.url(CI4_ROUTE).load();
+            }
+        }
         // initialize the datatable 
         manageTable_site = $('#manageTable_site').DataTable({
             'ajax': base_url + '/apartment/fetch_sites',

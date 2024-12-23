@@ -29,18 +29,18 @@ class BillModel extends Model
         // if ($status == 'all') $st = '';
         // else $st = " WHERE bill_status='$status' ";
         // $details = ($value['rental_id'] != 0) ? "Rental" : '<a href="javascript:void(0)" data-bs-target="#print_inv" data-bill_id="'. $value['id'] .'" class="dropdown-item" data-bs-toggle="modal"><i data-feather="eye" class="feather-icon"></i>Details</a>';
-
-        $sql = "SELECT rs.*,cu.cust_name, rs.tenant_id as customer_id from tbl_rental_summary rs join tbl_customers cu on cu.customer_id=rs.tenant_id order by rs.id desc";
+        $branch_id = session()->get('user')['branch_id'];
+        $sql = "SELECT rs.*,cu.cust_name, rs.tenant_id as customer_id from tbl_rental_summary rs join tbl_customers cu on cu.customer_id=rs.tenant_id WHERE rs.branch_id = $branch_id order by rs.id desc";
         if($status == 'rent'){
-            $sql = "SELECT rs.*,cu.cust_name, rs.tenant_id as customer_id from tbl_rental_summary rs join tbl_customers cu on cu.customer_id=rs.tenant_id where rental_id !=0 order by rs.id desc";
+            $sql = "SELECT rs.*,cu.cust_name, rs.tenant_id as customer_id from tbl_rental_summary rs join tbl_customers cu on cu.customer_id=rs.tenant_id where rental_id !=0 AND rs.branch_id = $branch_id order by rs.id desc";
         }elseif($status == 'bill'){
-            $sql = "SELECT rs.*,cu.cust_name, rs.tenant_id as customer_id from tbl_rental_summary rs join tbl_customers cu on cu.customer_id=rs.tenant_id where rental_id =0  order by rs.id desc";
+            $sql = "SELECT rs.*,cu.cust_name, rs.tenant_id as customer_id from tbl_rental_summary rs join tbl_customers cu on cu.customer_id=rs.tenant_id where rental_id =0 AND rs.branch_id = $branch_id order by rs.id desc";
         }elseif($status=='unpaid_bill'){
-            $sql = "SELECT rs.*,cu.cust_name, rs.tenant_id as customer_id from tbl_rental_summary rs join tbl_customers cu on cu.customer_id=rs.tenant_id where paid =0  order by rs.id desc";
+            $sql = "SELECT rs.*,cu.cust_name, rs.tenant_id as customer_id from tbl_rental_summary rs join tbl_customers cu on cu.customer_id=rs.tenant_id where paid =0  AND rs.branch_id = $branch_id order by rs.id desc";
         }elseif($status=='paid_bill'){
-            $sql = "SELECT rs.*,cu.cust_name, rs.tenant_id as customer_id from tbl_rental_summary rs join tbl_customers cu on cu.customer_id=rs.tenant_id where total=paid+discount  order by rs.id desc";
+            $sql = "SELECT rs.*,cu.cust_name, rs.tenant_id as customer_id from tbl_rental_summary rs join tbl_customers cu on cu.customer_id=rs.tenant_id where total=paid+discount AND rs.branch_id = $branch_id order by rs.id desc";
         }elseif($status=='partial_bill'){
-            $sql = "SELECT rs.*,cu.cust_name, rs.tenant_id as customer_id from tbl_rental_summary rs join tbl_customers cu on cu.customer_id=rs.tenant_id where paid!=0 and total<paid+discount  order by rs.id desc";
+            $sql = "SELECT rs.*,cu.cust_name, rs.tenant_id as customer_id from tbl_rental_summary rs join tbl_customers cu on cu.customer_id=rs.tenant_id where paid!=0 and total<paid+discount AND rs.branch_id = $branch_id  order by rs.id desc";
         }
         $query = $this->db->query($sql);
         return $query->getResultArray();
@@ -59,7 +59,8 @@ class BillModel extends Model
  
     public function get_chargable_bills()
     {
-        $sql = "SELECT MAX(created_date) as created_date,MAX(created_date) as bill_due_date, rental_id FROM tbl_rental_summary
+        $branch_id = session()->get('user')['branch_id'];
+        $sql = "SELECT MAX(created_date) as created_date,MAX(created_date) as bill_due_date, rental_id FROM tbl_rental_summary WHERE branch_id = $branch_id
         GROUP by rental_id ORDER BY created_date DESC";
 
         $query = $this->db->query($sql);

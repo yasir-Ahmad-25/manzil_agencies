@@ -178,7 +178,7 @@ class UserController extends BaseController
             'user_tell' => $this->request->getVar('user_tell'),
             'user_email' => $this->request->getVar('user_email'),
             'ut_id' => $this->request->getVar('ut_id'),
-            'branch_id' => $this->request->getVar('br_id'),
+            'branch_id' => session()->get('user')['branch_id'],
             'user_img' => $this->upload_img('users', 'user_img'),
             'user_timestamp' => time(),
             'user_status' => 'Active',

@@ -129,7 +129,7 @@
 
     <script> 
     $(document).ready(function() {
-        //alert('Hello...');
+        //alert('Hello...'); 
         var manageTable;
         var base_url = "<?php echo base_url($locale); ?>";
         var lang = "<?php echo $locale; ?>";

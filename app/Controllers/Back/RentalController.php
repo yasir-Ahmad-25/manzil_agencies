@@ -22,12 +22,13 @@ class RentalController extends BaseController
         $this->viewData['title'] = 'Rental';
         $this->viewData['access'] = $auth->get_user_access(session()->get('ut_id'), $this->request->getLocale());
 
-        $this->viewData['customers'] = $this->get_table_info('tbl_customers');
-        $this->viewData['Active_Apartments'] = $this->get_active_apartments();
+        $this->viewData['customers'] = $this->get_table_with_branch('tbl_customers');
+        $this->viewData['Active_Apartment'] = $this->get_active_apartments();
         $this->viewData['sites'] = $this->get_sites();
         $this->viewData['all_apartment'] = $this->get_table_info('tbl_apartments');
         $this->viewData['accounts'] = $payment->get_cash_bank_accounts();
 
+        // echo $this->viewData['Active_Apartments'];
         return view('admin/rental/rental', $this->viewData);
     }
 
@@ -50,8 +51,9 @@ class RentalController extends BaseController
 
         $result = array('data' => array());
 
+        $branch_id =  session()->get('user')['branch_id'];
         // search rental information based on selected site 
-        $data = $rental->get_rental_info($selected_site);
+        $data = $rental->get_rental_info($selected_site , $branch_id);
        
         $i = 1;
         foreach ($data as $key => $value) {
@@ -219,6 +221,7 @@ class RentalController extends BaseController
                         'duration' => $_POST['duration'],
                         'rental_status' => 'Active',
                         'deposit' => $_POST['deposit'],
+                        'branch_id' => session()->get('user')['branch_id'],
                     ];
 
                     // $_POST['acc_tag_rec'] : this is the account he payed it for the first time customer was renting the aprtment
@@ -449,8 +452,7 @@ class RentalController extends BaseController
         $rental->store('tbl_rental_termination', $data);
     }
 
-
-    public function get_active_apartments()
+    public function get_active_apartments() // get active apartments based on branch
     {
         $rental = new RentalModel();
 
@@ -469,7 +471,6 @@ class RentalController extends BaseController
         $apid = $_POST['ap_id'];
         echo $rental->get_apartment_price($apid);
     }
-
 
     public function get_sites(){
         $rental = new RentalModel();
