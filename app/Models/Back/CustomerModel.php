@@ -27,19 +27,56 @@ class CustomerModel extends Model
         return true;
     }
 
-    public function get_customers()
+    public function get_customers_based_on_site($selectedSite,$brid)
     {
-        $brid = session()->get('user')['branch_id'];
-
-        if($brid != 1){
-            $sql = "SELECT cu.*, (SELECT SUM(amount) FROM tbl_deposit td WHERE td.customer_id = cu.customer_id) AS total_deposit, acc.acc_balance FROM tbl_customers cu JOIN tbl_cl_accounts acc ON cu.customer_id = acc.acc_tag WHERE acc.acc_set = 'Customer' AND cu.branch_id = ".$brid;
-        }else{
-            $sql = "SELECT cu.*, (SELECT SUM(amount) FROM tbl_deposit td WHERE td.customer_id = cu.customer_id) AS total_deposit, acc.acc_balance FROM tbl_customers cu JOIN tbl_cl_accounts acc ON cu.customer_id = acc.acc_tag WHERE acc.acc_set = 'Customer'";
-        }
-        $query = $this->db->query($sql);
-
-        return $query->getResultArray();
+            // brid stands for branch_id
+            return $this->fetchCustomerBasedOnSite($selectedSite,$brid);
     }
+    
+    public function fetchCustomerBasedOnSite($selectedSite , $brid){
+        if($brid !== 1){
+            if($selectedSite !== "All_Sites"){
+                // fetch customers based on selected site
+                $sql = "SELECT DISTINCT cu.*, (SELECT SUM(amount) FROM tbl_deposit td WHERE td.customer_id = cu.customer_id) AS total_deposit,acc.acc_balance FROM tbl_customers cu JOIN tbl_cl_accounts acc ON cu.customer_id = acc.acc_tag JOIN tbl_sites s ON cu.site_id = s.site_id WHERE acc.acc_set = 'Customer' AND cu.branch_id =".$brid." AND s.site_id =".$selectedSite;
+                $query = $this->db->query($sql);
+                return $query->getResultArray();
+            }else{
+                // fetch all 
+                $sql = "SELECT DISTINCT cu.*, (SELECT SUM(amount) FROM tbl_deposit td WHERE td.customer_id = cu.customer_id) AS total_deposit,acc.acc_balance FROM tbl_customers cu JOIN tbl_cl_accounts acc ON cu.customer_id = acc.acc_tag WHERE acc.acc_set = 'Customer' AND cu.branch_id =".$brid;
+                $query = $this->db->query($sql);
+                return $query->getResultArray();
+            }
+        }else{
+            // then it's admin
+            if($selectedSite !== "All_Sites"){
+                // fetch All customer based on selected site
+                $sql = "SELECT DISTINCT cu.*, (SELECT SUM(amount) FROM tbl_deposit td WHERE td.customer_id = cu.customer_id) AS total_deposit,acc.acc_balance FROM tbl_customers cu JOIN tbl_cl_accounts acc ON cu.customer_id = acc.acc_tag JOIN tbl_sites s ON cu.site_id = s.site_id WHERE acc.acc_set = 'Customer' AND s.site_id =".$selectedSite;
+                $query = $this->db->query($sql);
+                return $query->getResultArray();
+            }else{
+                // fetch all 
+                $sql = "SELECT DISTINCT cu.*, (SELECT SUM(amount) FROM tbl_deposit td WHERE td.customer_id = cu.customer_id) AS total_deposit,acc.acc_balance FROM tbl_customers cu JOIN tbl_cl_accounts acc ON cu.customer_id = acc.acc_tag WHERE acc.acc_set = 'Customer'";
+                $query = $this->db->query($sql);
+                return $query->getResultArray();
+            }
+        }
+
+        
+    }
+
+    public function getsiteFromDB($site_id){
+        $branch_id = (int) session()->get('user')['branch_id']; 
+        if($branch_id !== 1){
+            $sql = 'SELECT * FROM tbl_sites WHERE No_of_Floors > 0 AND branch_id ='.$branch_id.' AND site_id='.$site_id;
+            $query = $this->db->query($sql);
+            return $query->getResultArray();
+        }else{
+            $sql = 'SELECT * FROM tbl_sites WHERE No_of_Floors > 0 AND site_id='.$site_id;
+            $query = $this->db->query($sql);
+            return $query->getResultArray();
+        }
+    }
+
     public function get_customers_()
     {
         $brid = session()->get('user')['branch_id'];

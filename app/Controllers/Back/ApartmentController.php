@@ -124,7 +124,7 @@ class ApartmentController extends BaseController
                 $value['SiteYearBuild'],
                 $apartment->get_num_floors($value['site_name']) . ' Floors',
                 $stat_icon . ' ' . $value['status'],
-               $buttons,
+                $buttons,
             );
 
             // $this->display(  $this->Property_model->get_num_floors($value['site_name']).' Floors');
@@ -212,7 +212,7 @@ class ApartmentController extends BaseController
                     'site_owner' => $_POST['siteOwner'],
                     'SiteYearBuild' => $_POST['SiteYearBuild'],
                     'No_of_Floors' => $_POST['floor'],
-                    'branch_id' =>  $_POST['branch_id'],
+                    'branch_id' => session()->get('user')['branch_id'],
                     'status' => $default_status
                 ];
                 $site_id = $apartment->store('tbl_sites', $data);
@@ -279,8 +279,10 @@ class ApartmentController extends BaseController
     
     public function fetch_owners()
     {
+        $branch_id = session()->get('user')['branch_id'];
+
         $ownerModel = new OwnerModel();
-        $data = $ownerModel->findAll();  // You can use your custom method to fetch data if necessary
+        $data = $ownerModel->get_owners_data('tbl_owners', 'owner_id', null , $branch_id);
         
         // Format the data in the way your JS expects it
         $result = array('data' => array());

@@ -179,7 +179,7 @@ class ApartmentModel extends Model
 
         return $query->getResultArray();
     }
-
+ 
     public function get_sites()
     {
 

@@ -71,6 +71,13 @@
     <div class="card col-md-12">
         <div id="outer"></div>
         <div class="card-body">
+            <div class="form-group mb-3">
+                <label for="#">Search by site: </label>
+                <select name="selected_site" id="selected_site" class="form-control">
+                    <option selected value="All_Sites">All Sites</option>
+                    <?= $sites ?>
+                </select>
+            </div>
             <div class="table-responsive">
                 <table id="manageTable" class="table table-bordered table-hover" width="100%">
                     <thead>
@@ -158,12 +165,18 @@
                                 <input type="text" class="form-control" name="ref_phone" id="ref_phone">
                             </div>
                         </div>
+                    </div>
 
-
+                    <div class="form-group mb-3 mt-3">
+                        <label><?= 'Site Name' ?></label>
+                        <select name="selected_site" id="selected_site" class="form-control">
+                            <option disabled>-- select available sites --</option>
+                            <?= $sites ?>
+                        </select>
                     </div>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-rounded btn-outline-primary btn_submit"><b><?= 'Submit' ?></b></button>
+                <button type="submit" class="btn btn-rounded btn-outline-primary btn_submit"><b></b></button>
             </div>
 
             </form>
@@ -181,11 +194,12 @@
 
             </div>
         </form>
-    </div>
+    </div> 
 </div>
 <script type="text/javascript">
     var base_url = "<?php echo base_url($locale); ?>";
     var lang = "<?php echo $locale; ?>";
+    // const selectedSiteBox = document.getElementById('selected_site');
 
     $(document).ready(function() {
         var manageTable;
@@ -194,21 +208,51 @@
         $('#branch_id').val("branch_id");
         
 
-        customerList();
+        // customerList();
+        fetchTable('All_Sites');
 
     });
 
-    function customerList() {
-        manageTable = $('#manageTable').DataTable({
-            // columnDefs: [
-            // { className: align, targets: [0, 1, 2, 3, 4,5,6,7,8] },
-            // ],
-            'ajax': base_url + '/customer/fetch_customers',
-            'order': [],
-            destroy: true,
-            searching: false
+
+        // Event listener to trigger table fetch table when site is selected
+        document.getElementById("selected_site").addEventListener("change", function() {
+            const selectedSite = this.value;
+            fetchTable(selectedSite);
         });
-    }
+
+        function fetchTable(site) {
+            let CI4_ROUTE;
+
+            // Determine which route to use based on the selected site
+            CI4_ROUTE = base_url + '/customer/fetch_customers/' + site;
+
+            // Initialize the DataTable only if it hasn't been initialized yet
+            if (!$.fn.dataTable.isDataTable('#manageTable')) {
+                manageTable = $('#manageTable').DataTable({
+                    'ajax': CI4_ROUTE,  // Dynamic data source URL based on the selected status
+                    'order': []         // Optionally specify your table ordering logic
+                });
+            } else {
+                // If the DataTable is already initialized, just reload the data
+                manageTable.ajax.url(CI4_ROUTE).load();
+            }
+        }
+
+        // function customerList() {
+        //     // Check if the DataTable is already initialized
+        //     if ($.fn.dataTable.isDataTable('#manageTable')) {
+        //         manageTable = $('#manageTable').DataTable();
+        //         manageTable.ajax.reload(); // Reload the table data without reinitializing
+        //     } else {
+        //         manageTable = $('#manageTable').DataTable({
+        //             'ajax': base_url + '/customer/fetch_customers',
+        //             'order': [],
+        //             'destroy': true, // Only needed the first time to destroy old table instances
+        //             'searching': false
+        //         });
+        //     }
+        // }
+
 
     $(document).on('submit', '#add_form', function(event) {
         form(new FormData(this), '/customer/customer_form', '#add_form', '#form_modal', '#inner_add');
@@ -235,19 +279,35 @@
         $('#sex').attr('disabled', false)
         $('#balance').attr('disabled', false)
         $('#btn_submit').attr('disabled', false)
+        // Disable the select element
+        // selectedSiteBox.disabled = true;
         if (event.target.id == 'btn_add') {
 
             $('#add_form')[0].reset();
-
+            $('.btn_submit').html('S A V E');
             $('.btn_submit').show();
 
         } else {
+            // selectedSiteBox.disabled = false;
             $('#customer_id').val($(e.relatedTarget).data('customer_id'));
             $('#sex').val($(e.relatedTarget).data('sex'));
             $('#cust_name').val($(e.relatedTarget).data('cust_name'));
             $('#cust_tell').val($(e.relatedTarget).data('cust_tell'));
             $('#cust_email').val($(e.relatedTarget).data('cust_email'));
             $('#balance').val($(e.relatedTarget).data('balance'));
+            const siteText = $(e.relatedTarget).data('selectedsite'); // Trim any spaces
+
+            
+
+            console.log("site Text id: " + siteText);
+            $('#selected_site option').each(function() {
+                console.log($(this).val() + " is equal to : " + siteText);  // Compare values, not text
+                if ($(this).val() === siteText) {  // Use .val() instead of .text()
+                    $(this).prop('selected', true); // Set the selected property to true
+                    return false; // Break the loop after finding the match
+                }
+            });
+            
 
             $('#ref_name').val($(e.relatedTarget).data('ref_name'));
             $('#ref_phone').val($(e.relatedTarget).data('ref_phone'));
@@ -256,7 +316,8 @@
 
 
             if (event.target.id == 'btn_edit') {
-
+                
+                $('.btn_submit').html('U P D A T E');
                 $('.btn_submit').show();
             } else if (event.target.id == 'btn_det') {
                 $('.btn_submit').hide();
@@ -313,11 +374,11 @@
             dataType: 'json',
             success: function(response) {
                 if (response.success == true) {
-
+                    // manageTable_site.ajax.reload(null, false);
                     $('.submit_bt').attr('disabled', false);
                     $('.submit_bt').html('Submit');
 
-                    customerList();
+                    fetchTable('All_Sites');
 
 
                     var width = 1;

@@ -44,14 +44,14 @@ class RentalController extends BaseController
         $this->viewData['accounts'] = $payment->get_cash_bank_accounts();
         return view('admin/rental/closed_rental', $this->viewData);
     }
-
+ 
     public function fetch_rentals($selected_site)
     {
         $rental = new RentalModel();
 
         $result = array('data' => array());
 
-        $branch_id =  session()->get('user')['branch_id'];
+        $branch_id =  (int) session()->get('user')['branch_id'];
         // search rental information based on selected site 
         $data = $rental->get_rental_info($selected_site , $branch_id);
        

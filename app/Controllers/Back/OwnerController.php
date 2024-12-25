@@ -25,8 +25,10 @@ class OwnerController extends BaseController
 
         $owner = new OwnerModel();
         $result = array('data' => array());
-
-        $data = $owner->get_type_data('tbl_owners', 'owner_id');
+        
+        $branch_id = (int) session()->get('user')['branch_id'];
+        
+        $data = $owner->get_owners_data('tbl_owners', 'owner_id' , null , $branch_id);
 
         $i = 1;
         foreach ($data as $key => $value) {
@@ -34,12 +36,78 @@ class OwnerController extends BaseController
             $set = [
                 'id' => $value["owner_id"],
                 'rec_title' => $value["fullname"],
-                // 'status' => $value["status"],
+                'status' => $value["status"],
                 'rec_tbl' => 'tbl_owners',
                 // 'rec_tag_col' => 'status',
                 'rec_id_col' => 'owner_id',
             ];
 
+            $stat_icon = $this->stat_icon($set["status"]);
+
+            $buttons = '<div class="ml-auto">
+            <div class="dropdown sub-dropdown">
+
+                <button class="btn btn-link text-dark" type="button" id="dd1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <i class="fas fa-ellipsis-v mx-1"></i>
+                </button>
+
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dd1" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-110px, 39px, 0px);">
+                    <a type="button" id="btn_view" 
+                                    data-owner_id="' . $value["owner_id"] . '"
+                                    data-ownerfullname="' . $value["fullname"] .' "
+                                    data-ownerphone="' . $value["phone"] .'"
+                                    data-owneremail="' . $value["email"] . '" 
+                                    data-ownertype="' . $value["owner_type"] . '"
+                                    data-ownercompanyname="' . $value["companyName"] . '"
+                        class="dropdown-item" data-bs-toggle="modal" data-bs-target="#ownermodel">
+                        <i class="fas fa-info-circle text-info mx-1"></i> View </a>
+
+                   <a type="button" id="btn_edit"  
+                                    data-owner_id="' . $value["owner_id"] . '"
+                                    data-ownerfullname="' . $value["fullname"] .' "
+                                    data-ownerphone="' . $value["phone"] .'"
+                                    data-owneremail="' . $value["email"] . '" 
+                                    data-ownertype="' . $value["owner_type"] . '"
+                                    data-ownercompanyname="' . $value["companyName"] . '"
+                   
+                        class="dropdown-item" data-bs-toggle="modal" data-bs-target="#ownermodel">
+                        <i class="fas fa-pencil-alt text-warning mx-1"></i> Edit </a>
+                    
+                   ';
+
+
+                   if($value['status'] == "Active"){
+                    $buttons .= 
+                     '<a type="button" id="btn_de_activate"
+                        data-owner_id="' . $value["owner_id"] . '"
+                        data-ownerfullname="' . $value["fullname"] .' "
+                        data-ownerphone="' . $value["phone"] .'"
+                        data-owneremail="' . $value["email"] . '" 
+                        data-ownertype="' . $value["owner_type"] . '"
+                        data-ownercompanyname="' . $value["companyName"] . '"
+
+                        class="dropdown-item" data-bs-toggle="modal" data-bs-target="#ownermodel">
+                        <i class="fa fa-trash text-danger mx-1"></i>  De-Activate </a>
+                        </div>
+                        </div>
+                </div>';
+            }else{
+                $buttons .= 
+                       '<a type="button" id="btn_Activate"
+                                    data-owner_id="' . $value["owner_id"] . '"
+                                    data-ownerfullname="' . $value["fullname"] .' "
+                                    data-ownerphone="' . $value["phone"] .'"
+                                    data-owneremail="' . $value["email"] . '" 
+                                    data-ownertype="' . $value["owner_type"] . '"
+                                    data-ownercompanyname="' . $value["companyName"] . '"
+
+                          class="dropdown-item" data-bs-toggle="modal" data-bs-target="#ownermodel">
+                          <i class="fa fa-check text-success mx-1"></i>  Activate </a>
+                          </div>
+                          </div>
+                  </div>';
+
+                   }
 
             
             $result['data'][$key] = array(
@@ -49,6 +117,8 @@ class OwnerController extends BaseController
                 $value['email'],
                 $value['owner_type'],
                 $value['companyName'] == "" ? "personal" : $value['companyName'],
+                $stat_icon . ' ' . $value['status'],
+                $buttons,
             );
 
             // $this->display(  $this->Property_model->get_num_floors($value['site_name']).' Floors');
@@ -121,6 +191,8 @@ class OwnerController extends BaseController
                     'email' => $_POST['Email'],
                     'owner_type' => $_POST['OwnerType'],
                     'companyName' => $_POST['companyName'],
+                    'branch_id' => session()->get('user')['branch_id'],
+                    'status' => 'Active',
                 ];
 
                 $owner_id = $owner->store('tbl_owners', $data);
@@ -131,16 +203,38 @@ class OwnerController extends BaseController
 
                 // collect the updated  Data
                 $data = [
+                    'owner_id' => $_POST['owner_id'],
                     'fullname' => $_POST['fullname'],
                     'phone' => $_POST['Phone'],
                     'email' => $_POST['Email'],
                     'owner_type' => $_POST['OwnerType'],
-                    'companyName' => $_POST['companyName'],
+                    'companyName' => $_POST['OwnerType'] !== "individual" ? $_POST['companyName'] : "",
                 ];
                 $owner->update_table('tbl_owners', $data);
                 $response['success'] = true;
                 $response['alert_outer'] = $this->alert('Owner Has Been Updated.', 'success');
-        } 
+        } else if ($_POST['btn_action'] == "btn_de_activate") { // DE-ACTIVATES SITE OR BUILDING
+                
+            $data = [
+                'owner_id' => $_POST['owner_id'],
+                'status' => 'De-Active'
+            ];
+            
+            $owner->update_table('tbl_owners', $data);
+            $response['success'] = true;
+            $response['alert_outer'] = $this->alert('Owner Has Been De-Activated Successfully.', 'success');
+            
+        } else if ($_POST['btn_action'] == "btn_Activate") { // ACTIVATES SITE OR BUILDING
+            
+            $data = [
+                'owner_id' => $_POST['owner_id'],
+                'status' => 'Active'
+            ];
+            
+            $owner->update_table('tbl_owners', $data);
+            $response['success'] = true;
+            $response['alert_outer'] = $this->alert('Owner Has Been Activated Successfully.', 'success');
+    } 
 
 
         echo json_encode($response);

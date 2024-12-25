@@ -25,6 +25,7 @@ class UserController extends BaseController
         $this->viewData['access'] = $auth->get_user_access(session()->get('ut_id'), $this->request->getLocale());
         $this->viewData['user_types'] = $usermodel->get_user_types();
         $this->viewData['branches'] = $this->get_table_info('tbl_branches');
+        log_message('debug', 'returned data: ' . $this->fetch_users());
         return view('admin/user/users', $this->viewData);
     }
 
@@ -33,8 +34,10 @@ class UserController extends BaseController
         $usermodel = new UserModel();
         $result = array('data' => array());
         $data = $usermodel->get_user_list();
-        $i = 1;
+
+        
         $sample_img = 'sample.jpg';
+        
         foreach ($data as $key => $value) {
 
             $sample_img = $value["user_img"] ;
@@ -97,7 +100,7 @@ class UserController extends BaseController
             </div>';
 
             $result['data'][$key] = array(
-                $i,
+                $key + 1,
                 $image . ' ' . ucfirst($value['fullname']),
                 $value['userAddress'],
                 $value['user_tell'],
@@ -106,10 +109,11 @@ class UserController extends BaseController
                 $stat_icon . ' ' . $value['user_status'],
                 $buttons,
             );
-            $i++;
+            // $i++;
         } // /foreach
         // print_r($result);
-        echo json_encode($result);
+        log_message('debug' , 'returned data is: ',$result);
+        return json_encode($result);
     }
 
     public function stat_icon($status)
@@ -178,7 +182,7 @@ class UserController extends BaseController
             'user_tell' => $this->request->getVar('user_tell'),
             'user_email' => $this->request->getVar('user_email'),
             'ut_id' => $this->request->getVar('ut_id'),
-            'branch_id' => session()->get('user')['branch_id'],
+            'branch_id' => $this->request->getVar('br_id'),
             'user_img' => $this->upload_img('users', 'user_img'),
             'user_timestamp' => time(),
             'user_status' => 'Active',

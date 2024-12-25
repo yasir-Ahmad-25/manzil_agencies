@@ -10,38 +10,51 @@ class AuthModel extends Model
 
     public function login($user, $pwd, $locale)
     {
-
+        // Query the database for the user
         $qry = $this->db->query("SELECT * FROM tbl_users WHERE user_name=?", array($user));
         $data = $qry->getRowArray();
-
+    
         if ($data != null) {
-
+    
             $db_pwd = $data['passwd'];
             $brid = $data['branch_id'];
-
-            // check password
+    
+            // Prepare the log message
+            $output = 'Entered password: ' . $pwd . '  Database password: ' . $db_pwd;
+            
+            // Log the message correctly
+            log_message('debug', 'Entered password details: ' . $output);
+    
+            // Check password
             if (password_verify($pwd, $db_pwd)) {
-
+    
                 if ($data['user_status'] == 'Active') {
-
+    
                     $user_id = $data['user_id'];
-
+    
                     $userdata = [
                         'user' => $data,
                         'ut_id' => $user_id,
                         'isLoggedIn' => true,
                         'branch_name' => 'Barakaale Apartment'
                     ];
-
+    
                     return [
                         'success' => true,
                         'message' => 'Login Successful',
                         'sess' => $userdata
                     ];
-                } else return ['success' => 0, 'message' => 'Login Successful'];
-            } else return ['success' => 0, 'message' => 'Invalid Password.'];;
-        } else return ['success' => 0, 'message' => 'Invalid UserName'];;
+                } else {
+                    return ['success' => 0, 'message' => 'Login Successful'];
+                }
+            } else {
+                return ['success' => 0, 'message' => 'Invalid Password.'];
+            }
+        } else {
+            return ['success' => 0, 'message' => 'Invalid UserName'];
+        }
     }
+    
 
     public function get_user_access($user_id , $locale){
 

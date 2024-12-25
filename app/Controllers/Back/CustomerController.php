@@ -7,6 +7,7 @@ use App\Models\Back\AuthModel;
 use App\Models\Back\CustomerModel;
 use App\Models\Back\PaymentModel;
 use App\Models\Back\FinancialModel;
+use App\Models\Back\RentalModel;
 
 class CustomerController extends BaseController
 {
@@ -119,9 +120,10 @@ class CustomerController extends BaseController
     {
         $auth = new AuthModel();
          
-
+ 
         $this->viewData['title'] = 'Customers';
         $this->viewData['customers'] = $this->get_table_info('tbl_customers');
+        $this->viewData['sites'] = $this->get_sites();
 
         $this->viewData['access'] = $auth->get_user_access(session()->get('ut_id'), $this->request->getLocale());
         return view('admin/customer/customer_list', $this->viewData);
@@ -333,14 +335,16 @@ class CustomerController extends BaseController
         }
         echo json_encode($result);
     }
-    public function fetch_customers()
+    public function fetch_customers($selected_site)
     {
         $customer = new CustomerModel();
         $locale = $this->request->getLocale();
 
         $result = array('data' => array());
 
-        $data = $customer->get_customers();
+        $branch_id =  (int) session()->get('user')['branch_id'];
+        $data = $customer->get_customers_based_on_site($selected_site, $branch_id);
+
         $i = 1;
         foreach ($data as $key => $value) {
             $set = [
@@ -376,6 +380,7 @@ class CustomerController extends BaseController
                      data-cust_tell="' . $value["cust_tell"] . '"  data-identification="' . $value["identification"] . '"
                      data-cust_email="' . $value["cust_email"] . '" 
                      data-balance="' . $value["acc_balance"] . '"
+                     data-selectedsite="' . $value["site_id"]  . '"
                     data-bs-target="#form_modal" class="dropdown-item" data-bs-toggle="modal">
                     <i class="fas fa-pencil-alt text-warning mx-1"></i>Edit  
                 </a>
@@ -396,6 +401,7 @@ class CustomerController extends BaseController
             );
             $i++;
         }
+        log_message('debug', print_r($result, true));  // CodeIgniter specific
         echo json_encode($result);
     }
 
@@ -424,6 +430,7 @@ class CustomerController extends BaseController
                 'ref_phone' => $this->request->getVar('ref_phone'),
                 'cust_status' => 'Active',
                 'branch_id' => $this->request->getVar('branch_id'),
+                'site_id' => $this->request->getVar('selected_site'),
             ];
             switch ($_POST['form_tag']) {
 
@@ -455,7 +462,20 @@ class CustomerController extends BaseController
                     break;
 
                 case "btn_edit":
-                    $data['customer_id '] = $_POST['customer_id'];
+                    $data = [
+                        'customer_id' => $_POST['customer_id'],
+                        'cust_name' => $name,
+                        'sex' => $this->request->getVar('sex'),
+                        'cust_tell' => $tell,
+                        'cust_email' => $this->request->getVar('cust_email'),
+                        'identification' => $this->request->getVar('identification'),
+                        'ref_name' => $this->request->getVar('ref_name'),
+                        'ref_phone' => $this->request->getVar('ref_phone'),
+                        'cust_status' => 'Active',
+                        'branch_id' => (int) session()->get('user')['branch_id'],
+                        'site_id' => $this->request->getVar('selected_site'),
+                    ];
+
                     $customer->update_table('tbl_customers', $data);
                     $response['success'] = true;
                     $response['alert_outer'] = $this->alert('Customer Updated', 'success');
@@ -496,4 +516,30 @@ class CustomerController extends BaseController
 
         echo $result;
     }
+
+    public function get_sites(){
+        $rental = new RentalModel();
+        $sites = $rental->getAvailableSites();
+        $output = '';
+
+        foreach ($sites as $key => $site) {
+            $output .= '<option value="'.$site['site_id'].'">'. $site['site_name'].'</option>';
+        }
+
+        return $output;
+    }
+
+    public function getSite_Based_on_Id($site_id) {
+        $customerModel = new CustomerModel();
+        $fetchedSite = $customerModel->getsiteFromDB($site_id);
+        
+        // Check if the result is not empty and contains 'site_name' key
+        if (!empty($fetchedSite) && isset($fetchedSite[0]['site_name'])) {
+            return $fetchedSite[0]['site_name']; // Return the 'site_name' of the first row
+        } else {
+            return "unknown site";  // Return a default value if not found
+        }
+    }
+    
+
 }

@@ -55,6 +55,8 @@
                                     <th><?= 'Email'?></th> 
                                     <th><?= 'Owner Type' ?></th>
                                     <th><?= 'Company Name' ?></th>
+                                    <th><?= 'Status' ?></th>
+                                    <th><?= 'Action' ?></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -167,10 +169,10 @@
 <!-- ============================================================== -->
 <script type="text/javascript">
 
-    var base_url = "<?php echo base_url($locale); ?>";
+    var base_url = "<?php echo base_url($locale); ?>"; 
     var manageTable;
     var lang = "<?php echo $locale; ?>";
-    
+     const OwnerTypeBox = document.getElementById('OwnerType');
 
     $(document).ready(function () {
          // This is hidden by default but when user clicks de-activate this message pops out
@@ -183,24 +185,6 @@
         });
         
         $('#deleteMessage').hide();
-        $('#name').hide();
-            $('#num').hide();
-
-        // If Admin selects to store floors by Numbers
-        $('#byname').on("change click", function() {
-            $('#num').hide();
-            $('#name').show();
-            $('#name').html($('#Prefix').val() + ' A ,' +$('#Prefix').val() + ' B ,' +$('#Prefix').val() + ' C, ...');
-        });
-
-        // If Admin selects to store floors by Alphabetically
-        $('#bynum').on("change click", function() {
-            $('#name').hide();
-            $('#num').show();
-            $('#num').html($('#Prefix').val() + ' 1 ,' +$('#Prefix').val() + ' 2 ,' +$('#Prefix').val() + ' 3, ...');
-        });
-
-
 
          // Event listener to trigger table update when status is selected
          document.getElementById("OwnerType").addEventListener("change", function() {
@@ -219,28 +203,37 @@
             $('#btn_action').val(event.target.id);
             
             $('#btn_submit').attr('disabled', false)
-            $('#sitename').attr('readonly', false)
-            $('#siteOwner').attr('readonly', false)
-            $('#SiteYearBuild').attr('readonly', false)
-            $('#siteaddress').attr('readonly', false)
-            $('#Prefix').attr('readonly', false)
-            $('#floor').attr('readonly', false)
+            $('#fullname').attr('readonly', false)
+            $('#Phone').attr('readonly', false)
+            $('#Email').attr('readonly', false)
             
+            $('#CompanyNameDiv').attr('readonly', false)
+           
+            // Disable the select element
+            OwnerTypeBox.disabled = true;
+
             if (event.target.id == 'btn_add') {
                 $('#myModalLabel').text(' Add New Owner ');
                 $('#btn_submit').show();
+                OwnerTypeBox.disabled = false;
                 $('#btn_submit').html('S A V E');
             } else if (event.target.id == 'btn_edit') {
 
-                $('#sitename').val($(e.relatedTarget).data('site_name'));
-                $('#siteaddress').val($(e.relatedTarget).data('site_address'));
-                $('#siteOwner').val($(e.relatedTarget).data('site_owner'));
-                $('#SiteYearBuild').val($(e.relatedTarget).data('site_build_year'));
-                $('#floor').val($(e.relatedTarget).data('floor'));
-                $('#Prefix').val($(e.relatedTarget).data('Prefix'));
-                $('#site_id').val($(e.relatedTarget).data('site_id'));
-                $('#Prefix').attr('readonly', true)
-                $('#floor').attr('readonly', true)
+                console.log("edit button triggred: " );
+                OwnerTypeBox.disabled = false;
+                $('#owner_id').val($(e.relatedTarget).data('owner_id'));
+                $('#fullname').val($(e.relatedTarget).data('ownerfullname'));
+                $('#Phone').val($(e.relatedTarget).data('ownerphone'));
+                $('#Email').val($(e.relatedTarget).data('owneremail'));
+                $('#OwnerType').val($(e.relatedTarget).data('ownertype'));
+                $('#companyName').val($(e.relatedTarget).data('ownercompanyname'));
+
+                ownerType = document.getElementById("OwnerType").value;                
+                if(ownerType != "individual"){
+                    $('#CompanyNameDiv').show();
+                }else{
+                    $('#CompanyNameDiv').hide();
+                }
 
                 $('#btn_submit').show();
                 $('#btn_submit').html('U P D A T E');
@@ -248,40 +241,58 @@
                     
             } else if (event.target.id == 'btn_view') {
                
-                // setting values
-                $('#sitename').val($(e.relatedTarget).data('site_name'));
-                $('#siteaddress').val($(e.relatedTarget).data('site_address'));
-                $('#SiteYearBuild').val($(e.relatedTarget).data('site_build_year'));
-                $('#siteOwner').val($(e.relatedTarget).data('site_owner'));
-
-               
+                console.log("view button is triggred");
                 
+                // setting values
+                $('#owner_id').val($(e.relatedTarget).data('owner_id'));
+                $('#fullname').val($(e.relatedTarget).data('ownerfullname'));
+                $('#Phone').val($(e.relatedTarget).data('ownerphone'));
+                $('#Email').val($(e.relatedTarget).data('owneremail'));
+                $('#OwnerType').val($(e.relatedTarget).data('ownertype'));
+                $('#companyName').val($(e.relatedTarget).data('ownercompanyname'));
 
-
-                $('#floor').val($(e.relatedTarget).data('floor'));
-                $('#Prefix').val($(e.relatedTarget).data('Prefix'));
-
+                ownerType = document.getElementById("OwnerType").value;                
+                if(ownerType != "individual"){
+                    $('#CompanyNameDiv').show();
+                }else{
+                    $('#CompanyNameDiv').hide();
+                }
                 // reading data
-               $('#sitename').attr('readonly', true)
-               $('#siteaddress').attr('readonly', true)
-               $('#siteOwner').attr('readonly', true)
-               $('#SiteYearBuild').attr('readonly', true)
-               $('#Prefix').attr('readonly', true)
-                $('#floor').attr('readonly', true)
+               $('#fullname').attr('readonly', true)
+               $('#Phone').attr('readonly', true)
+               $('#Email').attr('readonly', true)
+               $('#companyName').attr('readonly', true)
+
+                // Disable the select element
+                OwnerTypeBox.disabled = true;
+
                $('#btn_submit').hide();
                
             } else if (event.target.id == 'btn_de_activate') {
                 
-                // setting values
-                $('#sitename').val($(e.relatedTarget).data('site_name'));
-                $('#siteaddress').val($(e.relatedTarget).data('site_address'));
-                $('#siteOwner').val($(e.relatedTarget).data('site_owner'));
-                $('#SiteYearBuild').val($(e.relatedTarget).data('site_build_year'));
-                $('#floor').val($(e.relatedTarget).data('floor'));
-                $('#Prefix').val($(e.relatedTarget).data('Prefix'));
-                $('#site_id').val($(e.relatedTarget).data('site_id'));
-                $('#Prefix').attr('readonly', true)
-                $('#floor').attr('readonly', true)
+                console.log("DE-ACTIVATE Button is Triggred");
+                
+                // // setting values
+                $('#owner_id').val($(e.relatedTarget).data('owner_id'));
+                $('#fullname').val($(e.relatedTarget).data('ownerfullname'));
+                $('#Phone').val($(e.relatedTarget).data('ownerphone'));
+                $('#Email').val($(e.relatedTarget).data('owneremail'));
+                $('#OwnerType').val($(e.relatedTarget).data('ownertype'));
+                $('#companyName').val($(e.relatedTarget).data('ownercompanyname'));
+                ownerType = document.getElementById("OwnerType").value;                
+                if(ownerType != "individual"){
+                    $('#CompanyNameDiv').show();
+                }else{
+                    $('#CompanyNameDiv').hide();
+                }
+
+                $('#fullname').attr('readonly', true)
+                $('#Phone').attr('readonly', true)
+                $('#Email').attr('readonly', true)
+                $('#companyName').attr('readonly', true)
+
+                // Disable the select element
+                OwnerTypeBox.disabled = true;
 
                 $('#btn_submit').show();
                 $('#btn_submit').html('DE-ACTIVATE');
@@ -290,17 +301,28 @@
                 $('#deleteMessage').show();
             } else if (event.target.id == 'btn_Activate') {
                 
-                // setting values
-                $('#sitename').val($(e.relatedTarget).data('site_name'));
-                $('#siteaddress').val($(e.relatedTarget).data('site_address'));
-                $('#siteOwner').val($(e.relatedTarget).data('site_owner'));
-                $('#SiteYearBuild').val($(e.relatedTarget).data('site_build_year'));
-                $('#floor').val($(e.relatedTarget).data('floor'));
-                $('#Prefix').val($(e.relatedTarget).data('Prefix'));
-                $('#site_id').val($(e.relatedTarget).data('site_id'));
-                $('#Prefix').attr('readonly', true)
-                $('#floor').attr('readonly', true)
+                console.log("Activate button is triggred");
+                
+                // // setting values
+                $('#owner_id').val($(e.relatedTarget).data('owner_id'));
+                $('#fullname').val($(e.relatedTarget).data('ownerfullname'));
+                $('#Phone').val($(e.relatedTarget).data('ownerphone'));
+                $('#Email').val($(e.relatedTarget).data('owneremail'));
+                $('#OwnerType').val($(e.relatedTarget).data('ownertype'));
+                $('#companyName').val($(e.relatedTarget).data('ownercompanyname'));
+                ownerType = document.getElementById("OwnerType").value;                
+                if(ownerType != "individual"){
+                    $('#CompanyNameDiv').show();
+                }else{
+                    $('#CompanyNameDiv').hide();
+                }
 
+                $('#fullname').attr('readonly', true)
+                $('#Phone').attr('readonly', true)
+                $('#Email').attr('readonly', true)
+                $('#companyName').attr('readonly', true)
+                // Disable the select element
+                OwnerTypeBox.disabled = true;
                 $('#btn_submit').show();
                 $('#btn_submit').html('ACTIVATE');
 

@@ -38,6 +38,7 @@ class UserModel extends Model
         $user_role = session()->get('user')['role'];
 
         $role_cond = $user_role == "SuperAdmin" ? "" : "AND u.branch_id='$brid'";
+        
         $sql = "SELECT user_id, u.ut_id, user_img,userAddress, fullname, user_name,passwd, user_tell, user_email, user_status, ut.ut_name_en,br.br_name 
         FROM tbl_users u JOIN tbl_user_type ut ON ut.ut_id=u.ut_id
         JOIN tbl_branches br ON br.branch_id=u.branch_id $role_cond";

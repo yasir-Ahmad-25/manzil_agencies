@@ -147,7 +147,7 @@ $routes->group('{locale}', function ($routes) {
    $routes->group('owner', ['namespace' => 'App\Controllers\Back'], function ($routes) {
          // pages
          $routes->get('/', 'OwnerController::index',['filter' => 'restrict']);
-         $routes->get('list', 'OwnerController::fetch_owners',['filter' => ['restrict', 'pageAuthorizedFilter']]);
+         $routes->get('list', 'OwnerController::fetch_owners',['filter' => 'restrict']);
      
 
          // These are the Ajax requests: fetching user data and handling user actions
@@ -210,7 +210,7 @@ $routes->group('{locale}', function ($routes) {
 
       $routes->post('customer_advances', 'CustomerController::customer_advances', ['filter' => 'restrict']);
       $routes->get('get_advances', 'CustomerController::get_advances', ['filter' => 'restrict']);
-      $routes->get('fetch_customers', 'CustomerController::fetch_customers', ['filter' => 'restrict']);
+      $routes->get('fetch_customers/(:any)', 'CustomerController::fetch_customers/$1', ['filter' => 'restrict']);
       $routes->post('customer_form', 'CustomerController::customer_form', ['filter' => 'restrict']);
       $routes->post('customer_open_balance', 'CustomerController::customer_open_balance', ['filter' => 'restrict']);
 

@@ -111,11 +111,18 @@ class RentalModel extends Model
     }
 
     public function getAvailableSites(){
-        $branch_id = session()->get('user')['branch_id']; 
-        $sql = 'SELECT * FROM tbl_sites WHERE No_of_Floors > 0 AND branch_id ='.$branch_id;
-        $query = $this->db->query($sql);
-        return $query->getResultArray();
+        $branch_id = (int) session()->get('user')['branch_id']; 
+        if($branch_id !== 1){
+            $sql = 'SELECT * FROM tbl_sites WHERE No_of_Floors > 0 AND branch_id ='.$branch_id;
+            $query = $this->db->query($sql);
+            return $query->getResultArray();
+        }else{
+            $sql = 'SELECT * FROM tbl_sites WHERE No_of_Floors > 0';
+            $query = $this->db->query($sql);
+            return $query->getResultArray();
+        }
     }
+    
 
     public function get_apartment_price($apid)
     {

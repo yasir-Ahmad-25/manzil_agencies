@@ -42,7 +42,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="mt-3" id="outer"></div>
-
+ 
                     <div class="card-body">
 
                         <!-- <h3 class="card-title"> Rental List </h3> -->

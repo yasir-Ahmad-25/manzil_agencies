@@ -238,10 +238,10 @@
          
          if(branch_id != 1){
             console.log("BRANCH-ID IS: " + branch_id);
-            fetchTable(branch_id);
+            fetchTable(branch_id); // initialize the datatable 
          }else{
             console.log("THIS IS THE SUPER-ADMIN");
-            fetchTable(1)
+            fetchTable(1) // initialize the datatable 
          }
 
          function fetchTable(branch_id) {
@@ -253,6 +253,7 @@
             // Initialize the DataTable only if it hasn't been initialized yet
             if (!$.fn.dataTable.isDataTable('#manageTable_site')) {
                 manageTable_site = $('#manageTable_site').DataTable({
+                        destroy: true,
                     'ajax': CI4_ROUTE,  // Dynamic data source URL based on the selected status
                     'order': []         // Optionally specify your table ordering logic
                 });
@@ -261,11 +262,8 @@
                 manageTable_site.ajax.url(CI4_ROUTE).load();
             }
         }
-        // initialize the datatable 
-        manageTable_site = $('#manageTable_site').DataTable({
-            'ajax': base_url + '/apartment/fetch_sites',
-            'order': []
-        });
+        
+ 
         
         $('#deleteMessage').hide();
         $('#name').hide();
