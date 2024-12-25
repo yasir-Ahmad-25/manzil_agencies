@@ -59,7 +59,7 @@ class BillModel extends Model
  
     public function get_chargable_bills()
     {
-        $branch_id = session()->get('user')['branch_id'];
+        $branch_id = (int) session()->get('user')['branch_id'];
         $sql = "SELECT MAX(created_date) as created_date,MAX(created_date) as bill_due_date, rental_id FROM tbl_rental_summary WHERE branch_id = $branch_id
         GROUP by rental_id ORDER BY created_date DESC";
 
@@ -70,8 +70,21 @@ class BillModel extends Model
 
     public function get_chargable_tenants($rid)
     {
-        $sql = "CREATE TEMPORARY TABLE IF NOT EXISTS tmp_tenant_bills AS (SELECT r.rental_id, r.customer_id, cust_name, r.ap_id, ap_no,ap.price, end_date FROM tbl_rentals r 
-                JOIN tbl_customers tn ON tn.customer_id=r.customer_id JOIN tbl_apartments ap ON ap.ap_id=r.ap_id WHERE r.rental_id IN($rid)) ";
+        // $sql = "CREATE TEMPORARY TABLE IF NOT EXISTS tmp_tenant_bills AS (SELECT r.rental_id, r.customer_id, cust_name, r.ap_id, ap_no,ap.price, end_date FROM tbl_rentals r 
+        //         JOIN tbl_customers tn ON tn.customer_id=r.customer_id JOIN tbl_apartments ap ON ap.ap_id=r.ap_id WHERE r.rental_id IN($rid)) ";
+        $sql = "CREATE TEMPORARY TABLE tmp_tenant_bills AS SELECT r.rental_id,  r.customer_id,  tn.cust_name,  r.ap_id, ap.ap_no,ap.price, r.end_date,s.owner_id, o.fullname  
+        FROM 
+            tbl_rentals r
+        JOIN 
+            tbl_customers tn ON tn.customer_id = r.customer_id
+        JOIN 
+            tbl_apartments ap ON ap.ap_id = r.ap_id
+        JOIN 
+            tbl_sites s ON s.site_id = ap.site_id  
+        JOIN 
+            tbl_owners o ON o.owner_id = s.owner_id  
+        WHERE 
+            r.rental_id IN ($rid)";
         $this->db->query($sql);
 
         $sql = "select * from tmp_tenant_bills";
@@ -113,7 +126,7 @@ class BillModel extends Model
         }
     }
 
-    public function record_rental_bill($tenid, $rentid, $amount, $end_date, $bill_type)
+    public function record_rental_bill($owner_id,$tenid, $rentid, $amount, $end_date, $bill_type)
     {
         $finance = new FinancialModel();
         $date = $end_date;
@@ -125,8 +138,10 @@ class BillModel extends Model
         $trx_id = $finance->record_trans(($amount + $discount), $source, $fpid, $date, $tenid);
 
         $dracc = $finance->get_account_tag_set($tenid, 'Customer')['account_id'];
-        $cracc = $finance->get_account_tag('INC')['account_id'];
-
+        // $cracc = $finance->get_account_tag('INC')['account_id'];
+        
+        $cracc =  $finance->get_account_tag_set($owner_id, 'OWNER')['account_id'];
+        
         $finance->dr_trx_det($amount, $dracc, $trx_id);
         $finance->cr_trx_det($amount, $cracc, $trx_id);
 

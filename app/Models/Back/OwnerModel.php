@@ -48,4 +48,5 @@ class OwnerModel extends Model
         return true;
     }
 
+    
 }

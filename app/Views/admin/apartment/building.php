@@ -102,6 +102,7 @@
                             <input type="hidden" name="btn_action" id="btn_action">
                             <input type="hidden" name="site_id" id="site_id">
                             <input type="hidden" name="branch_id" id="branch_id">
+
                             <div class="form-group mt-3">
                                  <label for="#"> Building name</label>
                                 <input type="text" class="form-control" id="sitename" name="sitename" placeholder="" autocomplete="off">
@@ -219,7 +220,7 @@
                     // Populate the select box with owners from the response
                     $.each(response.data, function(index, owner) {
                         // Assuming 'fullname' is the name of the owner and 'owner_id' is the ID
-                        $('#siteOwner').append('<option value="' + owner.rec_title + '">' + owner.rec_title + '</option>');
+                        $('#siteOwner').append('<option value="' + owner.id + '">' + owner.rec_title + '</option>');
                     });
                 }
             },

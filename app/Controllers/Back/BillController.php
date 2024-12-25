@@ -271,7 +271,9 @@ class BillController extends BaseController
                 $buttons = $btn['header'] . '
                             <a type="button" id="btn_edit" data-end_date="' . $ten["end_date"] . '"
                                 data-ten_id="' . $ten["customer_id"] . '" data-ten_name="' . $ten["cust_name"] . '"
-                                data-ap_no="' . $ten["ap_no"] . '" data-price="' . $ten["price"] . '" data-rental_id="' . $ten["rental_id"] . '"
+                                data-ap_no="' . $ten["ap_no"] . '" data-price="' . $ten["price"] . '" 
+                                data-rental_id="' . $ten["rental_id"] . '"
+                                data-owner_id="' . $ten["owner_id"] . '"
                                 data-bs-target="#invoice_modal" class="dropdown-item" data-bs-toggle="modal" >
                                 <i class="fas fa-edit text-info mx-1"></i> Raise Invoice
                             </a>
@@ -302,12 +304,13 @@ class BillController extends BaseController
         $bill = new BillModel();
 
         $rentid = $_POST['rental_id'];
+        $owner_id = $_POST['owner_id'];
         $price = $_POST['inv_price'];
         $end_date = $_POST['inv_date'];
         $tenid = $_POST['ten_id'];
         $bill_type = 'rent';
 
-        $bill->record_rental_bill($tenid, $rentid, $price, $end_date, $bill_type);
+        $bill->record_rental_bill($owner_id,$tenid, $rentid, $price, $end_date, $bill_type);
 
         $response['alert_outer'] = $this->alert('Bill has been Raised', 'success');
 

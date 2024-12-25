@@ -227,7 +227,7 @@ class RentalController extends BaseController
                     // $_POST['acc_tag_rec'] : this is the account he payed it for the first time customer was renting the aprtment
                     // $_POST['acc_tag_dep'] : this is the account he payed it for the deposit money 
 
-                    $rental_created = $rental->create_rental( $_POST['ap_id'],$rentals, $_POST['rent_price'], $_POST['acc_tag_rec'], $_POST['acc_tag_dep']);
+                    $rental_created = $rental->create_rental( $_POST['ap_id'],$_POST['owner_id'],$rentals, $_POST['rent_price'], $_POST['acc_tag_rec'], $_POST['acc_tag_dep']);
 
                     if ($rental_created) {
 
@@ -316,9 +316,13 @@ class RentalController extends BaseController
 
 
 
-    /***********************************************
-     *             RENTAL EXTENSION  
-     * ********************************************/
+    /*
+     *          *********************************************
+     *                      RENTAL EXTENSION  
+     *          *******************************************
+     * 
+     * 
+     * */
 
     public function extend_rental_duration()
     {
@@ -469,9 +473,22 @@ class RentalController extends BaseController
     {
         $rental = new RentalModel();
         $apid = $_POST['ap_id'];
-        echo $rental->get_apartment_price($apid);
-    }
 
+        // Get apartment data
+        // Call the model methods
+        $price = $rental->get_apartment_price($apid);
+        $owner_id = $rental->get_apartments_site_owner($apid);
+        
+        // Prepare the response array
+        $response = array(
+            'price' => $price,
+            'owner_id' => $owner_id
+        );
+        
+        // Return the response as JSON
+        return json_encode($response);
+    }
+    
     public function get_sites(){
         $rental = new RentalModel();
         $sites = $rental->getAvailableSites();

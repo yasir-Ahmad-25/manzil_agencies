@@ -5,6 +5,7 @@ namespace App\Controllers\Back;
 use App\Controllers\BaseController;
 use App\Models\Back\AuthModel;
 use App\Models\Back\DashboardModel;
+use App\Models\Back\FinancialModel;
 use App\Models\Back\OwnerModel;
 
 class OwnerController extends BaseController
@@ -130,6 +131,8 @@ class OwnerController extends BaseController
     public function crud_owners()
     {
         $owner = new OwnerModel();
+        $finmodel = new FinancialModel();
+       
 
         
         $response = array();
@@ -181,9 +184,6 @@ class OwnerController extends BaseController
 
                     }
                 }
-
-
-
                 // collect data
                 $data = [
                     'fullname' => $_POST['fullname'],
@@ -194,8 +194,20 @@ class OwnerController extends BaseController
                     'branch_id' => session()->get('user')['branch_id'],
                     'status' => 'Active',
                 ];
-
                 $owner_id = $owner->store('tbl_owners', $data);
+                // create new account for this owner
+                $acc_data = [
+                    // acc_name  , acc_name_ar , acc_balance , acc_tag , acc_des , acc_status , acc_set
+                    'acc_name' => htmlspecialchars($_POST['fullname']),
+                    'acc_name_ar' => htmlspecialchars($_POST['fullname']),
+                    'acc_des' => 'THIS ACCOUNT BELONGS TO '.$_POST['fullname'],
+                    'acc_grp_id' => 2,
+                    'acc_type_id' => 3,
+                    'acc_status' => 'Active',
+                    'acc_tag' => $owner_id,
+                    'acc_set' => 'OWNER'
+                ];
+                $finmodel->store('tbl_cl_accounts', $acc_data);
                 $response['success'] = true;
                 $response['alert_outer'] = $this->alert('Owner Has Been Added', 'success');
 

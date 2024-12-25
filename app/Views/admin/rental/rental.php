@@ -463,8 +463,8 @@
 
                             <input type="hidden" name="btn_action" id="btn_action">
                             <input type="hidden" name="rental_id" id="rental_id">
-
                             <input type="hidden" id="duration_days" name="duration_days">
+                            <input type="hidden" id="owner_id" name="owner_id">
 
                             <div class="row">
                                 <div class="form-group col-6 text-dark">
@@ -484,19 +484,13 @@
                                         <!-- <option selected disabled>Choose Apartment</option> -->
                                         <?= $Active_Apartment ?> 
                                     </select>
-
-                                    <select class="form-control border-secondary " id="ap_id" name="ap_id">
-                                        <option selected disabled>Choose Apartment</option>
-                                        <?php foreach ($all_apartment as $val): ?>
-                                            <option value="<?= $val['ap_id'] ?>"><?= $val['ap_no'] ?></option>
-                                        <?php endforeach; ?>
-
-                                    </select>
+                                   
                                 </div>
 
 
                             </div>
 
+                            
                             <?php $curryear = date('Y-m-d'); ?>
 
 
@@ -631,8 +625,26 @@
                     data: {
                         ap_id: $(this).val(),
                     },
+                    dataType: "json",  // Add this line to tell jQuery to expect JSON and automatically parse it
                     success: function (response) {
-                        $("#rent_price").val(response);
+                        console.log("Full Response: ", response);  // Check the full response
+
+                        // Check if it's an object
+                        if (typeof response === 'object') {
+                            console.log("Price: " + response.price);  // Should log the price if it's an object
+                            console.log("Owner ID: " + response.owner_id);  // Should log the owner ID if it's an object
+                        } else {
+                            console.error("Response is not an object:", response);
+                        }
+
+                        // Set values if response is correct
+                        if (response.price && response.owner_id) {
+                            $("#rent_price").val(response.price);
+                            $("#owner_id").val(response.owner_id);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("AJAX Error: ", status, error);  // Handle any errors
                     }
                 });
             });

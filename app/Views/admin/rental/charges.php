@@ -98,6 +98,7 @@
 
                             <input type="hidden" name="btn_action" id="btn_action">
                             <input type="hidden" name="rental_id" id="rental_id">
+                            <input type="hidden" name="owner_id" id="owner_id">
 
                             <input type="hidden" id="end_date" name="end_date">
                             <input type="hidden" id="ten_id" name="ten_id">
@@ -173,6 +174,7 @@
 
                 $('#inv_price').val($(e.relatedTarget).data('price'));
                 $('#rental_id').val($(e.relatedTarget).data('rental_id'));
+                $('#owner_id').val($(e.relatedTarget).data('owner_id'));
 
                 // $('#end_date').val($(e.relatedTarget).data('end_date'));
 

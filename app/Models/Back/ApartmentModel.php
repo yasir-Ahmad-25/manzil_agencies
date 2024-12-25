@@ -29,6 +29,7 @@ class ApartmentModel extends Model
             //     return $query->getRowArray();
             // }
     
+            // SELECT tbl_sites.*, tbl_owners.fullname FROM tbl_sites JOIN tbl_owners ON tbl_sites.owner_id = tbl_owners.owner_id WHERE tbl_sites.branch_id = 1 ORDER BY tbl_sites.site_id ASC;
             $sql = "SELECT * FROM $table where $status != 'Deleted' AND branch_id = $branch_id ORDER BY $tableid ASC";
             $query = $this->db->query($sql);
             return $query->getResultArray();
@@ -46,6 +47,22 @@ class ApartmentModel extends Model
             return $query->getResultArray();
         }
  
+    }
+
+    public function get_sites_data(){
+        $branch_id = (int) session()->get('user')['branch_id']; // Cast to integer
+
+        if($branch_id !== 1){
+
+            // SELECT tbl_sites.*, tbl_owners.fullname FROM tbl_sites JOIN tbl_owners ON tbl_sites.owner_id = tbl_owners.owner_id WHERE tbl_sites.branch_id = 1 ORDER BY tbl_sites.site_id ASC;
+            $sql = "SELECT tbl_sites.*, tbl_owners.fullname FROM tbl_sites JOIN tbl_owners ON tbl_sites.owner_id = tbl_owners.owner_id WHERE tbl_sites.branch_id = $branch_id ORDER BY tbl_sites.site_id ASC";
+            $query = $this->db->query($sql);
+            return $query->getResultArray();
+        }else{
+            $sql = "SELECT tbl_sites.*, tbl_owners.fullname FROM tbl_sites JOIN tbl_owners ON tbl_sites.owner_id = tbl_owners.owner_id ORDER BY tbl_sites.site_id ASC";
+            $query = $this->db->query($sql);
+            return $query->getResultArray();
+        }
     }
 
     // changes made

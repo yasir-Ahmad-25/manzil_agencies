@@ -28,8 +28,7 @@ class ApartmentController extends BaseController
         $apartment = new ApartmentModel();
         $result = array('data' => array());
 
-        
-        $data = $apartment->get_type_data('tbl_sites', 'site_id', 'status');
+        $data = $apartment->get_sites_data();
 
         $i = 1;
         foreach ($data as $key => $value) {
@@ -63,14 +62,14 @@ class ApartmentController extends BaseController
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dd1" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-110px, 39px, 0px);">
                     <a type="button" id="btn_view" data-site_id="' . $value["site_id"] . '" 
                          data-site_build_year="' . $value["SiteYearBuild"] .' "
-                         data-site_owner="' . $value["site_owner"] .'"
+                         data-site_owner="' . $value["owner_id"] .'"
                         data-site_name="' . $value["site_name"] . '" data-site_address="' . $value["site_address"] . '"
                         data-floor="' . $apartment->get_num_floors($value['site_name']) . '" data-Prefix="' . 'Floor' . '"
                         class="dropdown-item" data-bs-toggle="modal" data-bs-target="#sitemodel">
                         <i class="fas fa-info-circle text-info mx-1"></i> View </a>
 
                    <a type="button" id="btn_edit"  data-site_id="' . $value["site_id"] . '"  
-                   data-site_name="' . $value["site_name"] . '" data-site_owner="' . $value["site_owner"] .'" data-site_build_year="' . $value["SiteYearBuild"] .'" data-site_address="' . $value["site_address"] . '"
+                   data-site_name="' . $value["site_name"] . '" data-site_owner="' . $value["owner_id"] .'" data-site_build_year="' . $value["SiteYearBuild"] .'" data-site_address="' . $value["site_address"] . '"
                    data-floor="' . $apartment->get_num_floors($value['site_name']) . '" data-Prefix="' . 'Floor' . '"
                         class="dropdown-item" data-bs-toggle="modal" data-bs-target="#sitemodel">
                         <i class="fas fa-pencil-alt text-warning mx-1"></i> Edit </a>
@@ -81,7 +80,7 @@ class ApartmentController extends BaseController
                    if($value['status'] == "Active"){
                     $buttons .= 
                      '<a type="button" id="btn_de_activate"  data-site_id="' . $value["site_id"] . '"  
-                   data-site_name="' . $value["site_name"] . '" data-site_owner="' . $value["site_owner"] .'" data-site_build_year="' . $value["SiteYearBuild"] .'" data-site_address="' . $value["site_address"] . '"
+                   data-site_name="' . $value["site_name"] . '" data-site_owner="' . $value["owner_id"] .'" data-site_build_year="' . $value["SiteYearBuild"] .'" data-site_address="' . $value["site_address"] . '"
                    data-floor="' . $apartment->get_num_floors($value['site_name']) . '" data-Prefix="' . 'Floor' . '"
                         class="dropdown-item" data-bs-toggle="modal" data-bs-target="#sitemodel">
                         <i class="fa fa-trash text-danger mx-1"></i>  De-Activate </a>
@@ -91,7 +90,7 @@ class ApartmentController extends BaseController
             }else{
                 $buttons .= 
                        '<a type="button" id="btn_Activate"  data-site_id="' . $value["site_id"] . '"  
-                     data-site_name="' . $value["site_name"] . '" data-site_owner="' . $value["site_owner"] .'" data-site_build_year="' . $value["SiteYearBuild"] .'" data-site_address="' . $value["site_address"] . '"
+                     data-site_name="' . $value["site_name"] . '" data-site_owner="' . $value["owner_id"] .'" data-site_build_year="' . $value["SiteYearBuild"] .'" data-site_address="' . $value["site_address"] . '"
                      data-floor="' . $apartment->get_num_floors($value['site_name']) . '" data-Prefix="' . 'Floor' . '"
                           class="dropdown-item" data-bs-toggle="modal" data-bs-target="#sitemodel">
                           <i class="fa fa-check text-success mx-1"></i>  Activate </a>
@@ -99,7 +98,7 @@ class ApartmentController extends BaseController
                           </div>
                   </div>';
 
-                   }
+            }
 
             // end menu button
 
@@ -119,7 +118,7 @@ class ApartmentController extends BaseController
             $result['data'][$key] = array(
                 $i,
                 $value['site_name'],
-                $value['site_owner'],
+                $value['fullname'],
                 $value['site_address'],
                 $value['SiteYearBuild'],
                 $apartment->get_num_floors($value['site_name']) . ' Floors',
@@ -209,7 +208,7 @@ class ApartmentController extends BaseController
                 $data = [
                     'site_name' => $_POST['sitename'],
                     'site_address' => $_POST['siteaddress'],
-                    'site_owner' => $_POST['siteOwner'],
+                    'owner_id' => $_POST['siteOwner'],
                     'SiteYearBuild' => $_POST['SiteYearBuild'],
                     'No_of_Floors' => $_POST['floor'],
                     'branch_id' => session()->get('user')['branch_id'],
@@ -231,7 +230,7 @@ class ApartmentController extends BaseController
                     'site_id' => $_POST['site_id'],
                     'site_name' => $_POST['sitename'],
                     'site_address' => $_POST['siteaddress'],
-                    'site_owner' => $_POST['siteOwner'],
+                    'owner_id' => $_POST['siteOwner'],
                     'SiteYearBuild' => $_POST['SiteYearBuild'],
                     'No_of_Floors' => $_POST['floor'],
                 ];
@@ -244,7 +243,7 @@ class ApartmentController extends BaseController
                     'site_id' => $_POST['site_id'],
                     'site_name' => $_POST['sitename'],
                     'site_address' => $_POST['siteaddress'],
-                    'site_owner' => $_POST['siteOwner'],
+                    'owner_id' => $_POST['siteOwner'],
                     'SiteYearBuild' => $_POST['SiteYearBuild'],
                     'No_of_Floors' => $_POST['floor'],
                     'status' => 'De-Active'
@@ -260,7 +259,7 @@ class ApartmentController extends BaseController
                     'site_id' => $_POST['site_id'],
                     'site_name' => $_POST['sitename'],
                     'site_address' => $_POST['siteaddress'],
-                    'site_owner' => $_POST['siteOwner'],
+                    'owner_id' => $_POST['siteOwner'],
                     'SiteYearBuild' => $_POST['SiteYearBuild'],
                     'No_of_Floors' => $_POST['floor'],
                     'status' => 'Active'

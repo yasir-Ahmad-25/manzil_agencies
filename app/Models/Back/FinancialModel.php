@@ -8,7 +8,7 @@ class FinancialModel extends Model
 {
     protected $table   = 'tbl_menus';
 
-    public function store($table, $data)
+    public function store($table, $data) 
     {
         $this->db->table($table)->insert($data);
         return true;
@@ -154,7 +154,7 @@ class FinancialModel extends Model
         // return $data;
     }
 
-    public function get_account_tag_set($tag, $set) # Get Account By tag
+    public function get_account_tag_set($tag, $set) # Get Account By tag 
     {
         $data = $this->db->query("SELECT * From tbl_cl_accounts where acc_status = 'Active' AND acc_tag = '$tag' AND acc_set='$set'")->getResultArray();
         if (count($data) == 0) $state = 'None';

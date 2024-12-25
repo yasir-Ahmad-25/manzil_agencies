@@ -127,7 +127,14 @@ class RentalModel extends Model
     public function get_apartment_price($apid)
     {
         $apart = $this->db->query("SELECT price FROM tbl_apartments WHERE ap_id='$apid'");
-        echo $apart->getRow()->price;
+        return $apart->getRow()->price;
+    }
+    public function get_apartments_site_owner($apid)
+    {
+        $getSite_id = $this->db->query("SELECT site_id FROM tbl_apartments WHERE ap_id='$apid'");
+
+        // $getSite_ownerid = $this->db->query("SELECT owner_id FROM tbl_sites WHERE site_id=$getSite_id");
+        return $getSite_id->getRow()->site_id;
     }
 
     public function apartment_exist($apid, $cid): bool
@@ -138,7 +145,7 @@ class RentalModel extends Model
     }
 
 
-    public function create_rental($apid,$data, $price, $acc_cash, $acc_dep)
+    public function create_rental($apid,$ownerId,$data, $price, $acc_cash, $acc_dep)
     {
         $this->db->transStart();
         $this->db->transException(true);
