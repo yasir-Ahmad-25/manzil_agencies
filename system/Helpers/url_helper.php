@@ -158,7 +158,7 @@ if (! function_exists('base_url')) {
         return site_url($relativePath, $scheme, $config);
     }
 }
-
+ 
 if (! function_exists('current_url')) {
     /**
      * Returns the current full URL based on the Config\App settings and IncomingRequest.

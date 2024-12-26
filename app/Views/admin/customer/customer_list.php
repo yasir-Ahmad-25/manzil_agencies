@@ -213,11 +213,11 @@
     });
 
 
-        // Event listener to trigger table fetch table when site is selected
-        document.getElementById("selected_site").addEventListener("change", function() {
-            const selectedSite = this.value;
-            fetchTable(selectedSite);
-        });
+        // // Event listener to trigger table fetch table when site is selected
+        // document.getElementById("selected_site").addEventListener("change", function() {
+        //     const selectedSite = this.value;
+        //     fetchTable(selectedSite);
+        // });
 
         function fetchTable(site) {
             let CI4_ROUTE;
@@ -270,7 +270,7 @@
     // ------------ Data Passing To Modals ------------ \\
     //-- Details --\\ 
     $('#form_modal').on('show.bs.modal', function(e) {
-        // console.log(event.target.id) 
+        console.log(event.target.id) 
         $('#form_tag').val(event.target.id);
         $('#cust_name,#cust_tell').attr('readonly', false)
         $('#cust_address,#cust_credit_limit').attr('readonly', false)
@@ -429,6 +429,7 @@
         });
         return false;
     }
+
 </script>
 
 
