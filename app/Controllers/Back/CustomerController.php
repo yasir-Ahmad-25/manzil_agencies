@@ -335,7 +335,8 @@ class CustomerController extends BaseController
         }
         echo json_encode($result);
     }
-    public function fetch_customers($selected_site)
+    // public function fetch_customers($selected_site)
+    public function fetch_customers()
     {
         $customer = new CustomerModel();
         $locale = $this->request->getLocale();
@@ -343,7 +344,8 @@ class CustomerController extends BaseController
         $result = array('data' => array());
 
         $branch_id =  (int) session()->get('user')['branch_id'];
-        $data = $customer->get_customers_based_on_site($selected_site, $branch_id);
+        $data = $customer->get_customers($branch_id);
+        // $data = $customer->get_customers_based_on_site($selected_site, $branch_id);
 
         $i = 1;
         foreach ($data as $key => $value) {
@@ -380,14 +382,16 @@ class CustomerController extends BaseController
                      data-cust_tell="' . $value["cust_tell"] . '"  data-identification="' . $value["identification"] . '"
                      data-cust_email="' . $value["cust_email"] . '" 
                      data-balance="' . $value["acc_balance"] . '"
-                     data-selectedsite="' . $value["site_id"]  . '"
-                    data-bs-target="#form_modal" class="dropdown-item" data-bs-toggle="modal">
-                    <i class="fas fa-pencil-alt text-warning mx-1"></i>Edit  
-                </a>
-                  
-                 
+                     data-bs-target="#form_modal" class="dropdown-item" data-bs-toggle="modal">
+                     <i class="fas fa-pencil-alt text-warning mx-1"></i>Edit  
+                     </a>
+                     
+                     
                      </div>
-         </div></div>';
+                     </div></div>';
+
+                     // IN CASE LOO BAAHDO SITE KA UU DAGAN YAHAY CUSTOMER KA
+                    //  data-selectedsite="' . $value["site_id"]  . '"
             $result['data'][$key] = array(
                 $i,
                 '<a href="' . base_url($locale) . '/customer/trx_list?cust_code=' . $value['customer_id'] . '">' . $value['cust_name'] . '</a>',
@@ -401,7 +405,7 @@ class CustomerController extends BaseController
             );
             $i++;
         }
-        log_message('debug', print_r($result, true));  // CodeIgniter specific
+        // log_message('debug', print_r($result, true));  // CodeIgniter specific
         echo json_encode($result);
     }
 
@@ -430,7 +434,7 @@ class CustomerController extends BaseController
                 'ref_phone' => $this->request->getVar('ref_phone'),
                 'cust_status' => 'Active',
                 'branch_id' => $this->request->getVar('branch_id'),
-                'site_id' => $this->request->getVar('selected_site'),
+                // 'site_id' => $this->request->getVar('selected_site'),
             ];
             switch ($_POST['form_tag']) {
 
@@ -473,7 +477,7 @@ class CustomerController extends BaseController
                         'ref_phone' => $this->request->getVar('ref_phone'),
                         'cust_status' => 'Active',
                         'branch_id' => (int) session()->get('user')['branch_id'],
-                        'site_id' => $this->request->getVar('selected_site'),
+                        // 'site_id' => $this->request->getVar('selected_site'),
                     ];
 
                     $customer->update_table('tbl_customers', $data);

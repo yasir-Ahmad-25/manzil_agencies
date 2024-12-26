@@ -71,13 +71,13 @@
     <div class="card col-md-12">
         <div id="outer"></div>
         <div class="card-body">
-            <div class="form-group mb-3">
+            <!-- <div class="form-group mb-3">
                 <label for="#">Search by site: </label>
                 <select name="selected_site" id="selected_site" class="form-control">
                     <option selected value="All_Sites">All Sites</option>
-                    <?= $sites ?>
+                    
                 </select>
-            </div>
+            </div> -->
             <div class="table-responsive">
                 <table id="manageTable" class="table table-bordered table-hover" width="100%">
                     <thead>
@@ -167,13 +167,12 @@
                         </div>
                     </div>
 
-                    <div class="form-group mb-3 mt-3">
-                        <label><?= 'Site Name' ?></label>
+                    <!-- <div class="form-group mb-3 mt-3">
+                        <label></label>
                         <select name="selected_site" id="selected_site" class="form-control">
                             <option disabled>-- select available sites --</option>
-                            <?= $sites ?>
                         </select>
-                    </div>
+                    </div> -->
             </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-rounded btn-outline-primary btn_submit"><b></b></button>
@@ -295,18 +294,17 @@
             $('#cust_tell').val($(e.relatedTarget).data('cust_tell'));
             $('#cust_email').val($(e.relatedTarget).data('cust_email'));
             $('#balance').val($(e.relatedTarget).data('balance'));
-            const siteText = $(e.relatedTarget).data('selectedsite'); // Trim any spaces
-
-            
-
-            console.log("site Text id: " + siteText);
-            $('#selected_site option').each(function() {
-                console.log($(this).val() + " is equal to : " + siteText);  // Compare values, not text
-                if ($(this).val() === siteText) {  // Use .val() instead of .text()
-                    $(this).prop('selected', true); // Set the selected property to true
-                    return false; // Break the loop after finding the match
-                }
-            });
+           
+            //  in case loo baahdo in lasoo aqriyo site ka uu dagan yahay customer ka 
+            // const siteText = $(e.relatedTarget).data('selectedsite'); // Trim any spaces
+            // console.log("site Text id: " + siteText);
+            // $('#selected_site option').each(function() {
+            //     console.log($(this).val() + " is equal to : " + siteText);  // Compare values, not text
+            //     if ($(this).val() === siteText) {  // Use .val() instead of .text()
+            //         $(this).prop('selected', true); // Set the selected property to true
+            //         return false; // Break the loop after finding the match
+            //     }
+            // });
             
 
             $('#ref_name').val($(e.relatedTarget).data('ref_name'));

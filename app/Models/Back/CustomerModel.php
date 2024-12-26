@@ -26,6 +26,27 @@ class CustomerModel extends Model
         $this->db->table($table)->upsertBatch($data);
         return true;
     }
+    public function get_customers($brid)
+    {
+            // brid stands for branch_id
+            return $this->fetchCustomerBasedOnBranch($brid);
+    }
+
+    public function fetchCustomerBasedOnBranch($brid){
+        if($brid !== 1){
+            $sql = "SELECT DISTINCT cu.*, (SELECT SUM(amount) FROM tbl_deposit td WHERE td.customer_id = cu.customer_id) AS total_deposit,acc.acc_balance FROM tbl_customers cu JOIN tbl_cl_accounts acc ON cu.customer_id = acc.acc_tag WHERE acc.acc_set = 'Customer' AND cu.branch_id =".$brid;
+            $query = $this->db->query($sql);
+            return $query->getResultArray();
+        }else{
+            // then it's admin
+            $sql = "SELECT DISTINCT cu.*, (SELECT SUM(amount) FROM tbl_deposit td WHERE td.customer_id = cu.customer_id) AS total_deposit,acc.acc_balance FROM tbl_customers cu JOIN tbl_cl_accounts acc ON cu.customer_id = acc.acc_tag WHERE acc.acc_set = 'Customer'";
+            $query = $this->db->query($sql);
+            return $query->getResultArray();
+        }
+
+        
+    }
+    // IN CASE LOO BAAHDO IN LASOO AQRIYO CUSTOMERS KA AYADOO LOO FIIRINAAYO PROPERTIES KA AY KALA DAGAN YIHIIN AMA SITE/BUILDING
 
     public function get_customers_based_on_site($selectedSite,$brid)
     {
