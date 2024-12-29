@@ -148,10 +148,14 @@ $routes->group('{locale}', function ($routes) {
          // pages
          $routes->get('/', 'OwnerController::index',['filter' => 'restrict']);
          $routes->get('list', 'OwnerController::fetch_owners',['filter' => 'restrict']);
+         $routes->get('payout', 'OwnerController::Owner_Payout',['filter' => 'restrict']);
+         $routes->get('fetch_settlements', 'OwnerController::fetch_owners_settlement', ['filter' => 'restrict']);
      
 
-         // These are the Ajax requests: fetching user data and handling user actions
+         // These are the Ajax requests: fetching  data and handling  actions
          $routes->post('crud_owners', 'OwnerController::crud_owners', ['filter' => 'restrict']);
+         $routes->post('owner_settlement', 'OwnerController::owner_settlement', ['filter' => 'restrict']);
+         $routes->post('get_owner_Account_And_Balance', 'OwnerController::get_Balance_And_Account', ['filter' => 'restrict']);
         
    });
 

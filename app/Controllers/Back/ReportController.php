@@ -7,6 +7,7 @@ use App\Models\Back\ApartmentModel;
 use App\Models\Back\AuthModel;
 use App\Models\Back\CustomerModel;
 use App\Models\Back\FinancialModel;
+use App\Models\Back\ReportModel;
 use App\Models\Back\SettingsModel;
 use App\Models\Back\SupplierModel;
 
@@ -365,6 +366,7 @@ class ReportController extends BaseController
  
 
         $apartment = new ApartmentModel();
+        $report = new ReportModel();
         $result = array('data' => array()); // initialize empty result array
 
         // fetch Apartments
@@ -385,10 +387,11 @@ class ReportController extends BaseController
 
             $stat_icon = $this->stat_icon($set["status"]);
 
+            $owner_name = $report->getOwnerById($value['owner_id']);
             $result['data'][$key] = array(
                 $i,
                 $value['site_name'],
-                $value['site_owner'],
+                $owner_name,
                 $value['site_address'],
                 $value['SiteYearBuild'],
                 $apartment->get_num_floors($value['site_name']) . ' Floors',

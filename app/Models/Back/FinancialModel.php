@@ -50,6 +50,7 @@ class FinancialModel extends Model
         $this->db->query("UPDATE tbl_cl_accounts SET acc_balance=acc_balance+$bal WHERE account_id='$acc_id' ");
     }
 
+    
     public function get_all_accounts()
     {
         $row = $this->db->query("SELECT acc.account_id,acc_name,`acc_type_name_ar` FROM tbl_cl_accounts acc
@@ -183,6 +184,7 @@ class FinancialModel extends Model
     public function get_custom_account_tag($tag, $accset) # Get Account By tag
     {
         $data = $this->db->query("SELECT * From tbl_cl_accounts where acc_status = 'Active' AND acc_tag = '$tag' and acc_set='$accset'")->getResultArray();
+        // dd($tag,$accset,$data);
         if (count($data) == 0)
             $state = 'None';
         else if (count($data) > 1)
@@ -213,6 +215,7 @@ class FinancialModel extends Model
         }
         return ['state' => $state ?? 'Ok', 'account_id' => $data[0]['account_id'] ?? null];
     }
+
 
     public function trx_det($dr_cr, $amount, $account_id, $trx_id, $trx_des) # Record trans_details
     {
@@ -651,6 +654,7 @@ class FinancialModel extends Model
 
         return $query->getResultArray();
     }
+
     public function get_balance_sheet_table($tid, $from, $to)
     {
         $brid = session()->get('user')['branch_id'];
@@ -665,5 +669,19 @@ class FinancialModel extends Model
         WHERE acc.acc_type_id='$tid' AND (tr.trx_date >= '$from' and tr.trx_date <= '$to') GROUP BY acc.account_id");
         }
         return $query->getResultArray();
+    }
+
+
+
+    # OWNER SECTION #
+    public function get_owner_Balance($owner_id)
+    {
+        $apart = $this->db->query("SELECT acc_balance FROM tbl_cl_accounts WHERE acc_tag='$owner_id'");
+        return $apart->getRow()->acc_balance;
+    }
+
+    public function getAgency_Balance($account_id){
+        $account = $this->db->query("SELECT acc_balance FROM tbl_cl_accounts WHERE account_id=$account_id");
+        return $account->getRow()->acc_balance;
     }
 }

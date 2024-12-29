@@ -129,6 +129,12 @@
                                 <label for="#"> Company Name</label>
                                 <input type="text" class="form-control" name="companyName" id="companyName">
                             </div>
+
+
+                            <div class="form-group mt-3">
+                                <label for="#">Account Number</label>
+                                <input type="text" class="form-control" name="Account_Number" id="Account_Number">
+                            </div>
                               
                                             
                         </div>
@@ -227,6 +233,7 @@
                 $('#Email').val($(e.relatedTarget).data('owneremail'));
                 $('#OwnerType').val($(e.relatedTarget).data('ownertype'));
                 $('#companyName').val($(e.relatedTarget).data('ownercompanyname'));
+                $('#Account_Number').val($(e.relatedTarget).data('owner_account_number'));
 
                 ownerType = document.getElementById("OwnerType").value;                
                 if(ownerType != "individual"){
@@ -250,6 +257,7 @@
                 $('#Email').val($(e.relatedTarget).data('owneremail'));
                 $('#OwnerType').val($(e.relatedTarget).data('ownertype'));
                 $('#companyName').val($(e.relatedTarget).data('ownercompanyname'));
+                $('#Account_Number').val($(e.relatedTarget).data('owner_account_number'));
 
                 ownerType = document.getElementById("OwnerType").value;                
                 if(ownerType != "individual"){
@@ -262,6 +270,7 @@
                $('#Phone').attr('readonly', true)
                $('#Email').attr('readonly', true)
                $('#companyName').attr('readonly', true)
+               $('#Account_Number').attr('readonly', true)
 
                 // Disable the select element
                 OwnerTypeBox.disabled = true;
@@ -279,6 +288,8 @@
                 $('#Email').val($(e.relatedTarget).data('owneremail'));
                 $('#OwnerType').val($(e.relatedTarget).data('ownertype'));
                 $('#companyName').val($(e.relatedTarget).data('ownercompanyname'));
+                $('#Account_Number').val($(e.relatedTarget).data('owner_account_number'));
+
                 ownerType = document.getElementById("OwnerType").value;                
                 if(ownerType != "individual"){
                     $('#CompanyNameDiv').show();
@@ -290,6 +301,7 @@
                 $('#Phone').attr('readonly', true)
                 $('#Email').attr('readonly', true)
                 $('#companyName').attr('readonly', true)
+                $('#Account_Number').attr('readonly', true)
 
                 // Disable the select element
                 OwnerTypeBox.disabled = true;
@@ -310,6 +322,8 @@
                 $('#Email').val($(e.relatedTarget).data('owneremail'));
                 $('#OwnerType').val($(e.relatedTarget).data('ownertype'));
                 $('#companyName').val($(e.relatedTarget).data('ownercompanyname'));
+                $('#Account_Number').val($(e.relatedTarget).data('owner_account_number'));
+
                 ownerType = document.getElementById("OwnerType").value;                
                 if(ownerType != "individual"){
                     $('#CompanyNameDiv').show();
@@ -321,6 +335,7 @@
                 $('#Phone').attr('readonly', true)
                 $('#Email').attr('readonly', true)
                 $('#companyName').attr('readonly', true)
+                $('#Account_Number').attr('readonly', true)
                 // Disable the select element
                 OwnerTypeBox.disabled = true;
                 $('#btn_submit').show();
