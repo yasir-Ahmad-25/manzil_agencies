@@ -143,7 +143,7 @@ class RentalModel extends Model
         $sql = "SELECT * FROM tbl_rentals where ap_id='$apid' and customer_id='$cid' and rental_status='Active'";
         return $this->db->query($sql)->getNumRows() > 0;
     }
-
+ 
 
     public function create_rental($apid,$ownerId,$data, $price, $acc_cash, $acc_dep)
     {
@@ -214,7 +214,7 @@ class RentalModel extends Model
         $finance = new FinancialModel();
 
         if ($deposit) {
-
+            
             $data = [
                 'customer_id' => $customer_id,
                 'profile_no' => 'not-settled-yet',
@@ -223,7 +223,7 @@ class RentalModel extends Model
                 'account_id' => $acc_dep,
                 'des' => '',
             ];
-
+            
             // save data to the database tbl_deposit
             $this->store('tbl_deposit', $data);
             
@@ -232,7 +232,7 @@ class RentalModel extends Model
             $ri = $this->rental_income_exists($month, $customer_id, $rental_id);
             $ap_id =$this->db->query("SELECT ap_id from tbl_rentals where rental_id=$rental_id")->getRow()->ap_id ??0 ;
             if ($ri == 0) {
-             
+                
                 $ridata = [
                     'rental_id'=>$rental_id,
                     'tenant_id'=>$customer_id,
@@ -241,18 +241,18 @@ class RentalModel extends Model
                     'paid_amount'=>$rental_amount,
                     'deposit_amount'=>$deposit,
                     'month'=>$month,
-                 ];
-                 $this->store('rental_income_report', $ridata);
-             }else{
+                ];
+                $this->store('rental_income_report', $ridata);
+            }else{
                  $this->db->query("UPDATE rental_income_report set deposit_amount=$deposit,rental_id=$rental_id, tenant_id=$customer_id, month=$month where id=$ri ");
              }
-            ## start transaction ###
-
-            $fpid = $finance->financial_period()['fp_id'];
-            $trx_id = $finance->record_trans($deposit, 'Deposit', $fpid, $date, $customer_id);
-
-            $dracc = $acc_dep;
-            $cracc = $finance->get_account_tag('DP')['account_id'];
+             ## start transaction ###
+             
+             $fpid = $finance->financial_period()['fp_id'];
+             $trx_id = $finance->record_trans($deposit, 'Deposit', $fpid, $date, $customer_id);
+             
+             $dracc = $acc_dep;
+             $cracc = $finance->get_account_tag('DP')['account_id'];
 
             $finance->dr_trx_det((float) $deposit, $dracc, $trx_id);
             $finance->cr_trx_det((float) $deposit, $cracc, $trx_id);
@@ -279,30 +279,94 @@ class RentalModel extends Model
             return 0;
         }
     }
+    // public function record_transaction($amount, $source, $cr_tag, $acc_cash, $date, $customer_id): string
+    // {
+    //     $finance = new FinancialModel();
+
+    //     $fpid = $finance->financial_period()['fp_id']; // getting the financial period id [ soo hel xisaab xirka sanadlaha ]
+
+    //     // create summary of the transaction that occured and get the id
+    //     // trx_amount = transaction ka dhacay meeqay ahayd lacagta
+    //     // trx_source = xagee ka timid lacagta ama transaction ka dhacaaya [ HADDA WAANA-QAANAA OO WAA KIRO ]
+    //     // fp_id = id ga xisaab xirka sanadlaha
+    //     $trx_id = $finance->record_trans($amount, $source, $fpid, $date, $customer_id);
+
+    //     // account cash = which account does he send the money to is it cash,wallet or merchant
+    //     $dracc = $acc_cash; // we are storing this to debit-account since i rent an apartment and i collected a money 
+    //     $cracc = $finance->get_account_tag($cr_tag)['account_id'];
+
+    //     // save the details of the transactions that occur
+    //     $finance->dr_trx_det((float) $amount, $dracc, $trx_id);
+    //     $finance->cr_trx_det((float) $amount, $cracc, $trx_id);
+        
+    //     // update my account's balance
+    //     $finance->update_accounnt_balance($dracc, (float) $amount, 'dr');
+    //     $finance->update_accounnt_balance($cracc, (float) $amount, 'cr');
+
+    //     dd($dracc,$cracc,$cr_tag);
+
+    //     return $trx_id;
+    // }
+
+
     public function record_transaction($amount, $source, $cr_tag, $acc_cash, $date, $customer_id): string
     {
         $finance = new FinancialModel();
+        try {
+            // Getting the financial period id
+            $fpid = $finance->financial_period()['fp_id']; // if this fails, it'll throw an error
+            if (!$fpid) {
+                throw new \Exception('Failed to get financial period ID');
+            }
 
-        $fpid = $finance->financial_period()['fp_id']; // getting the financial period id [ soo hel xisaab xirka sanadlaha ]
+            // Record the transaction
+            $trx_id = $finance->record_trans($amount, $source, $fpid, $date, $customer_id);
+            if (!$trx_id) {
+                throw new \Exception('Failed to record transaction');
+            }
 
-        // create summary of the transaction that occured and get the id
-        // trx_amount = transaction ka dhacay meeqay ahayd lacagta
-        // trx_source = xagee ka timid lacagta ama transaction ka dhacaaya [ HADDA WAANA-QAANAA OO WAA KIRO ]
-        // fp_id = id ga xisaab xirka sanadlaha
-        $trx_id = $finance->record_trans($amount, $source, $fpid, $date, $customer_id);
+            // Get the account tag for credit account
+            $cracc = $finance->get_account_tag($cr_tag)['account_id'];
+            if (!$cracc) {
+                throw new \Exception('Failed to get account tag for credit account');
+            }
 
-        // account cash = which account does he send the money to is it cash,wallet or merchant
-        $dracc = $acc_cash; // we are storing this to debit-account since i rent an apartment and i collected a money 
-        $cracc = $finance->get_account_tag($cr_tag)['account_id'];
+            // Debit transaction details
+            $dracc = $acc_cash; 
+            $dr_result = $finance->dr_trx_det((float) $amount, $dracc, $trx_id);
+            if (!$dr_result) {
+                dd('Failed to record debit transaction details');
+            }
 
-        // save the details of the transactions that occur
-        $finance->dr_trx_det((float) $amount, $dracc, $trx_id);
-        $finance->cr_trx_det((float) $amount, $cracc, $trx_id);
+            // Credit transaction details
+            $cr_result = $finance->cr_trx_det((float) $amount, $cracc, $trx_id);
+            if (!$cr_result) {
+                dd('Failed to record credit transaction details');
+            }
 
-        // update my account's balance
-        $finance->update_accounnt_balance($dracc, (float) $amount, 'dr');
-        $finance->update_accounnt_balance($cracc, (float) $amount, 'cr');
+            // Update account balance for debit
+            $dr_balance_result = $finance->update_accounnt_balance($dracc, (float) $amount, 'dr');
+            if (!$dr_balance_result) {
+                dd('Failed to update debit account balance');
+            }
 
-        return $trx_id;
+            // Update account balance for credit
+            $cr_balance_result = $finance->update_accounnt_balance($cracc, (float) $amount, 'cr');
+            if (!$cr_balance_result) {
+                dd('Failed to update credit account balance');
+            }
+
+            // You can remove the dd() or use it for debugging purposes
+            // dd($dracc, $cracc, $cr_tag ,$dr_result,$cr_result, $cr_balance_result , $dr_balance_result);
+            
+            return $trx_id;
+        } catch (\Exception $e) {
+            // Log the error for debugging
+            log_message('error', 'Error in record_transaction: ' . $e->getMessage());
+            
+            // Optionally return some value or rethrow the exception depending on your error handling strategy
+            return 'Error: ' . $e->getMessage();
+        }
     }
+
 }
