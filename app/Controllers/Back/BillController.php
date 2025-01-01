@@ -128,6 +128,9 @@ class BillController extends BaseController
         $result = array('data' => array());
 
         $data = $bill->get_all_bills($status);
+
+        // log_message("debug","This is Debug message",$data);
+
         $i = 1;
         foreach ($data as $key => $value) {
 
@@ -141,8 +144,9 @@ class BillController extends BaseController
                 ',
                 'mid_1' => '',
             ];
-            $cancel = ((($value["total"]+$value['discount']) - $value['paid']) > 0) ? '' : 'hidden';
+            // $cancel = ((($value["total"]+$value['discount']) - $value['paid']) > 0) ? '' : 'hidden';
             $pay = ( (( $value["total"]+$value['discount']) - $value['paid']) > 0) ? '' : 'hidden';
+            // 700 + 0.00 - 700
             $rem =  ($value['total'] + $value['discount']) - $value['paid'];
             // '<a ' . $cancel . ' type="button" id="btn_payment" data-total="' . $value['total'] . '" data-dis="' . $value["discount"] . '"
             //                     data-bill_id="' . $value["id"] . '" data-ten_id="' . $value["customer_id"] . '"
@@ -188,6 +192,10 @@ class BillController extends BaseController
                 11 => 'November',
                 12 => 'December'
             ];
+
+            // Fomrat date
+            $created_date = new \DateTime($value['created_date']);
+            $created_date_Format = $created_date->format('Y-m-d');
             // $type = ($value['rental_id'] != 0) ? "Rental":"Utility"  ;
             $details = ($value['rental_id'] != 0) ? "Rental" : '<a href="javascript:void(0)" data-bs-target="#print_inv" data-bill_id="'. $value['id'] .'" class="dropdown-item" data-bs-toggle="modal"><i data-feather="eye" class="feather-icon"></i>Details</a>';
             $result['data'][$key] = array(
@@ -198,15 +206,18 @@ class BillController extends BaseController
                 '$' . $value['discount'],
                 '$' . $value['paid'],
                 '$' . ($value['total'] + $value['discount']) - $value['paid'],
-                $value['created_date'],
+                $created_date_Format,
                 $details,
+                $pay != 'hidden' ? '<i class="fas fa-ban text-danger mx-1"></i> Unpaid' : '<i class="fas fa-check text-success mx-1"></i> Paid',
                 $buttons,
             );
             $i++;
         } // /foreach
         // print_r($result);
+        // dd($pay);
         echo json_encode($result);
     }
+    
     function print_bill()
     {
         $sid = $_POST['sid'];
@@ -228,7 +239,9 @@ class BillController extends BaseController
         }
 
         echo json_encode($response);
-    }
+    } 
+
+
     public function fetch_charging_tenants()
     {
         $bill = new BillModel();
@@ -242,46 +255,100 @@ class BillController extends BaseController
                 $arr[] = $val['rental_id'];
         }
 
-        $str = implode(',', $arr);
+        // $str = implode(',', $arr);
 
-        if ($arr != []) {
+        // if ($arr != []) {
 
+        //     $tenants = $bill->get_chargable_tenants($str);
+
+        //     foreach ($tenants as $key => $ten) {
+
+        //         $date1 = new DateTime(date('Y-m-d'));
+        //         $date2 = new DateTime($ten['end_date']);
+
+        //         $interval = $date2->diff($date1);
+        //         $dt = $interval->d . " days ";
+
+        //         $btn = [
+        //             'header' => '<div class="ml-auto">
+        //                     <div class="dropdown sub-dropdown"><button class="btn btn-link text-dark" type="button"
+        //                     id="dd1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        //                     <i class="fas fa-ellipsis-v mx-1"></i></button><div class="dropdown-menu dropdown-menu-right"
+        //                     aria-labelledby="dd1" x-placement="bottom-end" style="position: absolute; will-change: transform;
+        //                     top: 0px; left: 0px; transform: translate3d(-110px, 39px, 0px);">
+        //         ',
+        //             'mid_1' => '',
+        //         ];
+
+
+        //         $buttons = $btn['header'] . '
+        //                     <a type="button" id="btn_edit" data-end_date="' . $ten["end_date"] . '"
+        //                         data-ten_id="' . $ten["customer_id"] . '" data-ten_name="' . $ten["cust_name"] . '"
+        //                         data-ap_no="' . $ten["ap_no"] . '" data-price="' . $ten["price"] . '" 
+        //                         data-rental_id="' . $ten["rental_id"] . '"
+        //                         data-owner_id="' . $ten["owner_id"] . '"
+        //                         data-bs-target="#invoice_modal" class="dropdown-item" data-bs-toggle="modal" >
+        //                         <i class="fas fa-edit text-info mx-1"></i> Raise Invoice
+        //                     </a>
+                        
+        //             </div>
+        //             </div>
+        //     </div>';
+
+        //         $result['data'][$key] = array(
+        //             $i,
+        //             $ten['cust_name'],
+        //             $ten['ap_no'],
+        //             $ten['price'],
+        //             $ten['end_date'],
+        //             $dt,
+        //             $buttons,
+        //         );
+        //         $i++;
+        //     } // /foreach
+        // }
+
+        // Only proceed if there are rental IDs to process
+        if (!empty($arr)) {
+            $str = implode(',', $arr);
+            
+            // Get chargeable tenants for the rental IDs
             $tenants = $bill->get_chargable_tenants($str);
+            // dd($tenants);
 
             foreach ($tenants as $key => $ten) {
-
                 $date1 = new DateTime(date('Y-m-d'));
                 $date2 = new DateTime($ten['end_date']);
-
                 $interval = $date2->diff($date1);
-                $dt = $interval->d . " days ";
+                $dt = $interval->d . " days";
+
+
 
                 $btn = [
                     'header' => '<div class="ml-auto">
-                            <div class="dropdown sub-dropdown"><button class="btn btn-link text-dark" type="button"
-                            id="dd1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                            <i class="fas fa-ellipsis-v mx-1"></i></button><div class="dropdown-menu dropdown-menu-right"
-                            aria-labelledby="dd1" x-placement="bottom-end" style="position: absolute; will-change: transform;
-                            top: 0px; left: 0px; transform: translate3d(-110px, 39px, 0px);">
-                ',
+                                <div class="dropdown sub-dropdown">
+                                    <button class="btn btn-link text-dark" type="button" id="dd1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                        <i class="fas fa-ellipsis-v mx-1"></i>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dd1" x-placement="bottom-end">
+                    ',
                     'mid_1' => '',
                 ];
 
-
                 $buttons = $btn['header'] . '
-                            <a type="button" id="btn_edit" data-end_date="' . $ten["end_date"] . '"
-                                data-ten_id="' . $ten["customer_id"] . '" data-ten_name="' . $ten["cust_name"] . '"
-                                data-ap_no="' . $ten["ap_no"] . '" data-price="' . $ten["price"] . '" 
-                                data-rental_id="' . $ten["rental_id"] . '"
-                                data-owner_id="' . $ten["owner_id"] . '"
-                                data-bs-target="#invoice_modal" class="dropdown-item" data-bs-toggle="modal" >
-                                <i class="fas fa-edit text-info mx-1"></i> Raise Invoice
-                            </a>
-                        
-                    </div>
-                    </div>
-            </div>';
+                                <a type="button" id="btn_edit" data-end_date="' . $ten["end_date"] . '"
+                                    data-ten_id="' . $ten["customer_id"] . '" data-ten_name="' . $ten["cust_name"] . '"
+                                    data-ap_no="' . $ten["ap_no"] . '" data-price="' . $ten["price"] . '" 
+                                    data-rental_id="' . $ten["rental_id"] . '"
+                                    data-owner_id="' . $ten["owner_id"] . '" 
+                                    data-bs-target="#invoice_modal" class="dropdown-item" data-bs-toggle="modal">
+                                    <i class="fas fa-edit text-info mx-1"></i> Raise Invoice
+                                </a>
+                            </div>
+                        </div>
+                    </div>';
 
+                // Store the result for each tenant
                 $result['data'][$key] = array(
                     $i,
                     $ten['cust_name'],
@@ -292,7 +359,7 @@ class BillController extends BaseController
                     $buttons,
                 );
                 $i++;
-            } // /foreach
+            }
         }
         echo json_encode($result);
     }
@@ -310,7 +377,9 @@ class BillController extends BaseController
         $tenid = $_POST['ten_id'];
         $bill_type = 'rent';
 
+        $bill->updateInvoiceStatus($rentid);
         $bill->record_rental_bill($owner_id,$tenid, $rentid, $price, $end_date, $bill_type);
+
 
         $response['alert_outer'] = $this->alert('Bill has been Raised', 'success');
 

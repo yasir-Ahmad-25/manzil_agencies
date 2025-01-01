@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Back\AuthModel;
+use App\Models\Back\DashboardModel;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\CLIRequest;
 use CodeIgniter\HTTP\IncomingRequest;
@@ -125,5 +126,44 @@ abstract class BaseController extends Controller
 
         $query = $auth->query($sql);
         return $query->getResultArray();
+    }
+
+    // fetch income
+       // =======================    INCOME CHART    ============ //
+
+    public function getIncomeData_chart($accountId)
+    {
+        // Get the current month and year
+        $currentYear = date('Y');
+        $currentMonth = date('m');
+
+        // Calculate the start and end date for the current month
+        $startDate = date("Y-m-01", strtotime("$currentYear-$currentMonth-01")); // First day of the current month
+        $endDate = date("Y-m-t", strtotime("$currentYear-$currentMonth-01")); // Last day of the current month
+
+        // Query to fetch income data for the current month
+        $query = $this->db->query("
+            SELECT trx_date, trx_source, trx_des, dr_amount, cr_amount
+            FROM tbl_cl_trans_details det
+            JOIN tbl_cl_transections trx ON trx.trx_id = det.trx_id
+            JOIN tbl_cl_financial_period fp ON fp.fp_id = trx.fp_id
+            WHERE det.account_id = '$accountId'
+            AND trx_date BETWEEN '$startDate' AND '$endDate'
+        ");
+
+        // Get the result as an array
+        $data = $query->getResultArray();
+
+        // Prepare the data for Chart.js
+        $dates = [];
+        $incomeData = [];
+
+        foreach ($data as $row) {
+            $dates[] = $row['trx_date'];  // Transaction date
+            $incomeData[] = $row['cr_amount'];  // Credit amount (income)
+        }
+
+        // Return the data as JSON for use in the frontend
+        return $this->response->setJSON(['dates' => $dates, 'incomeData' => $incomeData]);
     }
 }

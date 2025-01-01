@@ -87,6 +87,7 @@
                                 <th>Remaining</th>
                                 <th><?= 'Bill Date' ?></th>
                                 <th><?= 'Details' ?></th>
+                                <th><?= 'Status' ?></th>
                                 <th><?= 'Action' ?></th>
                             </tr>
                         </thead>
@@ -287,7 +288,7 @@
     </div><!-- /.modal-dialog -->
 </div>
 
-
+ 
 
 <style>
     .select2 {

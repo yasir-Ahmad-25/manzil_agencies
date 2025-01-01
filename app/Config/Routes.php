@@ -50,6 +50,15 @@ $routes->group('{locale}', function ($routes) {
 
    $routes->group('admin', ['namespace' => 'App\Controllers\Back'], function ($routes) {
       $routes->get('/', 'Dashboard::index', ['filter' => 'restrict']);
+      $routes->get('getIncome/(:any)', 'Dashboard::getIncomeData_chart/$1', ['filter' => 'restrict']);
+      // $routes->get('due_rentals', 'Dashboard::fetch_due_rentals/', ['filter' => 'restrict']);
+      $routes->get('fetch_unpaid_bills', 'Dashboard::fetch_due_rentals', ['filter' => 'restrict']);
+      $routes->get('fetch_last_five_rentals', 'Dashboard::fetch_las_five_rentals', ['filter' => 'restrict']);
+
+
+      $routes->get('generate_monthly_income_chart/(:any)', 'Dashboard::generate_monthly_income_chart/$1', ['filter' => 'restrict']);
+
+
 
       $routes->get('auth', 'AuthController::index'); 
       $routes->post('login', 'AuthController::check_login');

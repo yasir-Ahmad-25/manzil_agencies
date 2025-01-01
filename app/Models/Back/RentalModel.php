@@ -43,6 +43,41 @@ class RentalModel extends Model
             
     }
 
+    public function get_last_five_rental_info($branch_id)
+    { 
+        if($branch_id !== 1){ /// if it's not superAdmin 
+            $sql = "SELECT rental_id, cu.customer_id, rental_status, duration, cust_name, r.profile_no, ap.ap_id, 
+                    ap_no, ap.price, start_date, end_date, rental_date, deposit, s.site_address, s.site_name 
+                        FROM tbl_rentals r
+                            JOIN tbl_apartments ap ON r.ap_id = ap.ap_id
+                                JOIN tbl_floors fl ON fl.floor_id = ap.floor_id
+                                    JOIN tbl_sites s ON s.site_id = fl.site_id
+                                        JOIN tbl_customers cu ON r.customer_id = cu.customer_id
+                                            WHERE r.rental_status = 'Active' 
+                                                AND r.branch_id = $branch_id
+                                                    ORDER BY rental_id DESC
+                                                            LIMIT 5;
+                ";
+        }else{
+            $sql = "SELECT rental_id, cu.customer_id, rental_status, duration, cust_name, r.profile_no, ap.ap_id, 
+                                ap_no, ap.price, start_date, end_date, rental_date, deposit, s.site_address, s.site_name 
+                                FROM tbl_rentals r
+                                JOIN tbl_apartments ap ON r.ap_id = ap.ap_id
+                                JOIN tbl_floors fl ON fl.floor_id = ap.floor_id
+                                JOIN tbl_sites s ON s.site_id = fl.site_id
+                                JOIN tbl_customers cu ON r.customer_id = cu.customer_id
+                                WHERE r.rental_status = 'Active' 
+                                ORDER BY rental_id DESC
+                                LIMIT 5;
+                                ";
+
+            $query = $this->db->query($sql);
+            return $query->getResultArray();
+
+        }
+            
+    }
+
     public function fetchBasedOnSelectedSite($selected_site , $branch){
         if($selected_site !== "All_Sites"){ // if he didn't select All sites fetch data based on selected site
             $sql = "SELECT rental_id, cu.customer_id,rental_status,duration, cust_name,r.profile_no, ap.ap_id, 
@@ -198,6 +233,7 @@ class RentalModel extends Model
             'created_date' => $date,
             'apartment_id' => $apid,
             'branch_id' => session()->get('user')['branch_id'],
+            'invoice_generated' => 0 // invoice is generated first time and when rent is raised 
         ];
 
         // if ($dur_days <= 30) {

@@ -48,23 +48,23 @@
             <h4 class="card-title"><?= lang('Site.labels.due_rentals') ?></h4>
             
           </div>
-          <table class="table table-responsive">
-            <tr>
+          <table class="table table-responsive" id="manage_due_rentals">
+            <!-- <tr>
                 <th>#</th>
                 <th>Tenant</th>
                 <th>Apartment</th>
                 <th>Months</th>
                 <th>Amounts</th>
-            </tr>
+            </tr> -->
+              <thead>
+                  <tr> 
+                      <th>#</th>                                                                                                                                     
+                      <th><?= 'Month' ?></th> 
+                      <th><?= 'Tenant' ?></th> 
+                      <th><?= 'Remaining'?></th> 
+                  </tr>
+              </thead>
             <tbody>
-                <tr>
-                    <!-- <td>1</td>
-                    <td>Zakarie Hassan Ibar</td>
-                    <td>Muna</td>
-                    <td>2</td>
-                    <td>$150</td> -->
-                </tr>
-               
             </tbody>
           </table>
         </div>
@@ -93,7 +93,7 @@
             <!-- Row -->
             <div class="row align-items-center">
               <div class="col-6">
-                <h3 class="fw-light"></h3>
+                <h3 class="fw-light"><?= $Apartments ?></h3>
                 <h6 class="text-muted mb-0"><?= lang('Site.labels.apartments') ?></h6>
               </div>
               <div class="col-6 text-end align-self-center">
@@ -107,7 +107,7 @@
             <!-- Row -->
             <div class="row align-items-center">
               <div class="col-6">
-                <h1 class="fw-light"></h1>
+                <h1 class="fw-light"><?= $buildings ?></h1>
                 <h6 class="text-muted mb-0"><?= lang('Site.labels.buildings') ?></h6>
               </div>
               <div class="col-6 text-end align-self-center">
@@ -117,27 +117,23 @@
           </div>
         </div>
         <div class="col-sm-6">
-
           <!-- Row -->
-         
             <div class="card card-body" style="height:14vh">
-              <!-- Row -->
+              <!-- Row --> 
               <div class="row align-items-center">
                 <div class="col-6">
                   <h1 class="fw-light">
                   <i class="fas fa-exclamation-triangle"
                         style="margin-right: 8px; animation: bounce 1.5s infinite;color:red;"></i>
-                      <span style="color:black; font-size: 1rem; display:block;">Avialable Units</span>
+                      <span style="color:black; font-size: 1rem; display:block;">Unpaid Invoices</span>
                   </h1>
                  
                 </div>
                 <div class="col-6 text-end align-self-center">
-                    <h2><?= $unit_avialable ?> Units</h2>
+                    <h2><?= $unpaid_people ?> Unpaid</h2>
                 </div>
               </div>
             </div>
-           
-          
         </div>
 
       </div>
@@ -146,675 +142,167 @@
       <div class="card w-100 overflow-hidden">
         <div class="card-body pb-8">
           <div class="d-md-flex no-block align-items-center">
-            <h4 class="card-title mb-0"><?= lang('Site.labels.last_5_sales') ?></h4>
+            <h4 class="card-title mb-0"><?= 'Last 5 Rents' ?></h4>
           </div>
         </div>
-        <div class="table-responsive">
-          <table class="table stylish-table align-middle text-nowrap">
+        <div class="table-responsive" >
+          <table class="table stylish-table align-middle text-nowrap" id="manageTable_Last_5_Rents">
             <thead>
-              <tr>
-              <th class="border-bottom fs-3 pe-4">
-                  <?= lang('Site.labels.rentdate') ?>
-                </th>
-                <th class="border-bottom fs-3 ps-4">
-                  <?= lang('Site.labels.customerName') ?>
-                </th>
-                <th class="border-bottom fs-3">
-                  <?= lang('Site.labels.building') ?>
-                </th>
-                <th class="border-bottom fs-3">
-                  <?= lang('Site.labels.aprtment_type') ?>
-                </th>
-                <th class="border-bottom fs-3">
-                  <?= lang('Site.labels.totalAmount') ?>
-                </th>
-                
-                <th class="border-bottom fs-3">
-                  <?= lang('Site.labels.duration') ?>
-                </th>
-                
-               
-
-              </tr>
+                <tr>
+                    <th>#</th>
+                    <th>Customer Name</th>
+                    <th>Apartment No</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Duration</th>
+                    <th>Left Period</th>
+                </tr>
             </thead>
             <tbody>
-
-            
-
             </tbody>
+
           </table>
         </div>
       </div>
     </div>
     <div class="col-lg-6 d-flex align-items-stretch">
       <div class="card w-100">
+        <div class="crad-header">
+          <h4 class="card-title"><?= 'Expense' ?></h4>
+        </div>
         <div class="card-body">
-          <div class="d-md-flex align-items-center no-block">
-            <h4 class="card-title"><?= lang('Site.labels.sales_by_category') ?></h4>
-            <div class="ms-auto">
-              <select class="form-select" id="months_value">
-                
-              </select>
-            </div>
-          </div>
-          <!-- Row -->
-          <div class="row mt-4">
-            <div class="col-md-9" id="sales-of-the-month-parent">
-              <div id="sales-of-the-month" class="m-auto"></div>
-              <!-- <div class="round-overlap sales"><i class="mdi mdi-cart"></i></div> -->
-            </div>
-
+          <div class="d-md-flex align-items-center">
+                <canvas id="ExpenseChart"></canvas>
           </div>
         </div>
       </div>
     </div>
     <div class="col-lg-6 d-flex align-items-stretch">
       <div class="card w-100">
+        <div class="card-header">
+          <h4 class="card-title"><?= 'Income' ?></h4>
+        </div>
         <div class="card-body">
           <div class="d-md-flex align-items-center">
-            <h4 class="card-title"><?= lang('Site.labels.incomevsexpense') ?></h4>
-
+              <canvas id="IncomeChart"></canvas>
           </div>
-          <div id="income-of-the-year" class="mx-n2"></div>
+          <!-- <div id="income-of-the-year" class="mx-n2"></div> -->
         </div>
       </div>
     </div>
   </div>
 
-
-
 </div>
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
 <script>
 
   $(document).ready(function () {
     // sales_per_month(0, <?//= json_encode($month_sales['labels']) ?>)
-    var cat_val = $('#months_value').val();
-    if (cat_val) {
-      $.ajax({
-        url: '<?= base_url($locale) ?>/items/sales_by_categories',
-        method: 'POST',
-        dataType: 'json',
+
+
+    // fetch due rentals people
+    var base_url = "<?php echo base_url($locale); ?>/admin/";
+    branch_id = <?= session()->get('user')['branch_id'] ?>;
+    fetchTable(branch_id);
+    fetchLastFiveRentTable();
+    console.log("Base Url: " + base_url);
+    
+
+
+    function fetchTable(branch_id) {
+        let CI4_ROUTE;
+
+        // Determine which route to use based on the selected site
+        CI4_ROUTE = base_url + 'fetch_unpaid_bills';
+      
+        
+
+        // Initialize the DataTable only if it hasn't been initialized yet
+        if (!$.fn.dataTable.isDataTable('#manage_due_rentals')) {
+          manage_due_rentals = $('#manage_due_rentals').DataTable({
+                'ajax': CI4_ROUTE,  // Dynamic data source URL based on the selected status
+                'order': []         // Optionally specify your table ordering logic
+            });
+        } else {
+            // If the DataTable is already initialized, just reload the data
+            manage_due_rentals.ajax.url(CI4_ROUTE).load();
+        }
+    }
+          
+    function fetchLastFiveRentTable() {
+          let CI4_ROUTE;
+
+          // Determine which route to use based on the selected site
+          CI4_ROUTE = base_url + 'fetch_last_five_rentals';
+
+          console.log("After metho called LAstFice :" + CI4_ROUTE);
+          
+          // Initialize the DataTable only if it hasn't been initialized yet
+          if (!$.fn.dataTable.isDataTable('#manageTable_Last_5_Rents')) {
+              manageTable_Last_5_Rents = $('#manageTable_Last_5_Rents').DataTable({
+                  'ajax': CI4_ROUTE,  // Dynamic data source URL based on the selected status
+                  'order': []         // Optionally specify your table ordering logic
+              });
+          } else {
+              // If the DataTable is already initialized, just reload the data
+              manageTable_Last_5_Rents.ajax.url(CI4_ROUTE).load();
+          }
+      }
+
+
+      const income_ctx = document.getElementById('IncomeChart');
+      const expense_ctx = document.getElementById('ExpenseChart');
+
+      new Chart(income_ctx, {
+        type: 'bar',
         data: {
-          value: cat_val
+          labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+          datasets: [{
+            label: '# of Votes',
+            data: [12, 19, 3, 5, 2, 3],
+            borderWidth: 1
+          }]
         },
-        success: function (response) {
-          console.log(response.data)
-          sales_per_month(response.data, response.labels);
-        },
-        error: function (xhr, status, error) {
-          console.error('Error fetching data:', error);
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
         }
       });
-    }
-    $('#months_value').change(function () {
-      var selectedValue = $(this).val();
 
-      $.ajax({
-        url: '<?= base_url($locale) ?>/items/sales_by_categories',
-        method: 'POST',
-        dataType: 'json',
+
+      new Chart(expense_ctx, {
+        type: 'bar',
         data: {
-          value: selectedValue
+          labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+          datasets: [{
+            label: '# of Votes',
+            data: [12, 19, 3, 5, 2, 3],
+            borderWidth: 1
+          }]
         },
-        success: function (response) {
-          console.log(response.data)
-          sales_per_month(response.data, response.labels);
-        },
-        error: function (xhr, status, error) {
-          console.error('Error fetching data:', error);
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
         }
       });
-    });
 
-    function sales_per_month(data, labels) {
-
-      var option_Sales_of_the_Month = {
-        series: data,
-        labels: labels,
-        chart: {
-          type: "donut",
-          height: 270,
-          offsetY: 20,
-          fontFamily: "inherit",
-        },
-        dataLabels: {
-          enabled: false,
-        },
-        stroke: {
-          width: 0,
-        },
-        plotOptions: {
-          pie: {
-            expandOnClick: true,
-            donut: {
-              size: 88,
-              labels: {
-                show: false,
-                name: {
-                  show: true,
-                  offsetY: 7,
-                },
-                value: {
-                  show: false,
-                },
-                total: {
-                  show: false,
-                  color: "#a1aab2",
-                  fontSize: "13px",
-                  label: "total sales",
-                },
-              },
-            },
-          },
-        },
-        colors: ["var(--bs-success)", "var(--bs-secondary)", "var(--bs-primary)", "#04B440", "#009EFB"],
-        tooltip: {
-          show: true,
-          fillSeriesColor: true,
-        },
-        legend: {
-          show: true,
-        },
-        responsive: [
-          {
-            breakpoint: 1025,
-            options: {
-              chart: {
-                width: 250,
-                height: 270,
-              },
-            },
-          },
-          {
-            breakpoint: 769,
-            options: {
-              chart: {
-                height: 270,
-                width: 250,
-              },
-            },
-          },
-          {
-            breakpoint: 426,
-            options: {
-              chart: {
-                height: 250,
-                offsetX: -20,
-                width: 250,
-              },
-            },
-          },
-        ],
-      };
-
-      $('#sales-of-the-month').remove();
-      $('#sales-of-the-month-parent').append('<div id="sales-of-the-month" style="width:100%" class="m-auto"></div>')
-      console.log(option_Sales_of_the_Month)
-      var chart_pie_donut = new ApexCharts(
-        document.querySelector("#sales-of-the-month"),
-        option_Sales_of_the_Month
-      );
-      chart_pie_donut.render();
-    }
-
-
-    var prod_sales_per = {
-      series: [],
-      chart: {
-        fontFamily: "inherit",
-        width: 380,
-        type: "pie",
-      },
-      colors: [
-        "#ffae1f",
-        "#39b69a",
-        "var(--bs-primary)",
-        "var(--bs-secondary)",
-        "#fa896b",
-      ],
-      labels: [],
-      responsive: [
-        {
-          breakpoint: 480,
-          options: {
-            chart: {
-              width: 200,
-            },
-            legend: {
-              position: "bottom",
-            },
-          },
-        },
-      ],
-      legend: {
-        labels: {
-          colors: "#a1aab2",
-        },
-      },
-    };
-
-    var chart_pie_simple = new ApexCharts(
-      document.querySelector("#chart-pie-simple-2"),
-      prod_sales_per
-    );
-    chart_pie_simple.render();
-    var options_Income_of_the_Year = {
-      series: [
-        {
-          name: "expense",
-          data: [],
-        },
-        {
-          name: "Income",
-          data: [],
-        },
-      ],
-      chart: {
-        fontFamily: "inherit",
-        type: "bar",
-        width: 550,
-        height: 315,
-        offsetY: 10,
-        toolbar: {
-          show: false,
-        },
-      },
-      grid: {
-        show: true,
-        strokeDashArray: 3,
-        borderColor: "rgba(0,0,0,0.1)",
-        xaxis: {
-          lines: {
-            show: true,
-          },
-        },
-      },
-      colors: ["var(--bs-primary)", "var(--bs-success)"],
-      plotOptions: {
-        bar: {
-          horizontal: false,
-          columnWidth: "70%",
-          borderRadius: 5,
-          endingShape: "rounded",
-        },
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      stroke: {
-        show: true,
-        width: 5,
-        colors: ["transparent"],
-      },
-      xaxis: {
-        type: "category",
-        categories: [],
-        tickAmount: "16",
-        tickPlacement: "on",
-        axisBorder: {
-          show: false,
-        },
-        axisTicks: {
-          show: false,
-        },
-        labels: {
-          style: {
-            colors: "#a1aab2",
-          },
-        },
-      },
-      yaxis: {
-        labels: {
-          style: {
-            colors: "#a1aab2",
-          },
-        },
-      },
-      fill: {
-        opacity: 1,
-      },
-      tooltip: {
-        theme: "dark",
-      },
-      legend: {
-        show: true,
-      },
-    };
-
-    var chart_column_basic = new ApexCharts(
-      document.querySelector("#income-of-the-year"),
-      options_Income_of_the_Year
-    );
-    chart_column_basic.render();
-
-
-
-
-    var total_revenue = {
-      series: [
-        { name: "Last Month Sales", data: [] },
-        { name: "This Month Sales", data: [] },
-      ],
-      chart: { fontFamily: "inherit", type: "area", width: '590px', height: 240, toolbar: { show: !1 } },
-      plotOptions: {},
-      legend: { show: 1 },
-      dataLabels: { enabled: !1 },
-      fill: { type: "solid", opacity: 0.07, colors: ["#04B440", "#009EFB"] },
-      stroke: { curve: "smooth", show: !0, width: 2, colors: ["#04B440", "var(--bs-info)"] },
-      xaxis: {
-        categories: [],
-        axisBorder: { show: !1 },
-        axisTicks: { show: !1 },
-        tickAmount: 6,
-        labels: { rotate: 0, rotateAlways: !0, style: { fontSize: "12px", colors: "#a1aab2" } },
-        crosshairs: { position: "front", stroke: { color: ["var(--bs-success)", "var(--bs-info)"], width: 1, dashArray: 3 } },
-
-      },
-      yaxis: { max: 120, min: 30, tickAmount: 6, labels: { style: { fontSize: "12px", colors: "#a1aab2" } } },
-      states: { normal: { filter: { type: "none", value: 0 } }, hover: { filter: { type: "none", value: 0 } }, active: { allowMultipleDataPointsSelection: !1, filter: { type: "none", value: 0 } } },
-      tooltip: {
-        theme: "dark",
-      },
-      colors: ["var(--bs-success)", "var(--bs-info) "],
-      grid: { borderColor: "var(--bs-border-color)", strokeDashArray: 4, yaxis: { lines: { show: !0 } } },
-      markers: { strokeColor: ["var(--bs-success)", "var(--bs-info)"], strokeWidth: 3 },
-    };
-
-    var chart_area_spline = new ApexCharts(
-      document.querySelector("#total-revenue"),
-      total_revenue
-    );
-    chart_area_spline.render();
-
-    // -----------------------------------------------------------------------
-    // New Clients
-    // -----------------------------------------------------------------------
-
-
-    var options = {
-      color: "#adb5bd",
-      series: [12, 88],
-      labels: ["12", "88"],
-      chart: {
-        type: "donut",
-        height: 95,
-        fontFamily: "inherit",
-        foreColor: "#adb0bb",
-      },
-      plotOptions: {
-        pie: {
-          donut: {
-            size: '85%',
-            background: 'transparent',
-            labels: {
-              show: true,
-              name: {
-                show: true,
-                offsetY: 7,
-              },
-              value: {
-                show: false,
-              },
-              total: {
-                show: true,
-                color: 'var(--bs-primary)',
-                fontSize: '14px',
-                fontWeight: "500",
-                label: '86',
-              },
-            },
-          },
-        },
-      },
-      grid: {
-        show: false,
-        padding: {
-          top: 0,
-          right: 0,
-          bottom: 0,
-          left: 0
-        }
-      },
-      stroke: {
-        show: false,
-      },
-      dataLabels: {
-        enabled: false,
-      },
-
-      legend: {
-        show: false,
-      },
-      colors: ["var(--bs-primary)", "#9fa0a5",],
-
-      tooltip: {
-        theme: "dark",
-        fillSeriesColor: false,
-      },
-    };
-
-    var chart = new ApexCharts(document.querySelector("#new-clients"), options);
-    chart.render();
-
-
-
-    // -----------------------------------------------------------------------
-    // All Projects
-    // -----------------------------------------------------------------------
-
-
-    var options = {
-      color: "#adb5bd",
-      series: [20, 80],
-      labels: ["20", "80"],
-      chart: {
-        type: "donut",
-        height: 95,
-        fontFamily: "inherit",
-        foreColor: "#adb0bb",
-      },
-      plotOptions: {
-        pie: {
-          donut: {
-            size: '85%',
-            background: 'transparent',
-            labels: {
-              show: true,
-              name: {
-                show: true,
-                offsetY: 7,
-              },
-              value: {
-                show: false,
-              },
-              total: {
-                show: true,
-                color: 'var(--bs-danger)',
-                fontSize: '14px',
-                fontWeight: "500",
-                label: '248',
-              },
-            },
-          },
-        },
-      },
-      grid: {
-        show: false,
-        padding: {
-          top: 0,
-          right: 0,
-          bottom: 0,
-          left: 0
-        }
-      },
-      stroke: {
-        show: false,
-      },
-      dataLabels: {
-        enabled: false,
-      },
-
-      legend: {
-        show: false,
-      },
-      colors: ["var(--bs-danger)", "#9fa0a5",],
-
-      tooltip: {
-        theme: "dark",
-        fillSeriesColor: false,
-      },
-    };
-
-    var chart = new ApexCharts(document.querySelector("#all-projects"), options);
-    chart.render();
-
-
-
-
-    // -----------------------------------------------------------------------
-    // New Items
-    // -----------------------------------------------------------------------
-
-
-    var options = {
-      color: "#adb5bd",
-      series: [30, 70],
-      labels: ["30", "70"],
-      chart: {
-        type: "donut",
-        height: 95,
-        fontFamily: "inherit",
-        foreColor: "#adb0bb",
-      },
-      plotOptions: {
-        pie: {
-          donut: {
-            size: '85%',
-            background: 'transparent',
-            labels: {
-              show: true,
-              name: {
-                show: true,
-                offsetY: 7,
-              },
-              value: {
-                show: false,
-              },
-              total: {
-                show: true,
-                color: 'var(--bs-warning)',
-                fontSize: '14px',
-                fontWeight: "500",
-                label: '352',
-              },
-            },
-          },
-        },
-      },
-      grid: {
-        show: false,
-        padding: {
-          top: 0,
-          right: 0,
-          bottom: 0,
-          left: 0
-        }
-      },
-      stroke: {
-        show: false,
-      },
-      dataLabels: {
-        enabled: false,
-      },
-
-      legend: {
-        show: false,
-      },
-      colors: ["var(--bs-warning)", "#9fa0a5",],
-
-      tooltip: {
-        theme: "dark",
-        fillSeriesColor: false,
-      },
-    };
-
-    var chart = new ApexCharts(document.querySelector("#new-items"), options);
-    chart.render();
-
-
-
-    // -----------------------------------------------------------------------
-    // Invoices
-    // -----------------------------------------------------------------------
-
-
-    var options = {
-      color: "#adb5bd",
-      series: [60, 40],
-      labels: ["60", "40"],
-      chart: {
-        type: "donut",
-        height: 95,
-        fontFamily: "inherit",
-        foreColor: "#adb0bb",
-      },
-      plotOptions: {
-        pie: {
-          donut: {
-            size: '85%',
-            background: 'transparent',
-            labels: {
-              show: true,
-              name: {
-                show: true,
-                offsetY: 7,
-              },
-              value: {
-                show: false,
-              },
-              total: {
-                show: true,
-                color: 'var(--bs-success)',
-                fontSize: '14px',
-                fontWeight: "500",
-                label: '159',
-              },
-            },
-          },
-        },
-      },
-      grid: {
-        show: false,
-        padding: {
-          top: 0,
-          right: 0,
-          bottom: 0,
-          left: 0
-        }
-      },
-      stroke: {
-        show: false,
-      },
-      dataLabels: {
-        enabled: false,
-      },
-
-      legend: {
-        show: false,
-      },
-      colors: ["var(--bs-success)", "#9fa0a5",],
-
-      tooltip: {
-        theme: "dark",
-        fillSeriesColor: false,
-      },
-    };
-
-    var chart = new ApexCharts(document.querySelector("#invoices"), options);
-    chart.render();
-
-  })
+  
+  });
 </script>
+
+
 <script src="<?php echo base_url() ?>public/assets/js/apexcharts.min.js"></script>
 <!-- <script src="<?php echo base_url() ?>public/assets/js/dashboard2.js"></script> -->
 <?= $this->endSection(); ?>

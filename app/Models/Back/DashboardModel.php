@@ -94,6 +94,14 @@ class DashboardModel extends Model
         return $booking;
     }
 
+
+    public function getNumberOf_Unpaid_People()
+    {
+        //  bookings 
+        $unpaid = $this->db->query("SELECT COUNT(rs.id) as Total_Unpaid_People from tbl_rental_summary rs join tbl_customers cu on cu.customer_id=rs.tenant_id where paid =0 AND rs.branch_id = 1 order by rs.id desc;")->getRow()->Total_Unpaid_People;
+        return $unpaid;
+    }
+
     public function get_rentings()
     {
         $renting = $this->db->query("SELECT count(rent_id) cnt FROM `tbl_rent_booking`")->getRow()->cnt;
@@ -143,4 +151,14 @@ class DashboardModel extends Model
 
         return $revenues;
     }
+
+    public function get_all_Unpaid_bills()
+    {
+        
+        $branch_id = session()->get('user')['branch_id'];
+        $sql = "SELECT COUNT(rs.id) as Total, rs.*,cu.cust_name, rs.tenant_id as customer_id from tbl_rental_summary rs join tbl_customers cu on cu.customer_id=rs.tenant_id where paid =0  AND rs.branch_id = $branch_id order by rs.id desc";
+        $query = $this->db->query($sql);
+        return $query->getResultArray();    
+    }
+
 }

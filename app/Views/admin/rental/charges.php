@@ -159,7 +159,7 @@
         });
 
         $('#invoice_modal').on('show.bs.modal', function(e) {
-
+ 
             $('#btn_submit').prop('disabled', false);
 
             //    alert(event.target.id)
